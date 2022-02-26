@@ -1,2 +1,2 @@
 # Nasa-Explorer
-Android application that use the Nasa Open Apis - https://api.nasa.gov/
+Android application that uses the Nasa Open Apis - https://api.nasa.gov/
