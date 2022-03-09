@@ -7,6 +7,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.mariomanzano.nasa_explorer.ui.screens.dailypicture.DailyPictureDetailScreen
 import com.mariomanzano.nasa_explorer.ui.screens.dailypicture.DailyPictureScreen
 import com.mariomanzano.nasa_explorer.ui.screens.earth.EarthScreen
 import com.mariomanzano.nasa_explorer.ui.screens.mars.MarsScreen
@@ -35,11 +36,17 @@ private fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
         route = Feature.DAILY_PICTURE.route
     ) {
         composable(NavCommand.ContentType(Feature.DAILY_PICTURE)) {
-            DailyPictureScreen()
+            DailyPictureScreen(
+                onClick = { pictureOfTheDay ->
+                    navController.navigate(
+                        NavCommand.ContentTypeDetail(Feature.DAILY_PICTURE).createRoute(pictureOfTheDay.id)
+                    )
+                }
+            )
         }
 
         composable(NavCommand.ContentTypeDetail(Feature.DAILY_PICTURE)) {
-            DailyPictureScreen()
+            DailyPictureDetailScreen()
         }
     }
 }

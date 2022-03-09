@@ -5,4 +5,6 @@
     <string name="daily_picture">Daily Picture</string>
     <string name="mars">Mars</string>
     <string name="earth">Earth</string>
+    <string name="more_options">More options</string>
+    <string name="go_to_detail">Go to Detail</string>
 </resources>
