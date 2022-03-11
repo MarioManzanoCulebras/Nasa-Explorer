@@ -1,9 +1,13 @@
 package com.mariomanzano.nasa_explorer.data.entities
 
+import java.util.*
+
 data class PictureOfDayItem(
-    override val id: Int,
-    override val title: String,
-    override val description: String,
-    override val thumbnail: String,
-    override val urls: List<Url>
+    override val date: Calendar,
+    override val id: Int? = null,
+    override val title: String? = null,
+    override val description: String? = null,
+    override val url: String? = null,
+    val copyRight: String? = null,
+    val idTime: Long = date.time.time,
 ): NasaItem

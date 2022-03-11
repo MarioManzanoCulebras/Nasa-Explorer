@@ -8,7 +8,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
-import java.util.*
 
 const val API_ENDPOINT = "https://api.nasa.gov/"
 
@@ -29,7 +28,7 @@ object ApiClient {
         .client(okHttpClient)
         .build()
 
-    val dailyPictureService: DailyPictureService = restAdapter.create()
+    val DAILY_PICTURES_SERVICE: DailyPicturesService = restAdapter.create()
 }
 
 private class QueryInterceptor : Interceptor {
@@ -38,7 +37,6 @@ private class QueryInterceptor : Interceptor {
         val originalUrl = original.url
 
         val url = originalUrl.newBuilder()
-                //Todo: Add to Authorization field on headers request not on query params
             .addQueryParameter("api_key", BuildConfig.NASA_API_KEY)
             .build()
 

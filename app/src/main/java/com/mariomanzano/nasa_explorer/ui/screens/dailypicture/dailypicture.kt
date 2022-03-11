@@ -7,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mariomanzano.nasa_explorer.data.entities.PictureOfDayItem
+import com.mariomanzano.nasa_explorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasa_explorer.ui.screens.common.NasaItemsListScreen
 
 @ExperimentalMaterialApi
@@ -24,7 +25,13 @@ fun DailyPictureScreen(
         onClick = onClick)
 }
 
+@ExperimentalMaterialApi
 @Composable
-fun DailyPictureDetailScreen() {
+fun DailyPictureDetailScreen(viewModel: DailyPictureDetailViewModel = viewModel()) {
+    val state by viewModel.state.collectAsState()
 
+    NasaItemDetailScreen(
+        loading = state.loading,
+        nasaItem = state.dailyPicture
+    )
 }
