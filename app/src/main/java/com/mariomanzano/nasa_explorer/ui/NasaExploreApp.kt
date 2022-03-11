@@ -6,13 +6,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import com.antonioleiva.marvelcompose.ui.screens.common.NasaExplorerTopAppBar
+import com.mariomanzano.nasa_explorer.ui.navigation.NasaExplorerTopAppBar
 import com.mariomanzano.nasa_explorer.ui.theme.NasaexplorerTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.SystemUiController
@@ -22,6 +23,8 @@ import com.mariomanzano.nasa_explorer.ui.navigation.AppBarIcon
 import com.mariomanzano.nasa_explorer.ui.navigation.AppBottomNavigation
 import com.mariomanzano.nasa_explorer.ui.navigation.DrawerContent
 import com.mariomanzano.nasa_explorer.ui.navigation.Navigation
+import com.mariomanzano.nasa_explorer.ui.screens.common.BuildIcon
+import com.mariomanzano.nasa_explorer.ui.screens.common.NasaIcon
 
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
@@ -39,10 +42,9 @@ fun NasaExploreApp(appState: NasaExploreAppState = rememberMarvelAppState()) {
                                 imageVector = Icons.Default.ArrowBack,
                                 onClick = { appState.onUpClick() })
                         } else {
-                            AppBarIcon(
-                                imageVector = Icons.Default.Menu,
-                                onClick = { appState.onMenuClick() }
-                            )
+                            IconButton(onClick = { appState.onMenuClick() }) {
+                                BuildIcon(icon = Icons.Default.Flight, nasaIcon = NasaIcon.NasaLogo)
+                            }
                         }
                     }
                 )

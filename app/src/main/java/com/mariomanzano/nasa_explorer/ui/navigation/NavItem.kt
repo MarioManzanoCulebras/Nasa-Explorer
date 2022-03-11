@@ -2,22 +2,24 @@ package com.mariomanzano.nasa_explorer.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.mariomanzano.nasa_explorer.R
+import com.mariomanzano.nasa_explorer.ui.screens.common.NasaIcon
 
 enum class NavItem(
     val navCommand: NavCommand,
-    val icon: ImageVector,
-    @StringRes val title: Int
+    val icon: ImageVector? = null,
+    val nasaIcon: NasaIcon? = null,
+    @StringRes val title: Int?
 ) {
-    HOME(NavCommand.ContentType(Feature.DAILY_PICTURE), Icons.Default.Launch, R.string.home),
-    NASA_LIBRARY(NavCommand.ContentType(Feature.NASA_LIBRARY), Icons.Default.Satellite, R.string.nasa_library),
-    DAILY_PICTURE(NavCommand.ContentType(Feature.DAILY_PICTURE), Icons.Default.Face, R.string.daily_picture),
-    MARS(NavCommand.ContentType(Feature.MARS), Icons.Default.TravelExplore, R.string.mars),
-    EARTH(NavCommand.ContentType(Feature.EARTH), Icons.Default.Public, R.string.earth)
+    HOME(NavCommand.ContentType(Feature.DAILY_PICTURE), Icons.Default.Home, title = R.string.home),
+    NASA_LIBRARY(NavCommand.ContentType(Feature.NASA_LIBRARY), nasaIcon = NasaIcon.NasaLogo, title = R.string.nasa_library),
+    DAILY_PICTURES(NavCommand.ContentType(Feature.DAILY_PICTURE), nasaIcon = NasaIcon.Spacecraft, title = R.string.daily_pictures),
+    MARS(NavCommand.ContentType(Feature.MARS), nasaIcon = NasaIcon.RocketVertical, title = R.string.mars),
+    EARTH(NavCommand.ContentType(Feature.EARTH), nasaIcon = NasaIcon.Earth, title = R.string.earth)
 }
 
 sealed class NavCommand(
@@ -29,7 +31,7 @@ sealed class NavCommand(
 
     class ContentTypeDetail(feature: Feature) :
         NavCommand(feature, "detail", listOf(NavArg.ItemId)) {
-        fun createRoute(itemId: Int) = "${feature.route}/$subRoute/$itemId"
+        fun createRoute(itemId: Long) = "${feature.route}/$subRoute/$itemId"
     }
 
     val route = run {
@@ -47,5 +49,5 @@ sealed class NavCommand(
 }
 
 enum class NavArg(val key: String, val navType: NavType<*>) {
-    ItemId("itemId", NavType.IntType)
+    ItemId("itemId", NavType.LongType)
 }

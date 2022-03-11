@@ -39,7 +39,9 @@ private fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
             DailyPictureScreen(
                 onClick = { pictureOfTheDay ->
                     navController.navigate(
-                        NavCommand.ContentTypeDetail(Feature.DAILY_PICTURE).createRoute(pictureOfTheDay.id)
+                        NavCommand.ContentTypeDetail(Feature.DAILY_PICTURE).createRoute(
+                            pictureOfTheDay.idTime
+                        )
                     )
                 }
             )

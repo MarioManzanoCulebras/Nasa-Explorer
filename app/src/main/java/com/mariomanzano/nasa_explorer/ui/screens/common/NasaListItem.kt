@@ -28,7 +28,7 @@ fun <T : NasaItem> NasaListItem(
     ) {
         Card {
             Image(
-                painter = rememberImagePainter(data = nasaItem.thumbnail),
+                painter = rememberImagePainter(data = nasaItem.url),
                 contentDescription = nasaItem.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -41,7 +41,7 @@ fun <T : NasaItem> NasaListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = nasaItem.title,
+                text = nasaItem.title?:"",
                 style = MaterialTheme.typography.subtitle1,
                 maxLines = 2,
                 modifier = Modifier

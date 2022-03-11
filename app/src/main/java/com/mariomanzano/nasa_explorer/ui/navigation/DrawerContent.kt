@@ -6,6 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Flight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -17,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mariomanzano.nasa_explorer.ui.NasaExploreScreen
+import com.mariomanzano.nasa_explorer.ui.screens.common.BuildIcon
 
 @ExperimentalMaterialApi
 @Composable
@@ -59,15 +63,12 @@ fun DrawerContent(
                     .padding(12.dp)
             ) {
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Icon(
-                        imageVector = navItem.icon,
-                        contentDescription = null
-                    )
+                    BuildIcon(icon = navItem.icon?: Icons.Default.Flight, nasaIcon = navItem.nasaIcon)
                 }
 
                 Spacer(modifier = Modifier.width(24.dp))
                 Text(
-                    text = stringResource(id = navItem.title),
+                    text = stringResource(id = navItem.title?:0),
                     style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold)
                 )
             }
@@ -83,7 +84,7 @@ fun DrawerContentPreview() {
     NasaExploreScreen {
         Column {
             DrawerContent(
-                drawerOptions = listOf(NavItem.HOME, NavItem.DAILY_PICTURE),
+                drawerOptions = listOf(NavItem.HOME, NavItem.DAILY_PICTURES),
                 selectedIndex = 0,
                 onOptionClick = {}
             )
