@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NasaExplorer</string>
+    <string name="app_name">Nasa Explorer</string>
     <string name="home">Home</string>
     <string name="nasa_library">Nasa library</string>
     <string name="daily_pictures">Daily Pictures</string>
