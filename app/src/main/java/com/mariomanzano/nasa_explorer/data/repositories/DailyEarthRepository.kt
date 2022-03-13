@@ -20,7 +20,7 @@ object DailyEarthRepository : Repository<EarthItem>() {
         super.find(date) {
             ApiClient
                 .dailyEarthService
-                .getDailyEarthFromDate(date = DateFormatter.Time.formatter.format(date.time))
+                .getDailyEarthFromDate(date = DateFormatter.FullTime.formatter.format(date.time))
                 .asEarthItem()
         }
 }

@@ -13,8 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.mariomanzano.nasa_explorer.R
+import com.mariomanzano.nasa_explorer.data.entities.EarthItem
 import com.mariomanzano.nasa_explorer.data.entities.NasaItem
-import java.util.*
 
 @Composable
 fun <T : NasaItem> NasaItemBottomPreview(item: T?, onGoToDetail: (T) -> Unit) {
@@ -35,9 +35,13 @@ fun <T : NasaItem> NasaItemBottomPreview(item: T?, onGoToDetail: (T) -> Unit) {
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                if (item is EarthItem) Text(
+                    text = DateFormatter.OnlyTime.formatter.format(item.date.time),
+                    style = MaterialTheme.typography.h4,
+                )
                 Text(text = DateFormatter.Simple.formatter.format(item.date.time))
                 Text(text = item.title ?: "", style = MaterialTheme.typography.h6)
-                Text(text = item.description?:"")
+                Text(text = item.description ?: "")
                 Button(
                     onClick = { onGoToDetail(item) },
                     modifier = Modifier.align(Alignment.End)

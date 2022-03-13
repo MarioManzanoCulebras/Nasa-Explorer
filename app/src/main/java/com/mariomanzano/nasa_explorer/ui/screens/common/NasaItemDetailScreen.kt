@@ -16,8 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.mariomanzano.nasa_explorer.data.entities.NasaItem
+import com.mariomanzano.nasa_explorer.data.entities.PictureOfDayItem
 import com.mariomanzano.nasa_explorer.data.entities.Result
-import java.util.*
 
 @ExperimentalMaterialApi
 @Composable
@@ -62,7 +62,8 @@ private fun Header(nasaItem: NasaItem) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = DateFormatter.Simple.formatter.format(nasaItem.date.time),
+            text = if (nasaItem is PictureOfDayItem) DateFormatter.Simple.formatter.format(nasaItem.date.time)
+            else DateFormatter.FullTime.formatter.format(nasaItem.date.time),
             textAlign = TextAlign.End,
             modifier = Modifier
                 .fillMaxWidth()
