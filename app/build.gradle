@@ -20,6 +20,8 @@ android {
         }
 
         buildConfigField("String", "NASA_API_KEY", getProps("NASA_API_KEY"))
+        buildConfigField("String", "API_ENDPOINT", getProps("API_ENDPOINT"))
+        buildConfigField("String", "EARTH_API_IMAGES_BASE_URL", getProps("EARTH_API_IMAGES_BASE_URL"))
     }
 
     buildTypes {

@@ -10,12 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import com.mariomanzano.nasa_explorer.data.entities.NasaItem
 import com.mariomanzano.nasa_explorer.R
-import java.text.SimpleDateFormat
+import com.mariomanzano.nasa_explorer.data.entities.NasaItem
 import java.util.*
 
 @Composable
@@ -37,8 +35,8 @@ fun <T : NasaItem> NasaItemBottomPreview(item: T?, onGoToDetail: (T) -> Unit) {
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(item.date.time))
-                Text(text = item.title?:"", style = MaterialTheme.typography.h6)
+                Text(text = DateFormatter.Simple.formatter.format(item.date.time))
+                Text(text = item.title ?: "", style = MaterialTheme.typography.h6)
                 Text(text = item.description?:"")
                 Button(
                     onClick = { onGoToDetail(item) },

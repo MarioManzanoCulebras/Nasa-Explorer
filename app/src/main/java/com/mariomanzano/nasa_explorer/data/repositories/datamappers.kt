@@ -1,12 +1,12 @@
 package com.mariomanzano.nasa_explorer.data.repositories
 
+import com.mariomanzano.nasa_explorer.data.entities.EarthItem
 import com.mariomanzano.nasa_explorer.data.entities.PictureOfDayItem
-import com.mariomanzano.nasa_explorer.data.entities.Url
+import com.mariomanzano.nasa_explorer.data.utils.buildEarthImageUri
+import com.mariomanzano.nasa_explorer.data.utils.toCalendar
+import com.mariomanzano.nasa_explorer.data.utils.toCalendarWithTime
 import com.mariomanzano.nasa_explorer.network.entities.ApiAPOD
-import com.mariomanzano.nasa_explorer.ui.screens.common.toCalendar
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.util.*
+import com.mariomanzano.nasa_explorer.network.entities.ApiEPIC
 
 fun ApiAPOD.asPictureOfTheDayItem() = PictureOfDayItem(
         id = 0,
@@ -16,3 +16,12 @@ fun ApiAPOD.asPictureOfTheDayItem() = PictureOfDayItem(
         url = url
 )
 
+fun ApiEPIC.asEarthItem(): EarthItem {
+        val cal = date.toCalendarWithTime()
+        return EarthItem(
+                id = 0,
+                title = caption,
+                date = cal,
+                url = buildEarthImageUri(cal, image)
+        )
+}

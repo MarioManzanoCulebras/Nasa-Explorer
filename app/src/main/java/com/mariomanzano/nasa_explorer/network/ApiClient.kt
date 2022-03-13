@@ -1,6 +1,7 @@
 package com.mariomanzano.nasa_explorer.network
 
 import com.mariomanzano.nasa_explorer.BuildConfig
+import com.mariomanzano.nasa_explorer.BuildConfig.API_ENDPOINT
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -8,8 +9,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
-
-const val API_ENDPOINT = "https://api.nasa.gov/"
 
 object ApiClient {
 
@@ -28,7 +27,8 @@ object ApiClient {
         .client(okHttpClient)
         .build()
 
-    val DAILY_PICTURES_SERVICE: DailyPicturesService = restAdapter.create()
+    val dailyPicturesService: DailyPicturesService = restAdapter.create()
+    val dailyEarthService: DailyEarthService = restAdapter.create()
 }
 
 private class QueryInterceptor : Interceptor {

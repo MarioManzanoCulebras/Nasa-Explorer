@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.mariomanzano.nasa_explorer.ui.screens.dailypicture.DailyPictureDetailScreen
 import com.mariomanzano.nasa_explorer.ui.screens.dailypicture.DailyPictureScreen
+import com.mariomanzano.nasa_explorer.ui.screens.earth.EarthDetailScreen
 import com.mariomanzano.nasa_explorer.ui.screens.earth.EarthScreen
 import com.mariomanzano.nasa_explorer.ui.screens.mars.MarsScreen
 
@@ -62,11 +63,17 @@ private fun NavGraphBuilder.earthNav(navController: NavController) {
         route = Feature.EARTH.route
     ) {
         composable(NavCommand.ContentType(Feature.EARTH)) {
-            EarthScreen()
+            EarthScreen(onClick = { earthDay ->
+                navController.navigate(
+                    NavCommand.ContentTypeDetail(Feature.EARTH).createRoute(
+                        earthDay.idTime
+                    )
+                )
+            })
         }
 
         composable(NavCommand.ContentTypeDetail(Feature.EARTH)) {
-            EarthScreen()
+            EarthDetailScreen()
         }
     }
 }

@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.mariomanzano.nasa_explorer.data.entities.NasaItem
 import com.mariomanzano.nasa_explorer.data.entities.Result
-import java.text.SimpleDateFormat
 import java.util.*
 
 @ExperimentalMaterialApi
@@ -63,7 +62,7 @@ private fun Header(nasaItem: NasaItem) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(nasaItem.date.time),
+            text = DateFormatter.Simple.formatter.format(nasaItem.date.time),
             textAlign = TextAlign.End,
             modifier = Modifier
                 .fillMaxWidth()
