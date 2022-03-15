@@ -11,6 +11,7 @@ import com.mariomanzano.nasa_explorer.ui.screens.dailypicture.DailyPictureDetail
 import com.mariomanzano.nasa_explorer.ui.screens.dailypicture.DailyPictureScreen
 import com.mariomanzano.nasa_explorer.ui.screens.earth.EarthDetailScreen
 import com.mariomanzano.nasa_explorer.ui.screens.earth.EarthScreen
+import com.mariomanzano.nasa_explorer.ui.screens.mars.MarsDetailScreen
 import com.mariomanzano.nasa_explorer.ui.screens.mars.MarsScreen
 
 @ExperimentalPagerApi
@@ -86,11 +87,17 @@ private fun NavGraphBuilder.marsNav(navController: NavController) {
         route = Feature.MARS.route
     ) {
         composable(NavCommand.ContentType(Feature.MARS)) {
-            MarsScreen()
+            MarsScreen(onClick = { marsItem ->
+                navController.navigate(
+                    NavCommand.ContentTypeDetail(Feature.MARS).createRoute(
+                        marsItem.idTime
+                    )
+                )
+            })
         }
 
         composable(NavCommand.ContentTypeDetail(Feature.MARS)) {
-            MarsScreen()
+            MarsDetailScreen()
         }
     }
 }

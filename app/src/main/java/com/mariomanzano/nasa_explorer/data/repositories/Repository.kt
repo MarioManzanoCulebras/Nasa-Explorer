@@ -20,15 +20,19 @@ abstract class Repository<T : NasaItem> {
         date: Calendar,
         findActionRemote: suspend () -> T
     ): Result<T> = tryCall {
-        val character = cache.find {
-            it.date.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH) &&
-                    it.date.get(Calendar.MONTH) == date.get(Calendar.MONTH) &&
-                    it.date.get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
-                    it.date.get(Calendar.HOUR) == date.get(Calendar.HOUR) &&
-                    it.date.get(Calendar.MINUTE) == date.get(Calendar.MINUTE) &&
-                    it.date.get(Calendar.SECOND) == date.get(Calendar.SECOND)
-        }
-        (character ?: findActionRemote())
+        (getFromCache(date) ?: findActionRemote())
     }
+
+    private fun getFromCache(date: Calendar) = cache.find {
+        nasaItemComparison(date, it.date)
+    }
+
+    private fun nasaItemComparison(date1: Calendar, date2: Calendar) =
+        date1.get(Calendar.DAY_OF_MONTH) == date2.get(Calendar.DAY_OF_MONTH) &&
+                date1.get(Calendar.MONTH) == date2.get(Calendar.MONTH) &&
+                date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR) &&
+                date1.get(Calendar.HOUR) == date2.get(Calendar.HOUR) &&
+                date1.get(Calendar.MINUTE) == date2.get(Calendar.MINUTE) &&
+                date1.get(Calendar.SECOND) == date2.get(Calendar.SECOND)
 
 }

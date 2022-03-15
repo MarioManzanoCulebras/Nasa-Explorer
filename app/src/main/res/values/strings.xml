@@ -7,4 +7,10 @@
     <string name="earth">Earth</string>
     <string name="more_options">More options</string>
     <string name="go_to_detail">Go to Detail</string>
+    <string name="sun_martian_rotation">Martian rotation: </string>
+    <string name="camera_name">Camera name: </string>
+    <string name="rover_name">Rover name: </string>
+    <string name="rover_landing_date">Rover Landing Date: </string>
+    <string name="rover_launching_date">Rover Lunching Date: </string>
+    <string name="rover_mission_status">Rover Mission Status: </string>
 </resources>

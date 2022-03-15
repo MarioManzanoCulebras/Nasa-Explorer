@@ -29,6 +29,7 @@ object ApiClient {
 
     val dailyPicturesService: DailyPicturesService = restAdapter.create()
     val dailyEarthService: DailyEarthService = restAdapter.create()
+    val marsService: MarsService = restAdapter.create()
 }
 
 private class QueryInterceptor : Interceptor {
