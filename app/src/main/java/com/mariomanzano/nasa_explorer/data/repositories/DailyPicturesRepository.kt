@@ -1,36 +1,32 @@
 package com.mariomanzano.nasa_explorer.data.repositories
+
+import com.mariomanzano.nasa_explorer.data.datasource.PODLocalDataSource
+import com.mariomanzano.nasa_explorer.data.datasource.PODRemoteDataSource
+import com.mariomanzano.nasa_explorer.data.entities.Error
 import com.mariomanzano.nasa_explorer.data.entities.PictureOfDayItem
-import com.mariomanzano.nasa_explorer.data.entities.Result
-import com.mariomanzano.nasa_explorer.network.ApiClient
-import com.mariomanzano.nasa_explorer.ui.screens.common.DateFormatter
-import java.util.*
+import kotlinx.coroutines.flow.Flow
 
-object DailyPicturesRepository : Repository<PictureOfDayItem>() {
+class DailyPicturesRepository(
+    private val localDataSource: PODLocalDataSource,
+    private val remoteDataSource: PODRemoteDataSource
+) {
 
-    suspend fun get(
-        from: Calendar = Calendar.getInstance().apply {
-            set(
-                Calendar.DAY_OF_MONTH,
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH) - 59
-            )
-        },
-        to: Calendar = Calendar.getInstance()
-    ): Result<List<PictureOfDayItem>> = super.get {
-        ApiClient
-            .dailyPicturesService
-            .getPicturesOfDateRange(
-                startDate = DateFormatter.Simple.formatter.format(from.time),
-                endDate = DateFormatter.Simple.formatter.format(to.time)
-            )
-            .filter { it.media_type == "image" }
-            .map { it.asPictureOfTheDayItem() }
-            .sortedByDescending { it.date }
+    val podList = localDataSource.podList
+
+    fun findById(id: Int): Flow<PictureOfDayItem> = localDataSource.findPODById(id)
+
+    suspend fun requestPODList(): Error? {
+        if (localDataSource.isPODListEmpty()) {
+            val items = remoteDataSource.findPODitems()
+            items.fold(ifLeft = { return it }) {
+                localDataSource.savePODList(it)
+            }
+        }
+        return null
     }
 
-    suspend fun find(date: Calendar = Calendar.getInstance()) : Result<PictureOfDayItem> = super.find(date) {
-        ApiClient
-            .dailyPicturesService
-            .getPictureOfTheDay(date = DateFormatter.Simple.formatter.format(date.time))
-            .asPictureOfTheDayItem()
+    suspend fun switchFavorite(pictureOfDayItem: PictureOfDayItem): Error? {
+        val updatedPOD = pictureOfDayItem.copy(favorite = !pictureOfDayItem.favorite)
+        return localDataSource.savePODList(listOf(updatedPOD))
     }
 }

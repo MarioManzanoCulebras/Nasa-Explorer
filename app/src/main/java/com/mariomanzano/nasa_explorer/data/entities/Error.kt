@@ -20,7 +20,7 @@ fun Exception.toError(): Error = when (this) {
     else -> Error.Unknown(message ?: "")
 }
 
-inline fun <T> tryCall(action: () -> T): Result<T> = try {
+inline fun <T> tryCall(action: () -> T): Either<Error, T> = try {
     action().right()
 } catch (e: Exception) {
     e.toError().left()

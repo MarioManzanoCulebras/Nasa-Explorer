@@ -1,26 +1,32 @@
 package com.mariomanzano.nasa_explorer.data.repositories
 
+import com.mariomanzano.nasa_explorer.data.datasource.EarthLocalDataSource
+import com.mariomanzano.nasa_explorer.data.datasource.EarthRemoteDataSource
 import com.mariomanzano.nasa_explorer.data.entities.EarthItem
-import com.mariomanzano.nasa_explorer.data.entities.Result
-import com.mariomanzano.nasa_explorer.network.ApiClient
-import com.mariomanzano.nasa_explorer.ui.screens.common.DateFormatter
-import java.util.*
+import com.mariomanzano.nasa_explorer.data.entities.Error
+import kotlinx.coroutines.flow.Flow
 
-object DailyEarthRepository : Repository<EarthItem>() {
+class DailyEarthRepository(
+    private val localDataSource: EarthLocalDataSource,
+    private val remoteDataSource: EarthRemoteDataSource
+) {
 
-    suspend fun get(): Result<List<EarthItem>> = super.get {
-        ApiClient
-            .dailyEarthService
-            .getDailyEarth()
-            .map { it.asEarthItem() }
-            .sortedByDescending { it.date }
+    val podList = localDataSource.earthList
+
+    fun findById(id: Int): Flow<EarthItem> = localDataSource.findEarthById(id)
+
+    suspend fun requestPODList(): Error? {
+        if (localDataSource.isEarthListEmpty()) {
+            val items = remoteDataSource.findEarthItems()
+            items.fold(ifLeft = { return it }) {
+                localDataSource.saveEarthList(it)
+            }
+        }
+        return null
     }
 
-    suspend fun find(date: Calendar = Calendar.getInstance()): Result<EarthItem> =
-        super.find(date) {
-            ApiClient
-                .dailyEarthService
-                .getDailyEarthFromDate(date = DateFormatter.FullTime.formatter.format(date.time))
-                .asEarthItem()
-        }
+    suspend fun switchFavorite(earthItem: EarthItem): Error? {
+        val updated = earthItem.copy(favorite = !earthItem.favorite)
+        return localDataSource.saveEarthList(listOf(updated))
+    }
 }
