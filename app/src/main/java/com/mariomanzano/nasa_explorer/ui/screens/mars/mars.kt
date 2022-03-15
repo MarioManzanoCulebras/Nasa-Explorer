@@ -7,17 +7,29 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mariomanzano.nasa_explorer.data.entities.MarsItem
-import com.mariomanzano.nasa_explorer.ui.screens.common.MarsItemDetailScreen
+import com.mariomanzano.nasa_explorer.data.repositories.MarsRepository
+import com.mariomanzano.nasa_explorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasa_explorer.ui.screens.common.NasaItemsListScreen
+import com.mariomanzano.nasa_explorer.usecases.FindMarsUseCase
+import com.mariomanzano.nasa_explorer.usecases.GetMarsUseCase
+import com.mariomanzano.nasa_explorer.usecases.RequestMarsListUseCase
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun MarsScreen(
     onClick: (MarsItem) -> Unit,
-    viewModel: MarsViewModel = viewModel()
+    repository: MarsRepository
 ) {
+    val viewModel: MarsViewModel = viewModel(
+        factory = MarsViewModelFactory(
+            GetMarsUseCase(repository),
+            RequestMarsListUseCase(repository)
+        )
+    )
     val state by viewModel.state.collectAsState()
+
+    viewModel.onUiReady()
 
     NasaItemsListScreen(
         loading = state.loading,
@@ -28,11 +40,19 @@ fun MarsScreen(
 
 @ExperimentalMaterialApi
 @Composable
-fun MarsDetailScreen(viewModel: MarsDetailViewModel = viewModel()) {
+fun MarsDetailScreen(
+    itemId: Int,
+    repository: MarsRepository
+) {
+    val viewModel: MarsDetailViewModel = viewModel(
+        factory = MareDetailViewModelFactory(
+            itemId,
+            FindMarsUseCase(repository)
+        )
+    )
     val state by viewModel.state.collectAsState()
 
-    MarsItemDetailScreen(
-        loading = state.loading,
-        marsItem = state.marsItem
+    NasaItemDetailScreen(
+        nasaItem = state.marsItem
     )
 }

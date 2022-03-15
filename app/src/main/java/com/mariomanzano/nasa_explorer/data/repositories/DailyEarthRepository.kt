@@ -11,11 +11,11 @@ class DailyEarthRepository(
     private val remoteDataSource: EarthRemoteDataSource
 ) {
 
-    val podList = localDataSource.earthList
+    val earthList = localDataSource.earthList
 
     fun findById(id: Int): Flow<EarthItem> = localDataSource.findEarthById(id)
 
-    suspend fun requestPODList(): Error? {
+    suspend fun requestEarthList(): Error? {
         if (localDataSource.isEarthListEmpty()) {
             val items = remoteDataSource.findEarthItems()
             items.fold(ifLeft = { return it }) {

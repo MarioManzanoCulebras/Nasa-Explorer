@@ -11,7 +11,7 @@ import com.mariomanzano.nasa_explorer.data.repositories.asPictureOfTheDayItem
 import com.mariomanzano.nasa_explorer.ui.screens.common.DateFormatter
 import java.util.*
 
-class MovieServerDataSource : PODRemoteDataSource, EarthRemoteDataSource, MarsRemoteDataSource {
+class NasaServerDataSource : PODRemoteDataSource, EarthRemoteDataSource, MarsRemoteDataSource {
 
     override suspend fun findPODitems(
         from: Calendar,

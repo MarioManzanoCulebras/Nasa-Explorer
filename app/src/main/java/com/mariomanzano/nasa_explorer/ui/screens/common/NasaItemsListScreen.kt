@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import com.mariomanzano.nasa_explorer.data.entities.NasaItem
-import com.mariomanzano.nasa_explorer.data.entities.Result
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -25,45 +24,42 @@ import kotlinx.coroutines.launch
 @Composable
 fun <T : NasaItem> NasaItemsListScreen(
     loading: Boolean = false,
-    items: Result<List<T>>,
+    items: List<T>?,
     onClick: (T) -> Unit
 ) {
+    var bottomSheetItem by remember { mutableStateOf<T?>(null) }
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val scope = rememberCoroutineScope()
 
-    items.fold({ ErrorMessage(it) }) { nasaItems ->
-        var bottomSheetItem by remember { mutableStateOf<T?>(null) }
-        val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-        val scope = rememberCoroutineScope()
+    BackPressedHandler(sheetState.isVisible) {
+        scope.launch { sheetState.hide() }
+    }
 
-        BackPressedHandler(sheetState.isVisible) {
-            scope.launch { sheetState.hide() }
-        }
-
-        ModalBottomSheetLayout(
-            sheetContent = {
-                NasaItemBottomPreview(
-                    item = bottomSheetItem,
-                    onGoToDetail = {
-                        scope.launch {
-                            sheetState.hide()
-                            onClick(it)
-                        }
-                    }
-                )
-            },
-            sheetState = sheetState
-        ) {
-            NasaItemsList(
-                loading = loading,
-                items = nasaItems,
-                onItemClick = onClick,
-                onItemMore = {
+    ModalBottomSheetLayout(
+        sheetContent = {
+            NasaItemBottomPreview(
+                item = bottomSheetItem,
+                onGoToDetail = {
                     scope.launch {
-                        bottomSheetItem = it
-                        sheetState.show()
+                        sheetState.hide()
+                        onClick(it)
                     }
                 }
             )
-        }
+        },
+        sheetState = sheetState
+    ) {
+        NasaItemsList(
+            loading = loading,
+            items = items,
+            onItemClick = onClick,
+            onItemMore = {
+                scope.launch {
+                    bottomSheetItem = it
+                    sheetState.show()
+                }
+            }
+        )
     }
 }
 
@@ -96,7 +92,7 @@ fun BackPressedHandler(enabled: Boolean, onBack: () -> Unit) {
 @Composable
 fun <T : NasaItem> NasaItemsList(
     loading: Boolean,
-    items: List<T>,
+    items: List<T>?,
     onItemClick: (T) -> Unit,
     onItemMore: (T) -> Unit,
     modifier: Modifier = Modifier
@@ -110,17 +106,20 @@ fun <T : NasaItem> NasaItemsList(
             CircularProgressIndicator()
         }
 
-        if (items.isNotEmpty()) {
-            LazyVerticalGrid(
-                cells = GridCells.Adaptive(180.dp),
-                contentPadding = PaddingValues(4.dp)
-            ) {
-                items(items) {
-                    NasaListItem(
-                        nasaItem = it,
-                        onItemMore = onItemMore,
-                        modifier = Modifier.clickable { onItemClick(it) }
-                    )
+        items?.let { list ->
+            if (list.isNotEmpty()) {
+                LazyVerticalGrid(
+                    cells = GridCells.Adaptive(180.dp),
+                    contentPadding = PaddingValues(4.dp)
+                ) {
+
+                    items(list) {
+                        NasaListItem(
+                            nasaItem = it,
+                            onItemMore = onItemMore,
+                            modifier = Modifier.clickable { onItemClick(it) }
+                        )
+                    }
                 }
             }
         }

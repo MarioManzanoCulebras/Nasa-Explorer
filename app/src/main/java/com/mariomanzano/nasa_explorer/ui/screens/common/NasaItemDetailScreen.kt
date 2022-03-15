@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,29 +16,21 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.mariomanzano.nasa_explorer.data.entities.NasaItem
 import com.mariomanzano.nasa_explorer.data.entities.PictureOfDayItem
-import com.mariomanzano.nasa_explorer.data.entities.Result
 
 @ExperimentalMaterialApi
 @Composable
-fun NasaItemDetailScreen(loading: Boolean, nasaItem: Result<NasaItem?>) {
-
-    if (loading) {
-        CircularProgressIndicator()
-    }
-
-    nasaItem.fold({ ErrorMessage(it) }) { item ->
-        if (item != null) {
-            NasaItemDetailScaffold(
-                nasaItem = item
-            ) { padding ->
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(padding)
-                ) {
-                    item {
-                        Header(nasaItem = item)
-                    }
+fun NasaItemDetailScreen(nasaItem: NasaItem?) {
+    nasaItem?.let {
+        NasaItemDetailScaffold(
+            nasaItem = it
+        ) { padding ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding)
+            ) {
+                item {
+                    Header(nasaItem = it)
                 }
             }
         }

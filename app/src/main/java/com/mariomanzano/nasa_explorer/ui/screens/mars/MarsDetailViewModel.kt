@@ -1,37 +1,44 @@
 package com.mariomanzano.nasa_explorer.ui.screens.mars
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import arrow.core.Either
+import com.mariomanzano.nasa_explorer.data.entities.Error
 import com.mariomanzano.nasa_explorer.data.entities.MarsItem
-import com.mariomanzano.nasa_explorer.data.entities.Result
-import com.mariomanzano.nasa_explorer.data.repositories.MarsRepository
-import com.mariomanzano.nasa_explorer.ui.navigation.NavArg
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.mariomanzano.nasa_explorer.data.entities.toError
+import com.mariomanzano.nasa_explorer.usecases.FindMarsUseCase
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.util.*
 
-class MarsDetailViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
-
-    private val idTimeSelected = savedStateHandle.get<Long>(NavArg.ItemId.key) ?: 0L
+class MarsDetailViewModel(
+    itemId: Int,
+    findMarsUseCase: FindMarsUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
     val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            _state.value = UiState(loading = true)
-            _state.value = UiState(
-                marsItem = MarsRepository.find(
-                    Calendar.getInstance().apply { timeInMillis = idTimeSelected })
-            )
+            findMarsUseCase(itemId)
+                .catch { cause -> _state.update { it.copy(error = cause.toError()) } }
+                .collect { marsItem -> _state.update { UiState(marsItem = marsItem) } }
         }
     }
 
     data class UiState(
-        val loading: Boolean = false,
-        val marsItem: Result<MarsItem?> = Either.Right(null)
+        val marsItem: MarsItem? = null,
+        val error: Error? = null
     )
+}
+
+@Suppress("UNCHECKED_CAST")
+class MareDetailViewModelFactory(
+    private val itemId: Int,
+    private val findMarsUseCase: FindMarsUseCase
+) :
+    ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return MarsDetailViewModel(itemId, findMarsUseCase) as T
+    }
 }

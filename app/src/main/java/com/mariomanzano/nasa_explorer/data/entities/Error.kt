@@ -20,7 +20,13 @@ fun Exception.toError(): Error = when (this) {
     else -> Error.Unknown(message ?: "")
 }
 
-inline fun <T> tryCall(action: () -> T): Either<Error, T> = try {
+fun Throwable.toError(): Error = when (this) {
+    is IOException -> Error.Connectivity
+    is HttpException -> Error.Server(code())
+    else -> Error.Unknown(message ?: "")
+}
+
+inline fun <T> tryCall(action: () -> T): Result<T> = try {
     action().right()
 } catch (e: Exception) {
     e.toError().left()

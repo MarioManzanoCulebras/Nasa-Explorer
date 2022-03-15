@@ -3,10 +3,17 @@ package com.mariomanzano.nasa_explorer.ui.navigation
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.mariomanzano.nasa_explorer.data.database.NasaRoomDataSource
+import com.mariomanzano.nasa_explorer.data.repositories.DailyEarthRepository
+import com.mariomanzano.nasa_explorer.data.repositories.DailyPicturesRepository
+import com.mariomanzano.nasa_explorer.data.repositories.MarsRepository
+import com.mariomanzano.nasa_explorer.network.NasaServerDataSource
+import com.mariomanzano.nasa_explorer.ui.common.app
 import com.mariomanzano.nasa_explorer.ui.screens.dailypicture.DailyPictureDetailScreen
 import com.mariomanzano.nasa_explorer.ui.screens.dailypicture.DailyPictureScreen
 import com.mariomanzano.nasa_explorer.ui.screens.earth.EarthDetailScreen
@@ -38,19 +45,33 @@ private fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
         route = Feature.DAILY_PICTURE.route
     ) {
         composable(NavCommand.ContentType(Feature.DAILY_PICTURE)) {
+            //Todo: revisar doble creación - con Hilt se arreglará
+            val application = LocalContext.current.applicationContext.app
+            val repository = DailyPicturesRepository(
+                NasaRoomDataSource(application.db.nasaDao()),
+                NasaServerDataSource()
+            )
+
             DailyPictureScreen(
                 onClick = { pictureOfTheDay ->
                     navController.navigate(
                         NavCommand.ContentTypeDetail(Feature.DAILY_PICTURE).createRoute(
-                            pictureOfTheDay.idTime
+                            pictureOfTheDay.id
                         )
                     )
-                }
+                },
+                repository
             )
         }
 
         composable(NavCommand.ContentTypeDetail(Feature.DAILY_PICTURE)) {
-            DailyPictureDetailScreen()
+            //Todo: revisar doble creación - con Hilt se arreglará
+            val application = LocalContext.current.applicationContext.app
+            val repository = DailyPicturesRepository(
+                NasaRoomDataSource(application.db.nasaDao()),
+                NasaServerDataSource()
+            )
+            DailyPictureDetailScreen(it.arguments?.getInt("itemId") ?: 0, repository)
         }
     }
 }
@@ -64,17 +85,33 @@ private fun NavGraphBuilder.earthNav(navController: NavController) {
         route = Feature.EARTH.route
     ) {
         composable(NavCommand.ContentType(Feature.EARTH)) {
-            EarthScreen(onClick = { earthDay ->
-                navController.navigate(
-                    NavCommand.ContentTypeDetail(Feature.EARTH).createRoute(
-                        earthDay.idTime
+            //Todo: revisar doble creación - con Hilt se arreglará
+            val application = LocalContext.current.applicationContext.app
+            val repository = DailyEarthRepository(
+                NasaRoomDataSource(application.db.nasaDao()),
+                NasaServerDataSource()
+            )
+
+            EarthScreen(
+                onClick = { earthDay ->
+                    navController.navigate(
+                        NavCommand.ContentTypeDetail(Feature.EARTH).createRoute(
+                            earthDay.id
+                        )
                     )
-                )
-            })
+                },
+                repository
+            )
         }
 
         composable(NavCommand.ContentTypeDetail(Feature.EARTH)) {
-            EarthDetailScreen()
+            //Todo: revisar doble creación - con Hilt se arreglará
+            val application = LocalContext.current.applicationContext.app
+            val repository = DailyEarthRepository(
+                NasaRoomDataSource(application.db.nasaDao()),
+                NasaServerDataSource()
+            )
+            EarthDetailScreen(it.arguments?.getInt("itemId") ?: 0, repository)
         }
     }
 }
@@ -87,17 +124,34 @@ private fun NavGraphBuilder.marsNav(navController: NavController) {
         route = Feature.MARS.route
     ) {
         composable(NavCommand.ContentType(Feature.MARS)) {
-            MarsScreen(onClick = { marsItem ->
-                navController.navigate(
-                    NavCommand.ContentTypeDetail(Feature.MARS).createRoute(
-                        marsItem.idTime
+            //Todo: revisar doble creación - con Hilt se arreglará
+            val application = LocalContext.current.applicationContext.app
+            val repository = MarsRepository(
+                NasaRoomDataSource(application.db.nasaDao()),
+                NasaServerDataSource()
+            )
+
+            MarsScreen(
+                onClick = { marsItem ->
+                    navController.navigate(
+                        NavCommand.ContentTypeDetail(Feature.MARS).createRoute(
+                            marsItem.id
+                        )
                     )
-                )
-            })
+                },
+                repository
+            )
         }
 
         composable(NavCommand.ContentTypeDetail(Feature.MARS)) {
-            MarsDetailScreen()
+            //Todo: revisar doble creación - con Hilt se arreglará
+            val application = LocalContext.current.applicationContext.app
+            val repository = MarsRepository(
+                NasaRoomDataSource(application.db.nasaDao()),
+                NasaServerDataSource()
+            )
+
+            MarsDetailScreen(it.arguments?.getInt("itemId") ?: 0, repository)
         }
     }
 }

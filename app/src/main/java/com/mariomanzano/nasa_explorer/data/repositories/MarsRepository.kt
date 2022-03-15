@@ -11,11 +11,11 @@ class MarsRepository(
     private val remoteDataSource: MarsRemoteDataSource
 ) {
 
-    val podList = localDataSource.marsList
+    val marsList = localDataSource.marsList
 
     fun findById(id: Int): Flow<MarsItem> = localDataSource.findMarsById(id)
 
-    suspend fun requestPODList(): Error? {
+    suspend fun requestMarsList(): Error? {
         if (localDataSource.isMarsListEmpty()) {
             val items = remoteDataSource.findMarsItems()
             items.fold(ifLeft = { return it }) {
