@@ -7,7 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
-import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
+import com.mariomanzano.nasaexplorer.ui.screens.common.PODItemsListScreen
 import com.mariomanzano.nasaexplorer.usecases.FindPODUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetPODUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestPODListUseCase
@@ -27,7 +27,7 @@ fun DailyPictureScreen(
     )
     val state by viewModel.state.collectAsState()
 
-    NasaItemsListScreen(
+    PODItemsListScreen(
         loading = state.loading,
         items = state.dailyPictures,
         onClick = onClick
