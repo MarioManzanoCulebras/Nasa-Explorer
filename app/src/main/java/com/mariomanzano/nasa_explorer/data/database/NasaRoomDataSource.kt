@@ -6,7 +6,6 @@ import com.mariomanzano.nasa_explorer.data.datasource.PODLocalDataSource
 import com.mariomanzano.nasa_explorer.data.entities.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.*
 
 class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, EarthLocalDataSource,
     MarsLocalDataSource {
@@ -66,7 +65,7 @@ private fun List<DbMars>.toMarsDomainModel(): List<MarsItem> = map { it.toDomain
 private fun DbPOD.toDomainModel(): PictureOfDayItem =
     PictureOfDayItem(
         id,
-        Calendar.getInstance().apply { time.time = date },
+        date,
         title,
         description,
         url,
@@ -77,7 +76,7 @@ private fun DbPOD.toDomainModel(): PictureOfDayItem =
 private fun DbEarth.toDomainModel(): EarthItem =
     EarthItem(
         id,
-        Calendar.getInstance().apply { time.time = date },
+        date,
         title,
         description,
         url,
@@ -87,7 +86,7 @@ private fun DbEarth.toDomainModel(): EarthItem =
 private fun DbMars.toDomainModel(): MarsItem =
     MarsItem(
         id,
-        Calendar.getInstance().apply { time.time = date },
+        date,
         title,
         description,
         url,
@@ -95,8 +94,8 @@ private fun DbMars.toDomainModel(): MarsItem =
         sun,
         cameraName ?: "",
         roverName ?: "",
-        Calendar.getInstance().apply { time.time = roverLandingDate ?: 0L },
-        Calendar.getInstance().apply { time.time = roverLaunchingDate ?: 0L },
+        roverLandingDate,
+        roverLaunchingDate,
         roverMissionStatus ?: ""
     )
 
@@ -104,7 +103,7 @@ private fun List<PictureOfDayItem>.fromPODDomainModel(): List<DbPOD> = map { it.
 
 private fun PictureOfDayItem.fromDomainModel(): DbPOD = DbPOD(
     id,
-    date.time.time,
+    date,
     title,
     description,
     url,
@@ -116,7 +115,7 @@ private fun List<EarthItem>.fromEarthDomainModel(): List<DbEarth> = map { it.fro
 
 private fun EarthItem.fromDomainModel(): DbEarth = DbEarth(
     id,
-    date.time.time,
+    date,
     title,
     description,
     url,
@@ -127,15 +126,15 @@ private fun List<MarsItem>.fromMarsDomainModel(): List<DbMars> = map { it.fromDo
 
 private fun MarsItem.fromDomainModel(): DbMars = DbMars(
     id,
-    date.time.time,
+    date,
     title,
     description,
     url,
     sun,
     cameraName,
     roverName,
-    roverLandingDate.time.time,
-    roverLaunchingDate.time.time,
+    roverLandingDate,
+    roverLaunchingDate,
     roverMissionStatus,
     favorite
 )
