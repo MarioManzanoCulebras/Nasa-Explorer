@@ -29,8 +29,6 @@ fun MarsScreen(
     )
     val state by viewModel.state.collectAsState()
 
-    viewModel.onUiReady()
-
     NasaItemsListScreen(
         loading = state.loading,
         items = state.marsPictures,

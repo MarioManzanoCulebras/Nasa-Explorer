@@ -23,11 +23,14 @@ class DailyPictureViewModel(
         viewModelScope.launch {
             getPODUseCase()
                 .catch { cause -> _state.update { it.copy(error = cause.toError()) } }
-                .collect { items -> _state.update { UiState(dailyPictures = items) } }
+                .collect { items ->
+                    _state.update { UiState(dailyPictures = items) }
+                    onUiReady()
+                }
         }
     }
 
-    fun onUiReady() {
+    private fun onUiReady() {
         viewModelScope.launch {
             _state.value = _state.value.copy(loading = true)
             val error = requestPODListUseCase()

@@ -23,11 +23,14 @@ class MarsViewModel(
         viewModelScope.launch {
             getMarsUseCase()
                 .catch { cause -> _state.update { it.copy(error = cause.toError()) } }
-                .collect { items -> _state.update { UiState(marsPictures = items) } }
+                .collect { items ->
+                    _state.update { UiState(marsPictures = items) }
+                    onUiReady()
+                }
         }
     }
 
-    fun onUiReady() {
+    private fun onUiReady() {
         viewModelScope.launch {
             _state.value = _state.value.copy(loading = true)
             val error = requestMarsListUseCase()
