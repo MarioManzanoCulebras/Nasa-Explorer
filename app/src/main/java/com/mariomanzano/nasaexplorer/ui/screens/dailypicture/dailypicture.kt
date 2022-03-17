@@ -6,23 +6,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
+import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
+import com.mariomanzano.nasaexplorer.repositories.MarsRepository
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.PODItemsListScreen
 import com.mariomanzano.nasaexplorer.usecases.FindPODUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetPODUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestPODListUseCase
+import com.mariomanzano.nasaexplorer.usecases.SwitchItemToFavoriteUseCase
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun DailyPictureScreen(
     onClick: (com.mariomanzano.domain.entities.PictureOfDayItem) -> Unit,
-    repository: com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
+    dailyPicturesRepository: DailyPicturesRepository
 ) {
     val viewModel: DailyPictureViewModel = viewModel(
         factory = DailyPictureViewModelFactory(
-            GetPODUseCase(repository),
-            RequestPODListUseCase(repository)
+            GetPODUseCase(dailyPicturesRepository),
+            RequestPODListUseCase(dailyPicturesRepository)
         )
     )
     val state by viewModel.state.collectAsState()
@@ -38,12 +42,15 @@ fun DailyPictureScreen(
 @Composable
 fun DailyPictureDetailScreen(
     itemId: Int,
-    repository: com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
+    dailyPicturesRepository: DailyPicturesRepository,
+    earthRepository: DailyEarthRepository,
+    marsRepository: MarsRepository
 ) {
     val viewModel: DailyPictureDetailViewModel = viewModel(
         factory = DailyPictureDetailViewModelFactory(
             itemId,
-            FindPODUseCase(repository)
+            FindPODUseCase(dailyPicturesRepository),
+            SwitchItemToFavoriteUseCase(dailyPicturesRepository, earthRepository, marsRepository)
         )
     )
     val state by viewModel.state.collectAsState()

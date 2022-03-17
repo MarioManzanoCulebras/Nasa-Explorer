@@ -10,4 +10,5 @@ interface EarthLocalDataSource {
     suspend fun isEarthListEmpty(): Boolean
     fun findEarthById(id: Int): Flow<EarthItem>
     suspend fun saveEarthList(items: List<EarthItem>): Error?
+    suspend fun insertEarthFavorite(item: EarthItem): Error?
 }

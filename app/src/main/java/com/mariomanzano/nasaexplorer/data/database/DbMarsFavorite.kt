@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity
-data class DbMars(
+data class DbMarsFavorite(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val date: Calendar,
     val title: String,
@@ -16,6 +16,5 @@ data class DbMars(
     val roverName: String?,
     val roverLandingDate: Calendar,
     val roverLaunchingDate: Calendar,
-    val roverMissionStatus: String?,
-    val favorite: Boolean
+    val roverMissionStatus: String?
 )

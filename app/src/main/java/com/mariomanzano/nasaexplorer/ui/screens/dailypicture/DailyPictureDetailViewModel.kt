@@ -7,6 +7,7 @@ import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.network.toError
 import com.mariomanzano.nasaexplorer.usecases.FindPODUseCase
+import com.mariomanzano.nasaexplorer.usecases.SwitchItemToFavoriteUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 class DailyPictureDetailViewModel(
     itemId: Int,
-    findPODUseCase: FindPODUseCase
+    findPODUseCase: FindPODUseCase,
+    private val favoriteUseCase: SwitchItemToFavoriteUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(UiState())
     val state = _state.asStateFlow()
@@ -28,6 +30,15 @@ class DailyPictureDetailViewModel(
         }
     }
 
+    fun onFavoriteClicked() {
+        viewModelScope.launch {
+            _state.value.dailyPicture?.let { item ->
+                val error = favoriteUseCase(item)
+                _state.update { it.copy(error = error) }
+            }
+        }
+    }
+
     data class UiState(
         val dailyPicture: PictureOfDayItem? = null,
         val error: Error? = null
@@ -37,10 +48,11 @@ class DailyPictureDetailViewModel(
 @Suppress("UNCHECKED_CAST")
 class DailyPictureDetailViewModelFactory(
     private val itemId: Int,
-    private val findPODUseCase: FindPODUseCase
+    private val findPODUseCase: FindPODUseCase,
+    private val favoriteUseCase: SwitchItemToFavoriteUseCase
 ) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return DailyPictureDetailViewModel(itemId, findPODUseCase) as T
+        return DailyPictureDetailViewModel(itemId, findPODUseCase, favoriteUseCase) as T
     }
 }

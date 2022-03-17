@@ -8,23 +8,26 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mariomanzano.domain.entities.EarthItem
 import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
+import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
+import com.mariomanzano.nasaexplorer.repositories.MarsRepository
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 import com.mariomanzano.nasaexplorer.usecases.FindEarthUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetEarthUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestEarthListUseCase
+import com.mariomanzano.nasaexplorer.usecases.SwitchItemToFavoriteUseCase
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun EarthScreen(
     onClick: (EarthItem) -> Unit,
-    repository: DailyEarthRepository
+    earthRepository: DailyEarthRepository
 ) {
     val viewModel: DailyEarthViewModel = viewModel(
         factory = DailyEarthViewModelFactory(
-            GetEarthUseCase(repository),
-            RequestEarthListUseCase(repository)
+            GetEarthUseCase(earthRepository),
+            RequestEarthListUseCase(earthRepository)
         )
     )
     val state by viewModel.state.collectAsState()
@@ -40,12 +43,15 @@ fun EarthScreen(
 @Composable
 fun EarthDetailScreen(
     itemId: Int,
-    repository: DailyEarthRepository
+    dailyPicturesRepository: DailyPicturesRepository,
+    earthRepository: DailyEarthRepository,
+    marsRepository: MarsRepository
 ) {
     val viewModel: DailyEarthDetailViewModel = viewModel(
         factory = DailyEarthDetailViewModelFactory(
             itemId,
-            FindEarthUseCase(repository)
+            FindEarthUseCase(earthRepository),
+            SwitchItemToFavoriteUseCase(dailyPicturesRepository, earthRepository, marsRepository)
         )
     )
     val state by viewModel.state.collectAsState()

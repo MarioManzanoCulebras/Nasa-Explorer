@@ -1,6 +1,9 @@
 package com.mariomanzano.nasaexplorer.data.database
 
 import com.mariomanzano.domain.Error
+import com.mariomanzano.domain.entities.EarthItem
+import com.mariomanzano.domain.entities.MarsItem
+import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
@@ -11,13 +14,13 @@ import kotlinx.coroutines.flow.map
 class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, EarthLocalDataSource,
     MarsLocalDataSource {
 
-    override val podList: Flow<List<com.mariomanzano.domain.entities.PictureOfDayItem>> =
+    override val podList: Flow<List<PictureOfDayItem>> =
         nasaDao.getAllPOD().map { it.toPODDomainModel() }
 
-    override val earthList: Flow<List<com.mariomanzano.domain.entities.EarthItem>> =
+    override val earthList: Flow<List<EarthItem>> =
         nasaDao.getAllEarth().map { it.toEarthDomainModel() }
 
-    override val marsList: Flow<List<com.mariomanzano.domain.entities.MarsItem>> =
+    override val marsList: Flow<List<MarsItem>> =
         nasaDao.getAllMars().map { it.toMarsDomainModel() }
 
     override suspend fun isPODListEmpty(): Boolean = nasaDao.getPODCount() == 0
@@ -26,16 +29,16 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
 
     override suspend fun isMarsListEmpty(): Boolean = nasaDao.getMarsCount() == 0
 
-    override fun findPODById(id: Int): Flow<com.mariomanzano.domain.entities.PictureOfDayItem> =
+    override fun findPODById(id: Int): Flow<PictureOfDayItem> =
         nasaDao.findPODById(id).map { it.toDomainModel() }
 
-    override fun findEarthById(id: Int): Flow<com.mariomanzano.domain.entities.EarthItem> =
+    override fun findEarthById(id: Int): Flow<EarthItem> =
         nasaDao.findEarthById(id).map { it.toDomainModel() }
 
-    override fun findMarsById(id: Int): Flow<com.mariomanzano.domain.entities.MarsItem> =
+    override fun findMarsById(id: Int): Flow<MarsItem> =
         nasaDao.findMarsById(id).map { it.toDomainModel() }
 
-    override suspend fun savePODList(items: List<com.mariomanzano.domain.entities.PictureOfDayItem>): Error? =
+    override suspend fun savePODList(items: List<PictureOfDayItem>): Error? =
         tryCall {
             nasaDao.insertPODEntities(items.fromPODDomainModel())
         }.fold(
@@ -43,7 +46,7 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifRight = { null }
         )
 
-    override suspend fun saveEarthList(items: List<com.mariomanzano.domain.entities.EarthItem>): Error? =
+    override suspend fun saveEarthList(items: List<EarthItem>): Error? =
         tryCall {
             nasaDao.insertEarthEntities(items.fromEarthDomainModel())
         }.fold(
@@ -51,26 +54,50 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifRight = { null }
         )
 
-    override suspend fun saveMarsList(items: List<com.mariomanzano.domain.entities.MarsItem>): Error? =
+    override suspend fun saveMarsList(items: List<MarsItem>): Error? =
         tryCall {
             nasaDao.insertMarsEntities(items.fromMarsDomainModel())
         }.fold(
             ifLeft = { it },
             ifRight = { null }
         )
+
+    override suspend fun insertPODFavorite(item: PictureOfDayItem): Error? =
+        tryCall {
+            nasaDao.insertPODFavoriteEntities(item.fromDomainToFavoriteModel())
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+
+    override suspend fun insertEarthFavorite(item: EarthItem): Error? =
+        tryCall {
+            nasaDao.insertEarthFavoriteEntities(item.fromDomainFavoriteModel())
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+
+    override suspend fun insertMarsFavorite(item: MarsItem): Error? =
+        tryCall {
+            nasaDao.insertMarsFavoriteEntities(item.fromDomainFavoriteModel())
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
 }
 
-private fun List<DbPOD>.toPODDomainModel(): List<com.mariomanzano.domain.entities.PictureOfDayItem> =
+private fun List<DbPOD>.toPODDomainModel(): List<PictureOfDayItem> =
     map { it.toDomainModel() }
 
-private fun List<DbEarth>.toEarthDomainModel(): List<com.mariomanzano.domain.entities.EarthItem> =
+private fun List<DbEarth>.toEarthDomainModel(): List<EarthItem> =
     map { it.toDomainModel() }
 
-private fun List<DbMars>.toMarsDomainModel(): List<com.mariomanzano.domain.entities.MarsItem> =
+private fun List<DbMars>.toMarsDomainModel(): List<MarsItem> =
     map { it.toDomainModel() }
 
-private fun DbPOD.toDomainModel(): com.mariomanzano.domain.entities.PictureOfDayItem =
-    com.mariomanzano.domain.entities.PictureOfDayItem(
+private fun DbPOD.toDomainModel(): PictureOfDayItem =
+    PictureOfDayItem(
         id,
         date,
         title,
@@ -80,8 +107,8 @@ private fun DbPOD.toDomainModel(): com.mariomanzano.domain.entities.PictureOfDay
         copyRight
     )
 
-private fun DbEarth.toDomainModel(): com.mariomanzano.domain.entities.EarthItem =
-    com.mariomanzano.domain.entities.EarthItem(
+private fun DbEarth.toDomainModel(): EarthItem =
+    EarthItem(
         id,
         date,
         title,
@@ -90,8 +117,8 @@ private fun DbEarth.toDomainModel(): com.mariomanzano.domain.entities.EarthItem 
         favorite
     )
 
-private fun DbMars.toDomainModel(): com.mariomanzano.domain.entities.MarsItem =
-    com.mariomanzano.domain.entities.MarsItem(
+private fun DbMars.toDomainModel(): MarsItem =
+    MarsItem(
         id,
         date,
         title,
@@ -106,10 +133,10 @@ private fun DbMars.toDomainModel(): com.mariomanzano.domain.entities.MarsItem =
         roverMissionStatus ?: ""
     )
 
-private fun List<com.mariomanzano.domain.entities.PictureOfDayItem>.fromPODDomainModel(): List<DbPOD> =
+private fun List<PictureOfDayItem>.fromPODDomainModel(): List<DbPOD> =
     map { it.fromDomainModel() }
 
-private fun com.mariomanzano.domain.entities.PictureOfDayItem.fromDomainModel(): DbPOD = DbPOD(
+private fun PictureOfDayItem.fromDomainModel(): DbPOD = DbPOD(
     id,
     date,
     title,
@@ -119,10 +146,19 @@ private fun com.mariomanzano.domain.entities.PictureOfDayItem.fromDomainModel():
     favorite
 )
 
-private fun List<com.mariomanzano.domain.entities.EarthItem>.fromEarthDomainModel(): List<DbEarth> =
+private fun PictureOfDayItem.fromDomainToFavoriteModel(): DbPODFavorite = DbPODFavorite(
+    id,
+    date,
+    title,
+    description,
+    url,
+    copyRight
+)
+
+private fun List<EarthItem>.fromEarthDomainModel(): List<DbEarth> =
     map { it.fromDomainModel() }
 
-private fun com.mariomanzano.domain.entities.EarthItem.fromDomainModel(): DbEarth = DbEarth(
+private fun EarthItem.fromDomainModel(): DbEarth = DbEarth(
     id,
     date,
     title,
@@ -131,10 +167,18 @@ private fun com.mariomanzano.domain.entities.EarthItem.fromDomainModel(): DbEart
     favorite
 )
 
-private fun List<com.mariomanzano.domain.entities.MarsItem>.fromMarsDomainModel(): List<DbMars> =
+private fun EarthItem.fromDomainFavoriteModel(): DbEarthFavorite = DbEarthFavorite(
+    id,
+    date,
+    title,
+    description,
+    url
+)
+
+private fun List<MarsItem>.fromMarsDomainModel(): List<DbMars> =
     map { it.fromDomainModel() }
 
-private fun com.mariomanzano.domain.entities.MarsItem.fromDomainModel(): DbMars = DbMars(
+private fun MarsItem.fromDomainModel(): DbMars = DbMars(
     id,
     date,
     title,
@@ -147,4 +191,18 @@ private fun com.mariomanzano.domain.entities.MarsItem.fromDomainModel(): DbMars 
     roverLaunchingDate,
     roverMissionStatus,
     favorite
+)
+
+private fun MarsItem.fromDomainFavoriteModel(): DbMarsFavorite = DbMarsFavorite(
+    id,
+    date,
+    title,
+    description,
+    url,
+    sun,
+    cameraName,
+    roverName,
+    roverLandingDate,
+    roverLaunchingDate,
+    roverMissionStatus
 )

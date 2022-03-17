@@ -37,11 +37,20 @@ interface NasaDao {
     suspend fun getMarsCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPODEntities(movies: List<DbPOD>)
+    suspend fun insertPODEntities(items: List<DbPOD>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEarthEntities(movies: List<DbEarth>)
+    suspend fun insertEarthEntities(items: List<DbEarth>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMarsEntities(movies: List<DbMars>)
+    suspend fun insertMarsEntities(items: List<DbMars>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPODFavoriteEntities(item: DbPODFavorite)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertEarthFavoriteEntities(item: DbEarthFavorite)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMarsFavoriteEntities(item: DbMarsFavorite)
 }

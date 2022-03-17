@@ -7,6 +7,7 @@ import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.nasaexplorer.network.toError
 import com.mariomanzano.nasaexplorer.usecases.FindMarsUseCase
+import com.mariomanzano.nasaexplorer.usecases.SwitchItemToFavoriteUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 class MarsDetailViewModel(
     itemId: Int,
-    findMarsUseCase: FindMarsUseCase
+    findMarsUseCase: FindMarsUseCase,
+    private val favoriteUseCase: SwitchItemToFavoriteUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
@@ -29,6 +31,15 @@ class MarsDetailViewModel(
         }
     }
 
+    fun onFavoriteClicked() {
+        viewModelScope.launch {
+            _state.value.marsItem?.let { item ->
+                val error = favoriteUseCase(item)
+                _state.update { it.copy(error = error) }
+            }
+        }
+    }
+
     data class UiState(
         val marsItem: MarsItem? = null,
         val error: Error? = null
@@ -38,10 +49,11 @@ class MarsDetailViewModel(
 @Suppress("UNCHECKED_CAST")
 class MareDetailViewModelFactory(
     private val itemId: Int,
-    private val findMarsUseCase: FindMarsUseCase
+    private val findMarsUseCase: FindMarsUseCase,
+    private val favoriteUseCase: SwitchItemToFavoriteUseCase
 ) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MarsDetailViewModel(itemId, findMarsUseCase) as T
+        return MarsDetailViewModel(itemId, findMarsUseCase, favoriteUseCase) as T
     }
 }
