@@ -3,13 +3,11 @@ package com.mariomanzano.nasaexplorer.datasource
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import kotlinx.coroutines.flow.Flow
-import java.util.*
 
 interface PODLocalDataSource {
     val podList: Flow<List<PictureOfDayItem>>
 
     suspend fun isPODListEmpty(): Boolean
     fun findPODById(id: Int): Flow<PictureOfDayItem>
-    fun findPODByIdAndDate(id: Int, date: Calendar): Flow<PictureOfDayItem>
     suspend fun savePODList(items: List<PictureOfDayItem>): Error?
 }

@@ -12,5 +12,6 @@ data class DbEarth(
     val description: String,
     val url: String,
     val favorite: Boolean,
-    val lastRequest: Calendar
+    val lastRequest: Calendar,
+    val type: String
 )

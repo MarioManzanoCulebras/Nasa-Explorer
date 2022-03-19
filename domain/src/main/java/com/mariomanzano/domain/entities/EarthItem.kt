@@ -10,4 +10,5 @@ data class EarthItem(
     override val url: String,
     override val favorite: Boolean = false,
     override var lastRequest: Calendar,
+    override val type: String = "earth"
 ) : NasaItem

@@ -39,15 +39,6 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
     override fun findMarsById(id: Int): Flow<MarsItem> =
         nasaDao.findMarsById(id).map { it.toDomainModel() }
 
-    override fun findPODByIdAndDate(id: Int, date: Calendar): Flow<PictureOfDayItem> =
-        nasaDao.findPODByIdAndDate(id, date).map { it.toDomainModel() }
-
-    override fun findEarthByIdAndDate(id: Int, date: Calendar): Flow<EarthItem> =
-        nasaDao.findEarthByIdAndDate(id, date).map { it.toDomainModel() }
-
-    override fun findMarsByIdAndDate(id: Int, date: Calendar): Flow<MarsItem> =
-        nasaDao.findMarsByIdAndDate(id, date).map { it.toDomainModel() }
-
     override suspend fun savePODList(items: List<PictureOfDayItem>): Error? =
         tryCall {
             nasaDao.insertPODEntities(items.fromPODDomainModel())
@@ -84,86 +75,89 @@ private fun List<DbMars>.toMarsDomainModel(): List<MarsItem> =
 
 private fun DbPOD.toDomainModel(): PictureOfDayItem =
     PictureOfDayItem(
-        id,
-        date,
-        title,
-        description,
-        url,
-        favorite,
-        lastRequest,
-        copyRight
+        id = id,
+        date = date,
+        title = title,
+        description = description,
+        url = url,
+        favorite = favorite,
+        lastRequest = lastRequest,
+        copyRight = copyRight
     )
 
 private fun DbEarth.toDomainModel(): EarthItem =
     EarthItem(
         id,
-        date,
-        title,
-        description,
-        url,
-        favorite,
-        lastRequest
+        date = date,
+        title = title,
+        description = description,
+        url = url,
+        favorite = favorite,
+        lastRequest = lastRequest
     )
 
 private fun DbMars.toDomainModel(): MarsItem =
     MarsItem(
-        id,
-        date,
-        title,
-        description,
-        url,
-        favorite,
-        lastRequest,
-        sun,
-        cameraName ?: "",
-        roverName ?: "",
-        roverLandingDate,
-        roverLaunchingDate,
-        roverMissionStatus ?: "",
+        id = id,
+        date = date,
+        title = title,
+        description = description,
+        url = url,
+        favorite = favorite,
+        lastRequest = lastRequest,
+        sun = sun,
+        cameraName = cameraName ?: "",
+        roverName = roverName ?: "",
+        roverLandingDate = roverLandingDate,
+        roverLaunchingDate = roverLaunchingDate,
+        roverMissionStatus = roverMissionStatus ?: "",
     )
 
 private fun List<PictureOfDayItem>.fromPODDomainModel(): List<DbPOD> =
     map { it.fromDomainModel() }
 
 private fun PictureOfDayItem.fromDomainModel(): DbPOD = DbPOD(
-    id,
-    date,
-    title,
-    description,
-    url,
-    copyRight,
-    favorite,
-    lastRequest = Calendar.getInstance()
+    id = id,
+    date = date,
+    title = title,
+    description = description,
+    url = url,
+    copyRight = copyRight,
+    favorite = favorite,
+    lastRequest = Calendar.getInstance(),
+    type = type
 )
 
 private fun List<EarthItem>.fromEarthDomainModel(): List<DbEarth> =
     map { it.fromDomainModel() }
 
 private fun EarthItem.fromDomainModel(): DbEarth = DbEarth(
-    id,
-    date,
-    title,
-    description,
-    url,
-    favorite,
-    lastRequest = Calendar.getInstance()
+    id = id,
+    date = date,
+    title = title,
+    description = description,
+    url = url,
+    favorite = favorite,
+    lastRequest = Calendar.getInstance(),
+    type = type
 )
 
 private fun List<MarsItem>.fromMarsDomainModel(): List<DbMars> =
     map { it.fromDomainModel() }
 
 private fun MarsItem.fromDomainModel(): DbMars = DbMars(
-    id,
-    date,
-    title,
-    description,
-    url,
-    sun,
-    cameraName,
-    roverName,
-    roverLandingDate,
-    roverLaunchingDate,
-    roverMissionStatus,
-    favorite,
-    lastRequest = Calendar.getInstance()
+    id = id,
+    date = date,
+    title = title,
+    description = description,
+    url = url,
+    sun = sun,
+    cameraName = cameraName,
+    roverName = roverName,
+    roverLandingDate = roverLandingDate,
+    roverLaunchingDate = roverLaunchingDate,
+    roverMissionStatus = roverMissionStatus,
+    favorite = favorite,
+    lastRequest = Calendar.getInstance(),
+    type = type
 )

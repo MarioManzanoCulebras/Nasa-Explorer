@@ -12,11 +12,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.*
 
 class FavoriteDetailViewModel(
     itemId: Int,
-    itemDate: Calendar,
+    itemType: String,
     private val findFavoriteUseCase: FindFavoriteUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(UiState())
@@ -24,7 +23,7 @@ class FavoriteDetailViewModel(
 
     init {
         viewModelScope.launch {
-            findFavoriteUseCase(itemId, itemDate)
+            findFavoriteUseCase(itemId, itemType)
                 .catch { cause -> _state.update { it.copy(error = cause.toError()) } }
                 .collect { item -> _state.update { UiState(nasaItem = item) } }
         }
@@ -39,11 +38,11 @@ class FavoriteDetailViewModel(
 @Suppress("UNCHECKED_CAST")
 class FavoriteDetailViewModelFactory(
     private val itemId: Int,
-    private val itemDate: Calendar,
+    private val itemType: String,
     private val findFavoriteUseCase: FindFavoriteUseCase
 ) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return FavoriteDetailViewModel(itemId, itemDate, findFavoriteUseCase) as T
+        return FavoriteDetailViewModel(itemId, itemType, findFavoriteUseCase) as T
     }
 }

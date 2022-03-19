@@ -23,7 +23,6 @@ import com.mariomanzano.nasaexplorer.ui.screens.favorites.FavoritesDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.favorites.FavoritesScreen
 import com.mariomanzano.nasaexplorer.ui.screens.mars.MarsDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.mars.MarsScreen
-import java.util.*
 
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -60,7 +59,7 @@ private fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
             DailyPictureScreen(
                 onClick = { pictureOfTheDay ->
                     navController.navigate(
-                        NavCommand.ContentTypeDetail(Feature.DAILY_PICTURE).createRoute(
+                        NavCommand.ContentTypeDetailById(Feature.DAILY_PICTURE).createRoute(
                             pictureOfTheDay.id
                         )
                     )
@@ -69,7 +68,7 @@ private fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
             )
         }
 
-        composable(NavCommand.ContentTypeDetail(Feature.DAILY_PICTURE)) {
+        composable(NavCommand.ContentTypeDetailById(Feature.DAILY_PICTURE)) {
             //Todo: revisar doble creación - con Hilt se arreglará
             val application = LocalContext.current.applicationContext.app
             val dailyPicturesRepository = DailyPicturesRepository(
@@ -113,7 +112,7 @@ private fun NavGraphBuilder.earthNav(navController: NavController) {
             EarthScreen(
                 onClick = { earthDay ->
                     navController.navigate(
-                        NavCommand.ContentTypeDetail(Feature.EARTH).createRoute(
+                        NavCommand.ContentTypeDetailById(Feature.EARTH).createRoute(
                             earthDay.id
                         )
                     )
@@ -122,7 +121,7 @@ private fun NavGraphBuilder.earthNav(navController: NavController) {
             )
         }
 
-        composable(NavCommand.ContentTypeDetail(Feature.EARTH)) {
+        composable(NavCommand.ContentTypeDetailById(Feature.EARTH)) {
             //Todo: revisar doble creación - con Hilt se arreglará
             val application = LocalContext.current.applicationContext.app
             val dailyPicturesRepository = DailyPicturesRepository(
@@ -165,7 +164,7 @@ private fun NavGraphBuilder.marsNav(navController: NavController) {
             MarsScreen(
                 onClick = { marsItem ->
                     navController.navigate(
-                        NavCommand.ContentTypeDetail(Feature.MARS).createRoute(
+                        NavCommand.ContentTypeDetailById(Feature.MARS).createRoute(
                             marsItem.id
                         )
                     )
@@ -174,7 +173,7 @@ private fun NavGraphBuilder.marsNav(navController: NavController) {
             )
         }
 
-        composable(NavCommand.ContentTypeDetail(Feature.MARS)) {
+        composable(NavCommand.ContentTypeDetailById(Feature.MARS)) {
             //Todo: revisar doble creación - con Hilt se arreglará
             val application = LocalContext.current.applicationContext.app
             val dailyPicturesRepository = DailyPicturesRepository(
@@ -217,27 +216,24 @@ private fun NavGraphBuilder.favoritesNav(navController: NavController) {
             FavoritesScreen(
                 onClick = { nasaItem ->
                     navController.navigate(
-                        NavCommand.ContentTypeDetail(Feature.FAVORITES).createRoute(
-                            //Todo: Fake navigation
-                            nasaItem.id ?: 0
-                        )
+                        NavCommand.ContentTypeDetailByIdAndType(Feature.FAVORITES)
+                            .createRoute(nasaItem.id ?: 0, nasaItem.type)
                     )
                 },
                 favoritesRepository
             )
         }
 
-        composable(NavCommand.ContentTypeDetail(Feature.FAVORITES)) {
+        composable(NavCommand.ContentTypeDetailByIdAndType(Feature.FAVORITES)) {
             //Todo: revisar doble creación - con Hilt se arreglará
             val application = LocalContext.current.applicationContext.app
             val nasaRoomDataSource = NasaRoomDataSource(application.db.nasaDao())
             val favoritesRepository =
                 FavoritesRepository(nasaRoomDataSource, nasaRoomDataSource, nasaRoomDataSource)
 
-            //Todo: Fix second argument
             FavoritesDetailScreen(
                 it.arguments?.getInt("itemId") ?: 0,
-                Calendar.getInstance(),
+                it.arguments?.getString("itemType") ?: "",
                 favoritesRepository
             )
         }

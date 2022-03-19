@@ -12,7 +12,6 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 import com.mariomanzano.nasaexplorer.usecases.FindFavoriteUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetFavoritesUseCase
-import java.util.*
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -39,13 +38,13 @@ fun FavoritesScreen(
 @Composable
 fun FavoritesDetailScreen(
     itemId: Int,
-    itemDate: Calendar,
+    itemType: String,
     favoritesRepository: FavoritesRepository
 ) {
     val viewModel: FavoriteDetailViewModel = viewModel(
         factory = FavoriteDetailViewModelFactory(
             itemId,
-            itemDate,
+            itemType,
             FindFavoriteUseCase(favoritesRepository)
         )
     )

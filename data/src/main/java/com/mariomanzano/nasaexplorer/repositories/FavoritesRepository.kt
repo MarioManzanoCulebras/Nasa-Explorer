@@ -10,8 +10,6 @@ import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEmpty
-import java.util.*
 
 class FavoritesRepository(
     private val pODDataSource: PODLocalDataSource,
@@ -25,12 +23,14 @@ class FavoritesRepository(
 
     fun getList() = merge(podList, earthList, marsList)
 
-    fun findByIdAndDate(id: Int, date: Calendar): Flow<NasaItem> =
-        pODDataSource.findPODByIdAndDate(id, date)
-            .onEmpty {
-                earthDataSource.findEarthByIdAndDate(id, date)
-                    .onEmpty { marsDataSource.findMarsByIdAndDate(id, date) }
-            }
+    fun findByIdAndType(id: Int, type: String): Flow<NasaItem> {
+        return when (type) {
+            "dailyPicture" -> pODDataSource.findPODById(id)
+            "earth" -> earthDataSource.findEarthById(id)
+            else -> marsDataSource.findMarsById(id)
+        }
+    }
+
 
     suspend fun switchFavorite(nasaItem: NasaItem): Error? {
         return when (nasaItem) {

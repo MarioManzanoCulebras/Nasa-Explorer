@@ -10,5 +10,6 @@ data class PictureOfDayItem(
     override val url: String,
     override val favorite: Boolean = false,
     override var lastRequest: Calendar,
+    override val type: String = "dailyPicture",
     val copyRight: String
 ): NasaItem
