@@ -58,5 +58,5 @@ fun EarthDetailScreen(
 
     NasaItemDetailScreen(
         nasaItem = state.earthPicture
-    )
+    ) { viewModel.onFavoriteClicked() }
 }

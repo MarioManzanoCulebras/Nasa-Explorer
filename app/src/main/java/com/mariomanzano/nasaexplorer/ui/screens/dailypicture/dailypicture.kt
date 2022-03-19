@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
 import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
 import com.mariomanzano.nasaexplorer.repositories.MarsRepository
@@ -20,7 +21,7 @@ import com.mariomanzano.nasaexplorer.usecases.SwitchItemToFavoriteUseCase
 @ExperimentalFoundationApi
 @Composable
 fun DailyPictureScreen(
-    onClick: (com.mariomanzano.domain.entities.PictureOfDayItem) -> Unit,
+    onClick: (PictureOfDayItem) -> Unit,
     dailyPicturesRepository: DailyPicturesRepository
 ) {
     val viewModel: DailyPictureViewModel = viewModel(
@@ -57,5 +58,5 @@ fun DailyPictureDetailScreen(
 
     NasaItemDetailScreen(
         nasaItem = state.dailyPicture
-    )
+    ) { viewModel.onFavoriteClicked() }
 }

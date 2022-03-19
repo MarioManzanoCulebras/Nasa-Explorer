@@ -47,7 +47,7 @@ class MarsDetailViewModel(
 }
 
 @Suppress("UNCHECKED_CAST")
-class MareDetailViewModelFactory(
+class MarsDetailViewModelFactory(
     private val itemId: Int,
     private val findMarsUseCase: FindMarsUseCase,
     private val favoriteUseCase: SwitchItemToFavoriteUseCase

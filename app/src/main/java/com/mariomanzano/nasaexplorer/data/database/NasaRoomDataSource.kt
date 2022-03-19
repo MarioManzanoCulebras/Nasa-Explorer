@@ -10,6 +10,7 @@ import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
 import com.mariomanzano.nasaexplorer.network.tryCall
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.*
 
 class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, EarthLocalDataSource,
     MarsLocalDataSource {
@@ -38,6 +39,15 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
     override fun findMarsById(id: Int): Flow<MarsItem> =
         nasaDao.findMarsById(id).map { it.toDomainModel() }
 
+    override fun findPODByIdAndDate(id: Int, date: Calendar): Flow<PictureOfDayItem> =
+        nasaDao.findPODByIdAndDate(id, date).map { it.toDomainModel() }
+
+    override fun findEarthByIdAndDate(id: Int, date: Calendar): Flow<EarthItem> =
+        nasaDao.findEarthByIdAndDate(id, date).map { it.toDomainModel() }
+
+    override fun findMarsByIdAndDate(id: Int, date: Calendar): Flow<MarsItem> =
+        nasaDao.findMarsByIdAndDate(id, date).map { it.toDomainModel() }
+
     override suspend fun savePODList(items: List<PictureOfDayItem>): Error? =
         tryCall {
             nasaDao.insertPODEntities(items.fromPODDomainModel())
@@ -57,30 +67,6 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
     override suspend fun saveMarsList(items: List<MarsItem>): Error? =
         tryCall {
             nasaDao.insertMarsEntities(items.fromMarsDomainModel())
-        }.fold(
-            ifLeft = { it },
-            ifRight = { null }
-        )
-
-    override suspend fun insertPODFavorite(item: PictureOfDayItem): Error? =
-        tryCall {
-            nasaDao.insertPODFavoriteEntities(item.fromDomainToFavoriteModel())
-        }.fold(
-            ifLeft = { it },
-            ifRight = { null }
-        )
-
-    override suspend fun insertEarthFavorite(item: EarthItem): Error? =
-        tryCall {
-            nasaDao.insertEarthFavoriteEntities(item.fromDomainFavoriteModel())
-        }.fold(
-            ifLeft = { it },
-            ifRight = { null }
-        )
-
-    override suspend fun insertMarsFavorite(item: MarsItem): Error? =
-        tryCall {
-            nasaDao.insertMarsFavoriteEntities(item.fromDomainFavoriteModel())
         }.fold(
             ifLeft = { it },
             ifRight = { null }
@@ -146,15 +132,6 @@ private fun PictureOfDayItem.fromDomainModel(): DbPOD = DbPOD(
     favorite
 )
 
-private fun PictureOfDayItem.fromDomainToFavoriteModel(): DbPODFavorite = DbPODFavorite(
-    id,
-    date,
-    title,
-    description,
-    url,
-    copyRight
-)
-
 private fun List<EarthItem>.fromEarthDomainModel(): List<DbEarth> =
     map { it.fromDomainModel() }
 
@@ -165,14 +142,6 @@ private fun EarthItem.fromDomainModel(): DbEarth = DbEarth(
     description,
     url,
     favorite
-)
-
-private fun EarthItem.fromDomainFavoriteModel(): DbEarthFavorite = DbEarthFavorite(
-    id,
-    date,
-    title,
-    description,
-    url
 )
 
 private fun List<MarsItem>.fromMarsDomainModel(): List<DbMars> =
@@ -191,18 +160,4 @@ private fun MarsItem.fromDomainModel(): DbMars = DbMars(
     roverLaunchingDate,
     roverMissionStatus,
     favorite
-)
-
-private fun MarsItem.fromDomainFavoriteModel(): DbMarsFavorite = DbMarsFavorite(
-    id,
-    date,
-    title,
-    description,
-    url,
-    sun,
-    cameraName,
-    roverName,
-    roverLandingDate,
-    roverLaunchingDate,
-    roverMissionStatus
 )

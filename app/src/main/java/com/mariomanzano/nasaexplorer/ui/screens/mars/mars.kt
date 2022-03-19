@@ -10,7 +10,7 @@ import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
 import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
 import com.mariomanzano.nasaexplorer.repositories.MarsRepository
-import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
+import com.mariomanzano.nasaexplorer.ui.screens.common.MarsItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 import com.mariomanzano.nasaexplorer.usecases.FindMarsUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetMarsUseCase
@@ -22,15 +22,12 @@ import com.mariomanzano.nasaexplorer.usecases.SwitchItemToFavoriteUseCase
 @Composable
 fun MarsScreen(
     onClick: (MarsItem) -> Unit,
-    dailyPicturesRepository: DailyPicturesRepository,
-    earthRepository: DailyEarthRepository,
     marsRepository: MarsRepository
 ) {
     val viewModel: MarsViewModel = viewModel(
         factory = MarsViewModelFactory(
             GetMarsUseCase(marsRepository),
-            RequestMarsListUseCase(marsRepository),
-            SwitchItemToFavoriteUseCase(dailyPicturesRepository, earthRepository, marsRepository)
+            RequestMarsListUseCase(marsRepository)
         )
     )
     val state by viewModel.state.collectAsState()
@@ -46,17 +43,20 @@ fun MarsScreen(
 @Composable
 fun MarsDetailScreen(
     itemId: Int,
-    repository: MarsRepository
+    dailyPicturesRepository: DailyPicturesRepository,
+    earthRepository: DailyEarthRepository,
+    marsRepository: MarsRepository
 ) {
     val viewModel: MarsDetailViewModel = viewModel(
-        factory = MareDetailViewModelFactory(
+        factory = MarsDetailViewModelFactory(
             itemId,
-            FindMarsUseCase(repository)
+            FindMarsUseCase(marsRepository),
+            SwitchItemToFavoriteUseCase(dailyPicturesRepository, earthRepository, marsRepository)
         )
     )
     val state by viewModel.state.collectAsState()
 
-    NasaItemDetailScreen(
-        nasaItem = state.marsItem
-    )
+    MarsItemDetailScreen(
+        marsItem = state.marsItem
+    ) { viewModel.onFavoriteClicked() }
 }

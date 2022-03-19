@@ -2,11 +2,13 @@ package com.mariomanzano.nasaexplorer.repositories
 
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.MarsItem
+import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
+import com.mariomanzano.nasaexplorer.datasource.MarsRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 
 class MarsRepository(
-    private val localDataSource: com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource,
-    private val remoteDataSource: com.mariomanzano.nasaexplorer.datasource.MarsRemoteDataSource
+    private val localDataSource: MarsLocalDataSource,
+    private val remoteDataSource: MarsRemoteDataSource
 ) {
 
     val marsList = localDataSource.marsList

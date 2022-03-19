@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -18,29 +17,22 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.nasaexplorer.R
-import com.mariomanzano.nasaexplorer.network.Result
 
 @ExperimentalMaterialApi
 @Composable
-fun MarsItemDetailScreen(loading: Boolean, marsItem: Result<MarsItem?>) {
-
-    if (loading) {
-        CircularProgressIndicator()
-    }
-
-    marsItem.fold({ ErrorMessage(it) }) { item ->
-        if (item != null) {
-            NasaItemDetailScaffold(
-                nasaItem = item
-            ) { padding ->
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(padding)
-                ) {
-                    item {
-                        Header(marsItem = item)
-                    }
+fun MarsItemDetailScreen(marsItem: MarsItem?, onFavoriteClick: () -> Unit) {
+    marsItem?.let { item ->
+        NasaItemDetailScaffold(
+            nasaItem = item,
+            onFavoriteClick = onFavoriteClick
+        ) { padding ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding)
+            ) {
+                item {
+                    Header(marsItem = item)
                 }
             }
         }

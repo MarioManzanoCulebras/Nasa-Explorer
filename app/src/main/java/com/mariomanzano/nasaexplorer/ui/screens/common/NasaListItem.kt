@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,6 +37,7 @@ fun <T : NasaItem> NasaListItem(
                     .background(Color.LightGray)
                     .aspectRatio(1f)
             )
+            if (nasaItem.favorite) BuildIcon(icon = Icons.Default.Favorite)
         }
         Row(
             verticalAlignment = Alignment.CenterVertically

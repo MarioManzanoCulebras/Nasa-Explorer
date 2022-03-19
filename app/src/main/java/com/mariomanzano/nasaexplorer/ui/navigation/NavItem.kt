@@ -2,6 +2,7 @@ package com.mariomanzano.nasaexplorer.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
@@ -16,10 +17,27 @@ enum class NavItem(
     @StringRes val title: Int?
 ) {
     HOME(NavCommand.ContentType(Feature.DAILY_PICTURE), Icons.Default.Home, title = R.string.home),
-    NASA_LIBRARY(NavCommand.ContentType(Feature.NASA_LIBRARY), nasaIcon = NasaIcon.NasaLogo, title = R.string.nasa_library),
-    DAILY_PICTURES(NavCommand.ContentType(Feature.DAILY_PICTURE), nasaIcon = NasaIcon.Spacecraft, title = R.string.daily_pictures),
-    MARS(NavCommand.ContentType(Feature.MARS), nasaIcon = NasaIcon.RocketVertical, title = R.string.mars),
-    EARTH(NavCommand.ContentType(Feature.EARTH), nasaIcon = NasaIcon.Earth, title = R.string.earth)
+    NASA_LIBRARY(
+        NavCommand.ContentType(Feature.NASA_LIBRARY),
+        nasaIcon = NasaIcon.NasaLogo,
+        title = R.string.nasa_library
+    ),
+    DAILY_PICTURES(
+        NavCommand.ContentType(Feature.DAILY_PICTURE),
+        nasaIcon = NasaIcon.Spacecraft,
+        title = R.string.daily_pictures
+    ),
+    MARS(
+        NavCommand.ContentType(Feature.MARS),
+        nasaIcon = NasaIcon.RocketVertical,
+        title = R.string.mars
+    ),
+    EARTH(NavCommand.ContentType(Feature.EARTH), nasaIcon = NasaIcon.Earth, title = R.string.earth),
+    FAVORITES(
+        NavCommand.ContentType(Feature.FAVORITES),
+        Icons.Default.FavoriteBorder,
+        title = R.string.favorites
+    )
 }
 
 sealed class NavCommand(

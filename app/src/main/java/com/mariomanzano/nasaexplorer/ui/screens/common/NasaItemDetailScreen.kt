@@ -19,10 +19,11 @@ import com.mariomanzano.domain.entities.PictureOfDayItem
 
 @ExperimentalMaterialApi
 @Composable
-fun NasaItemDetailScreen(nasaItem: NasaItem?) {
+fun NasaItemDetailScreen(nasaItem: NasaItem?, onFavoriteClick: () -> Unit = {}) {
     nasaItem?.let {
         NasaItemDetailScaffold(
-            nasaItem = it
+            nasaItem = it,
+            onFavoriteClick = onFavoriteClick
         ) { padding ->
             LazyColumn(
                 modifier = Modifier

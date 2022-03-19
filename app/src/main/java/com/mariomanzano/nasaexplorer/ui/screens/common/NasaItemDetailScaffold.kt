@@ -13,12 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ShareCompat
+import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.nasaexplorer.ui.navigation.AppBarIcon
 
 @ExperimentalMaterialApi
 @Composable
 fun NasaItemDetailScaffold(
-    nasaItem: com.mariomanzano.domain.entities.NasaItem,
+    nasaItem: NasaItem,
+    onFavoriteClick: () -> Unit,
     content: @Composable (PaddingValues) -> Unit
 ) {
     val context = LocalContext.current
@@ -39,7 +41,7 @@ fun NasaItemDetailScaffold(
             ) {
                 AppBarIcon(imageVector = Icons.Default.Menu, onClick = { })
                 Spacer(modifier = Modifier.weight(1f))
-                AppBarIcon(imageVector = Icons.Default.Favorite, onClick = { })
+                AppBarIcon(imageVector = Icons.Default.Favorite, onClick = onFavoriteClick)
             }
         },
         content = content

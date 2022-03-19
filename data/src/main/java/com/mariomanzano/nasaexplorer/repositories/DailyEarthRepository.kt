@@ -2,11 +2,13 @@ package com.mariomanzano.nasaexplorer.repositories
 
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.EarthItem
+import com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource
+import com.mariomanzano.nasaexplorer.datasource.EarthRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 
 class DailyEarthRepository(
-    private val localDataSource: com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource,
-    private val remoteDataSource: com.mariomanzano.nasaexplorer.datasource.EarthRemoteDataSource
+    private val localDataSource: EarthLocalDataSource,
+    private val remoteDataSource: EarthRemoteDataSource
 ) {
 
     val earthList = localDataSource.earthList

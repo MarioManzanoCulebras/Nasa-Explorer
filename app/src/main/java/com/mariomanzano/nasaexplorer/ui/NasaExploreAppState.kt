@@ -29,7 +29,8 @@ class NasaExploreAppState(
 ) {
     companion object {
         val DRAWER_OPTIONS = listOf(NavItem.HOME, NavItem.NASA_LIBRARY)
-        val BOTTOM_NAV_OPTIONS = listOf(NavItem.DAILY_PICTURES, NavItem.EARTH, NavItem.MARS)
+        val BOTTOM_NAV_OPTIONS =
+            listOf(NavItem.DAILY_PICTURES, NavItem.EARTH, NavItem.MARS, NavItem.FAVORITES)
     }
 
     val currentRoute: String
