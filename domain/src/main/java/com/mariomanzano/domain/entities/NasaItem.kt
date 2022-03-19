@@ -9,4 +9,5 @@ interface NasaItem {
     val description: String?
     val url: String?
     val favorite: Boolean
+    var lastRequest: Calendar
 }

@@ -12,5 +12,6 @@ data class DbPOD(
     val description: String,
     val url: String,
     val copyRight: String,
-    val favorite: Boolean
+    val favorite: Boolean,
+    val lastRequest: Calendar
 )

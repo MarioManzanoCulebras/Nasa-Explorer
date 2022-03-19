@@ -17,3 +17,13 @@ fun Int.monthApiCorrection(): String {
         this.toString()
     }
 }
+
+fun Calendar.checkIfDayAfter(): Boolean {
+    val currentDay = Calendar.getInstance()
+    val dayOfMonth = this.get(Calendar.DAY_OF_MONTH)
+    val month = this.get(Calendar.MONTH)
+    val year = this.get(Calendar.YEAR)
+    return dayOfMonth != currentDay.get(Calendar.DAY_OF_MONTH) ||
+            month != currentDay.get(Calendar.MONTH) ||
+            year != currentDay.get(Calendar.YEAR)
+}

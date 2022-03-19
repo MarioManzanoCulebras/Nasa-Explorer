@@ -15,7 +15,8 @@ class DailyEarthRepository(
 
     fun findById(id: Int): Flow<EarthItem> = localDataSource.findEarthById(id)
 
-    suspend fun requestEarthList(): Error? {
+    suspend fun requestEarthList(dayChanged: Boolean): Error? {
+        if (dayChanged) localDataSource.saveEarthList(emptyList())
         if (localDataSource.isEarthListEmpty()) {
             val items = remoteDataSource.findEarthItems()
             items.fold(ifLeft = { return it }) {

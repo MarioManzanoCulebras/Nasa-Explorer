@@ -15,7 +15,8 @@ class MarsRepository(
 
     fun findById(id: Int): Flow<MarsItem> = localDataSource.findMarsById(id)
 
-    suspend fun requestMarsList(): Error? {
+    suspend fun requestMarsList(dayChanged: Boolean): Error? {
+        if (dayChanged) localDataSource.saveMarsList(emptyList())
         if (localDataSource.isMarsListEmpty()) {
             val items = remoteDataSource.findMarsItems()
             items.fold(ifLeft = { return it }) {

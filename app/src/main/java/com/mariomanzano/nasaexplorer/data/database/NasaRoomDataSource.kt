@@ -90,6 +90,7 @@ private fun DbPOD.toDomainModel(): PictureOfDayItem =
         description,
         url,
         favorite,
+        lastRequest,
         copyRight
     )
 
@@ -100,7 +101,8 @@ private fun DbEarth.toDomainModel(): EarthItem =
         title,
         description,
         url,
-        favorite
+        favorite,
+        lastRequest
     )
 
 private fun DbMars.toDomainModel(): MarsItem =
@@ -111,12 +113,13 @@ private fun DbMars.toDomainModel(): MarsItem =
         description,
         url,
         favorite,
+        lastRequest,
         sun,
         cameraName ?: "",
         roverName ?: "",
         roverLandingDate,
         roverLaunchingDate,
-        roverMissionStatus ?: ""
+        roverMissionStatus ?: "",
     )
 
 private fun List<PictureOfDayItem>.fromPODDomainModel(): List<DbPOD> =
@@ -129,7 +132,8 @@ private fun PictureOfDayItem.fromDomainModel(): DbPOD = DbPOD(
     description,
     url,
     copyRight,
-    favorite
+    favorite,
+    lastRequest = Calendar.getInstance()
 )
 
 private fun List<EarthItem>.fromEarthDomainModel(): List<DbEarth> =
@@ -141,7 +145,8 @@ private fun EarthItem.fromDomainModel(): DbEarth = DbEarth(
     title,
     description,
     url,
-    favorite
+    favorite,
+    lastRequest = Calendar.getInstance()
 )
 
 private fun List<MarsItem>.fromMarsDomainModel(): List<DbMars> =
@@ -159,5 +164,6 @@ private fun MarsItem.fromDomainModel(): DbMars = DbMars(
     roverLandingDate,
     roverLaunchingDate,
     roverMissionStatus,
-    favorite
+    favorite,
+    lastRequest = Calendar.getInstance()
 )

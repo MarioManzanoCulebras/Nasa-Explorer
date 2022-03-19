@@ -8,5 +8,6 @@ data class EarthItem(
     override val title: String,
     override val description: String,
     override val url: String,
-    override val favorite: Boolean = false
+    override val favorite: Boolean = false,
+    override var lastRequest: Calendar,
 ) : NasaItem

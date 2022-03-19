@@ -15,7 +15,8 @@ class DailyPicturesRepository(
 
     fun findById(id: Int): Flow<PictureOfDayItem> = localDataSource.findPODById(id)
 
-    suspend fun requestPODList(): Error? {
+    suspend fun requestPODList(dayChanged: Boolean): Error? {
+        if (dayChanged) localDataSource.savePODList(emptyList())
         if (localDataSource.isPODListEmpty()) {
             val items = remoteDataSource.findPODitems()
             items.fold(ifLeft = { return it }) {

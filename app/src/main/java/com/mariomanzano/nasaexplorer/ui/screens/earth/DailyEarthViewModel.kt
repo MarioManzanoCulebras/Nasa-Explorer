@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.EarthItem
+import com.mariomanzano.nasaexplorer.data.utils.checkIfDayAfter
 import com.mariomanzano.nasaexplorer.network.toError
 import com.mariomanzano.nasaexplorer.usecases.GetEarthUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestEarthListUseCase
@@ -28,15 +29,19 @@ class DailyEarthViewModel(
                 .catch { cause -> _state.update { it.copy(error = cause.toError()) } }
                 .collect { items ->
                     _state.update { UiState(dailyPictures = items) }
-                    onUiReady()
+                    if (items.isEmpty()) {
+                        onUiReady()
+                    } else {
+                        onUiReady(items.first().lastRequest.checkIfDayAfter())
+                    }
                 }
         }
     }
 
-    private fun onUiReady() {
+    private fun onUiReady(dayChanged: Boolean = false) {
         viewModelScope.launch {
             _state.value = _state.value.copy(loading = true)
-            val error = requestEarthListUseCase()
+            val error = requestEarthListUseCase(dayChanged)
             _state.update { _state.value.copy(loading = false, error = error) }
         }
     }

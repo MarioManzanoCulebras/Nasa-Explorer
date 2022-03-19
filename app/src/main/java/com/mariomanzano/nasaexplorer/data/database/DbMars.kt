@@ -17,5 +17,6 @@ data class DbMars(
     val roverLandingDate: Calendar,
     val roverLaunchingDate: Calendar,
     val roverMissionStatus: String?,
-    val favorite: Boolean
+    val favorite: Boolean,
+    val lastRequest: Calendar
 )

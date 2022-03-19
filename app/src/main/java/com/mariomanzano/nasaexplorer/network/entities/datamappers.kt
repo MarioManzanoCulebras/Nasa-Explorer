@@ -14,7 +14,8 @@ fun ApiAPOD.asPictureOfTheDayItem() = PictureOfDayItem(
         date = date.toCalendar(DateFormatter.Simple),
         description = explanation ?: "",
         url = url ?: "",
-        copyRight = copyRight ?: ""
+        copyRight = copyRight ?: "",
+        lastRequest = Calendar.getInstance()
 )
 
 fun ApiEPIC.asEarthItem(): EarthItem {
@@ -24,7 +25,8 @@ fun ApiEPIC.asEarthItem(): EarthItem {
                 title = caption ?: "",
                 date = cal,
                 url = buildEarthImageUri(cal, image),
-                description = ""
+                description = "",
+                lastRequest = Calendar.getInstance()
         )
 }
 
@@ -41,5 +43,6 @@ fun ApiMarsItem.asMarsItem() = MarsItem(
                 ?: Calendar.getInstance(),
         roverMissionStatus = rover.status ?: "",
         description = "",
-        title = ""
+        title = "",
+        lastRequest = Calendar.getInstance()
 )

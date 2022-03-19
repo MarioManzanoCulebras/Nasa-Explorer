@@ -9,6 +9,7 @@ data class MarsItem(
     override val description: String,
     override val url: String,
     override val favorite: Boolean = false,
+    override var lastRequest: Calendar,
     val sun: Int,
     val cameraName: String,
     val roverName: String,
