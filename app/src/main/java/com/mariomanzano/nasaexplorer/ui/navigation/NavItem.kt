@@ -2,7 +2,6 @@ package com.mariomanzano.nasaexplorer.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
@@ -35,7 +34,7 @@ enum class NavItem(
     EARTH(NavCommand.ContentType(Feature.EARTH), nasaIcon = NasaIcon.Earth, title = R.string.earth),
     FAVORITES(
         NavCommand.ContentType(Feature.FAVORITES),
-        Icons.Default.FavoriteBorder,
+        nasaIcon = NasaIcon.FavoriteOn,
         title = R.string.favorites
     )
 }

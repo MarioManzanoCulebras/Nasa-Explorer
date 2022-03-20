@@ -39,9 +39,18 @@ interface NasaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPODEntities(items: List<DbPOD>)
 
+    @Query("UPDATE DbPOD SET favorite = :favorite WHERE id = :id")
+    suspend fun updatePODEntities(id: Int, favorite: Boolean)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEarthEntities(items: List<DbEarth>)
 
+    @Query("UPDATE DbEarth SET favorite = :favorite WHERE id = :id")
+    suspend fun updateEarthEntities(id: Int, favorite: Boolean)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMarsEntities(items: List<DbMars>)
+
+    @Query("UPDATE DbMars SET favorite = :favorite WHERE id = :id")
+    suspend fun updateMarsEntities(id: Int, favorite: Boolean)
 }

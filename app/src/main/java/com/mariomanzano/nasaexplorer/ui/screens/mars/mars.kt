@@ -10,7 +10,7 @@ import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
 import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
 import com.mariomanzano.nasaexplorer.repositories.MarsRepository
-import com.mariomanzano.nasaexplorer.ui.screens.common.MarsItemDetailScreen
+import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 import com.mariomanzano.nasaexplorer.usecases.FindMarsUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetMarsUseCase
@@ -56,7 +56,7 @@ fun MarsDetailScreen(
     )
     val state by viewModel.state.collectAsState()
 
-    MarsItemDetailScreen(
-        marsItem = state.marsItem
+    NasaItemDetailScreen(
+        nasaItem = state.marsItem
     ) { viewModel.onFavoriteClicked() }
 }

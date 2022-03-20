@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
@@ -41,7 +42,16 @@ fun NasaItemDetailScaffold(
             ) {
                 AppBarIcon(imageVector = Icons.Default.Menu, onClick = { })
                 Spacer(modifier = Modifier.weight(1f))
-                AppBarIcon(imageVector = Icons.Default.Favorite, onClick = onFavoriteClick)
+                IconButton(onClick = onFavoriteClick) {
+                    if (nasaItem.favorite) BuildIcon(
+                        icon = Icons.Default.Favorite,
+                        nasaIcon = NasaIcon.FavoriteOn
+                    )
+                    else BuildIcon(
+                        icon = Icons.Default.FavoriteBorder,
+                        nasaIcon = NasaIcon.FavoriteOff
+                    )
+                }
             }
         },
         content = content

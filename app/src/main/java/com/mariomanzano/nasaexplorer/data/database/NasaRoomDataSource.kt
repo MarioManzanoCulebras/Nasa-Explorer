@@ -47,6 +47,14 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifRight = { null }
         )
 
+    override suspend fun updatePODList(id: Int, favorite: Boolean): Error? =
+        tryCall {
+            nasaDao.updatePODEntities(id, favorite)
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+
     override suspend fun saveEarthList(items: List<EarthItem>): Error? =
         tryCall {
             nasaDao.insertEarthEntities(items.fromEarthDomainModel())
@@ -55,9 +63,25 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifRight = { null }
         )
 
+    override suspend fun updateEarthList(id: Int, favorite: Boolean): Error? =
+        tryCall {
+            nasaDao.updateEarthEntities(id, favorite)
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+
     override suspend fun saveMarsList(items: List<MarsItem>): Error? =
         tryCall {
             nasaDao.insertMarsEntities(items.fromMarsDomainModel())
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+
+    override suspend fun updateMarsList(id: Int, favorite: Boolean): Error? =
+        tryCall {
+            nasaDao.updateMarsEntities(id, favorite)
         }.fold(
             ifLeft = { it },
             ifRight = { null }

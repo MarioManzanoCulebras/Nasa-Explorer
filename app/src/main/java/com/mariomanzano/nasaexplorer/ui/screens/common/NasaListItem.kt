@@ -37,7 +37,10 @@ fun <T : NasaItem> NasaListItem(
                     .background(Color.LightGray)
                     .aspectRatio(1f)
             )
-            if (nasaItem.favorite) BuildIcon(icon = Icons.Default.Favorite)
+            if (nasaItem.favorite) BuildIcon(
+                icon = Icons.Default.Favorite,
+                nasaIcon = NasaIcon.FavoriteOn
+            )
         }
         Row(
             verticalAlignment = Alignment.CenterVertically

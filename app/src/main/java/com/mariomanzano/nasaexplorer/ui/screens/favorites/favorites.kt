@@ -12,6 +12,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 import com.mariomanzano.nasaexplorer.usecases.FindFavoriteUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetFavoritesUseCase
+import com.mariomanzano.nasaexplorer.usecases.SwitchFavoriteUseCase
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -45,12 +46,13 @@ fun FavoritesDetailScreen(
         factory = FavoriteDetailViewModelFactory(
             itemId,
             itemType,
-            FindFavoriteUseCase(favoritesRepository)
+            FindFavoriteUseCase(favoritesRepository),
+            SwitchFavoriteUseCase(favoritesRepository)
         )
     )
     val state by viewModel.state.collectAsState()
 
     NasaItemDetailScreen(
         nasaItem = state.nasaItem
-    )
+    ) { viewModel.onFavoriteClicked() }
 }

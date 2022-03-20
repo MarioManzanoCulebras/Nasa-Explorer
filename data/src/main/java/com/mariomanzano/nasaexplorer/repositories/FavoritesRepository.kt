@@ -1,10 +1,7 @@
 package com.mariomanzano.nasaexplorer.repositories
 
 import com.mariomanzano.domain.Error
-import com.mariomanzano.domain.entities.EarthItem
-import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.domain.entities.NasaItem
-import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
@@ -32,19 +29,16 @@ class FavoritesRepository(
     }
 
 
-    suspend fun switchFavorite(nasaItem: NasaItem): Error? {
-        return when (nasaItem) {
-            is PictureOfDayItem -> {
-                val updatedPOD = nasaItem.copy(favorite = !nasaItem.favorite)
-                pODDataSource.savePODList(listOf(updatedPOD))
+    suspend fun switchFavorite(id: Int, type: String, favorite: Boolean): Error? {
+        return when (type) {
+            "dailyPicture" -> {
+                pODDataSource.updatePODList(id, favorite)
             }
-            is EarthItem -> {
-                val updatedEarth = nasaItem.copy(favorite = !nasaItem.favorite)
-                earthDataSource.saveEarthList(listOf(updatedEarth))
+            "earth" -> {
+                earthDataSource.updateEarthList(id, favorite)
             }
-            is MarsItem -> {
-                val updatedMars = nasaItem.copy(favorite = !nasaItem.favorite)
-                marsDataSource.saveMarsList(listOf(updatedMars))
+            "mars" -> {
+                marsDataSource.updateMarsList(id, favorite)
             }
             else -> null
         }
