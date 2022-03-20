@@ -11,11 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.domain.entities.PictureOfDayItem
+import com.mariomanzano.nasaexplorer.R
 
 @ExperimentalMaterialApi
 @Composable
@@ -61,20 +64,73 @@ private fun Header(nasaItem: NasaItem) {
                 .fillMaxWidth()
                 .padding(end = 10.dp)
         )
+        if (nasaItem !is MarsItem) {
+            Text(
+                text = nasaItem.title ?: "",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.h4,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 0.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = nasaItem.description ?: "",
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.padding(16.dp, 0.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        } else {
+            ExtraMarsHeader(marsItem = nasaItem)
+        }
+    }
+}
+
+@Composable
+private fun ExtraMarsHeader(marsItem: MarsItem) {
+    Spacer(modifier = Modifier.height(16.dp))
+    Text(
+        text = stringResource(id = R.string.sun_martian_rotation) + marsItem.sun,
+        style = MaterialTheme.typography.body1,
+        modifier = Modifier.padding(16.dp, 0.dp)
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    Text(
+        text = stringResource(id = R.string.camera_name) + marsItem.cameraName,
+        style = MaterialTheme.typography.body1,
+        modifier = Modifier.padding(16.dp, 0.dp)
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    Text(
+        text = stringResource(id = R.string.rover_name) + marsItem.roverName,
+        style = MaterialTheme.typography.body1,
+        modifier = Modifier.padding(16.dp, 0.dp)
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    marsItem.roverLandingDate.time.let {
         Text(
-            text = nasaItem.title?:"",
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h4,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, 0.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = nasaItem.description?:"",
+            text = stringResource(id = R.string.rover_landing_date) + DateFormatter.Simple.formatter.format(
+                it
+            ),
             style = MaterialTheme.typography.body1,
             modifier = Modifier.padding(16.dp, 0.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
     }
+    marsItem.roverLaunchingDate.time.let {
+        Text(
+            text = stringResource(id = R.string.rover_launching_date) + DateFormatter.Simple.formatter.format(
+                it
+            ),
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.padding(16.dp, 0.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+    Text(
+        text = stringResource(id = R.string.rover_mission_status) + marsItem.roverMissionStatus,
+        style = MaterialTheme.typography.body1,
+        modifier = Modifier.padding(16.dp, 0.dp)
+    )
+    Spacer(modifier = Modifier.height(32.dp))
 }
