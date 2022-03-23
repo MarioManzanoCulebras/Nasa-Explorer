@@ -10,10 +10,7 @@ import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.mariomanzano.nasaexplorer.data.database.NasaRoomDataSource
 import com.mariomanzano.nasaexplorer.network.NasaServerDataSource
-import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
-import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
-import com.mariomanzano.nasaexplorer.repositories.FavoritesRepository
-import com.mariomanzano.nasaexplorer.repositories.MarsRepository
+import com.mariomanzano.nasaexplorer.repositories.*
 import com.mariomanzano.nasaexplorer.ui.common.app
 import com.mariomanzano.nasaexplorer.ui.screens.dailypicture.DailyPictureDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.dailypicture.DailyPictureScreen
@@ -51,10 +48,12 @@ private fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
         composable(NavCommand.ContentType(Feature.DAILY_PICTURE)) {
             //Todo: revisar doble creación - con Hilt se arreglará
             val application = LocalContext.current.applicationContext.app
-            val repository = DailyPicturesRepository(
-                NasaRoomDataSource(application.db.nasaDao()),
+            val nasaRoomDataSource = NasaRoomDataSource(application.db.nasaDao())
+            val dailyPicturesRepository = DailyPicturesRepository(
+                nasaRoomDataSource,
                 NasaServerDataSource()
             )
+            val lastDbUpdateRepository = LastDbUpdateRepository(nasaRoomDataSource)
 
             DailyPictureScreen(
                 onClick = { pictureOfTheDay ->
@@ -64,7 +63,8 @@ private fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
                         )
                     )
                 },
-                repository
+                dailyPicturesRepository,
+                lastDbUpdateRepository
             )
         }
 
@@ -104,10 +104,12 @@ private fun NavGraphBuilder.earthNav(navController: NavController) {
         composable(NavCommand.ContentType(Feature.EARTH)) {
             //Todo: revisar doble creación - con Hilt se arreglará
             val application = LocalContext.current.applicationContext.app
-            val repository = DailyEarthRepository(
-                NasaRoomDataSource(application.db.nasaDao()),
+            val nasaRoomDataSource = NasaRoomDataSource(application.db.nasaDao())
+            val dailyEarthRepository = DailyEarthRepository(
+                nasaRoomDataSource,
                 NasaServerDataSource()
             )
+            val lastDbUpdateRepository = LastDbUpdateRepository(nasaRoomDataSource)
 
             EarthScreen(
                 onClick = { earthDay ->
@@ -117,7 +119,8 @@ private fun NavGraphBuilder.earthNav(navController: NavController) {
                         )
                     )
                 },
-                repository
+                dailyEarthRepository,
+                lastDbUpdateRepository
             )
         }
 
@@ -156,10 +159,12 @@ private fun NavGraphBuilder.marsNav(navController: NavController) {
         composable(NavCommand.ContentType(Feature.MARS)) {
             //Todo: revisar doble creación - con Hilt se arreglará
             val application = LocalContext.current.applicationContext.app
+            val nasaRoomDataSource = NasaRoomDataSource(application.db.nasaDao())
             val marsRepository = MarsRepository(
-                NasaRoomDataSource(application.db.nasaDao()),
+                nasaRoomDataSource,
                 NasaServerDataSource()
             )
+            val lastDbUpdateRepository = LastDbUpdateRepository(nasaRoomDataSource)
 
             MarsScreen(
                 onClick = { marsItem ->
@@ -169,7 +174,8 @@ private fun NavGraphBuilder.marsNav(navController: NavController) {
                         )
                     )
                 },
-                marsRepository
+                marsRepository,
+                lastDbUpdateRepository
             )
         }
 
@@ -217,7 +223,7 @@ private fun NavGraphBuilder.favoritesNav(navController: NavController) {
                 onClick = { nasaItem ->
                     navController.navigate(
                         NavCommand.ContentTypeDetailByIdAndType(Feature.FAVORITES)
-                            .createRoute(nasaItem.id ?: 0, nasaItem.type)
+                            .createRoute(nasaItem.id, nasaItem.type)
                     )
                 },
                 favoritesRepository

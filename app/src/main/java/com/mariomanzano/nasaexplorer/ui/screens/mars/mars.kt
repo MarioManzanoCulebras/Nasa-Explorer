@@ -9,25 +9,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
 import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
+import com.mariomanzano.nasaexplorer.repositories.LastDbUpdateRepository
 import com.mariomanzano.nasaexplorer.repositories.MarsRepository
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
-import com.mariomanzano.nasaexplorer.usecases.FindMarsUseCase
-import com.mariomanzano.nasaexplorer.usecases.GetMarsUseCase
-import com.mariomanzano.nasaexplorer.usecases.RequestMarsListUseCase
-import com.mariomanzano.nasaexplorer.usecases.SwitchItemToFavoriteUseCase
+import com.mariomanzano.nasaexplorer.usecases.*
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun MarsScreen(
     onClick: (MarsItem) -> Unit,
-    marsRepository: MarsRepository
+    marsRepository: MarsRepository,
+    lastDbUpdateRepository: LastDbUpdateRepository
 ) {
     val viewModel: MarsViewModel = viewModel(
         factory = MarsViewModelFactory(
             GetMarsUseCase(marsRepository),
-            RequestMarsListUseCase(marsRepository)
+            RequestMarsListUseCase(marsRepository),
+            ResetMarsListUseCase(marsRepository),
+            GetLastMarsUpdateUseCase(lastDbUpdateRepository),
+            UpdateLastUpdateUseCase(lastDbUpdateRepository)
         )
     )
     val state by viewModel.state.collectAsState()

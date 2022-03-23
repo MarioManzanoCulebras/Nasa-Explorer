@@ -7,8 +7,7 @@ import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.EarthItem
 import com.mariomanzano.nasaexplorer.data.utils.checkIfDayAfter
 import com.mariomanzano.nasaexplorer.network.toError
-import com.mariomanzano.nasaexplorer.usecases.GetEarthUseCase
-import com.mariomanzano.nasaexplorer.usecases.RequestEarthListUseCase
+import com.mariomanzano.nasaexplorer.usecases.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -17,32 +16,64 @@ import kotlinx.coroutines.launch
 
 class DailyEarthViewModel(
     getEarthUseCase: GetEarthUseCase,
-    private val requestEarthListUseCase: RequestEarthListUseCase
+    private val requestEarthListUseCase: RequestEarthListUseCase,
+    private val resetEarthListUseCase: ResetEarthListUseCase,
+    private val getLastEarthUpdateUseCase: GetLastEarthUpdateUseCase,
+    private val updateLastUpdateUseCase: UpdateLastUpdateUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
     val state = _state.asStateFlow()
 
+    private var requestedUpdate = false
+
     init {
         viewModelScope.launch {
+            _state.update { _state.value.copy(loading = true) }
             getEarthUseCase()
-                .catch { cause -> _state.update { it.copy(error = cause.toError()) } }
+                .catch { cause ->
+                    _state.update { it.copy(error = cause.toError()) }
+                }
                 .collect { items ->
-                    _state.update { UiState(dailyPictures = items) }
-                    if (items.isEmpty()) {
-                        onUiReady()
-                    } else {
-                        onUiReady(items.first().lastRequest.checkIfDayAfter())
+                    if (requestedUpdate) {
+                        _state.update {
+                            _state.value.copy(
+                                loading = true,
+                                dailyPictures = emptyList()
+                            )
+                        }
+                        requestUpdate(requestedUpdate)
+                    } else if (items.isNotEmpty()) {
+                        _state.update { _state.value.copy(loading = false, dailyPictures = items) }
+                    }
+                }
+        }
+        viewModelScope.launch {
+            getLastEarthUpdateUseCase()
+                .catch { cause ->
+                    _state.update { it.copy(error = cause.toError()) }
+                }
+                .collect { date ->
+                    when {
+                        date == null -> {
+                            updateLastUpdateUseCase()
+                            requestUpdate(true)
+                        }
+                        date.checkIfDayAfter() -> {
+                            resetEarthListUseCase()
+                            requestedUpdate = true
+                        }
                     }
                 }
         }
     }
 
-    private fun onUiReady(dayChanged: Boolean = false) {
+    private fun requestUpdate(request: Boolean) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(loading = true)
-            val error = requestEarthListUseCase(dayChanged)
-            _state.update { _state.value.copy(loading = false, error = error) }
+            if (request) {
+                requestEarthListUseCase()
+                requestedUpdate = false
+            }
         }
     }
 
@@ -56,10 +87,19 @@ class DailyEarthViewModel(
 @Suppress("UNCHECKED_CAST")
 class DailyEarthViewModelFactory(
     private val getEarthUseCase: GetEarthUseCase,
-    private val requestEarthListUseCase: RequestEarthListUseCase
+    private val requestEarthListUseCase: RequestEarthListUseCase,
+    private val resetEarthListUseCase: ResetEarthListUseCase,
+    private val getLastEarthUpdateUseCase: GetLastEarthUpdateUseCase,
+    private val updateLastUpdateUseCase: UpdateLastUpdateUseCase
 ) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return DailyEarthViewModel(getEarthUseCase, requestEarthListUseCase) as T
+        return DailyEarthViewModel(
+            getEarthUseCase,
+            requestEarthListUseCase,
+            resetEarthListUseCase,
+            getLastEarthUpdateUseCase,
+            updateLastUpdateUseCase
+        ) as T
     }
 }

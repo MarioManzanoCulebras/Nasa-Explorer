@@ -5,6 +5,7 @@ import com.mariomanzano.domain.entities.EarthItem
 import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource
+import com.mariomanzano.nasaexplorer.datasource.LastDbUpdateDataSource
 import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
 import com.mariomanzano.nasaexplorer.network.tryCall
@@ -13,7 +14,38 @@ import kotlinx.coroutines.flow.map
 import java.util.*
 
 class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, EarthLocalDataSource,
-    MarsLocalDataSource {
+    MarsLocalDataSource, LastDbUpdateDataSource {
+
+    override val podTableUpdatedDay: Flow<Calendar?> = nasaDao.getPODLastUpdate().map { it?.date }
+
+    override val earthTableUpdatedDay: Flow<Calendar?> =
+        nasaDao.getEarthLastUpdate().map { it?.date }
+
+    override val marsTableUpdatedDay: Flow<Calendar?> = nasaDao.getMarsLastUpdate().map { it?.date }
+
+    override suspend fun updatePODDate(date: Calendar): Error? =
+        tryCall {
+            nasaDao.updatePODDbLastUpdate(DbPODLastUpdate(0, date))
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+
+    override suspend fun updateEarthDate(date: Calendar): Error? =
+        tryCall {
+            nasaDao.updateEarthDbLastUpdate(DbEarthLastUpdate(0, date))
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+
+    override suspend fun updateMarsDate(date: Calendar): Error? =
+        tryCall {
+            nasaDao.updateMarsDbLastUpdate(DbMarsLastUpdate(0, date))
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
 
     override val podList: Flow<List<PictureOfDayItem>> =
         nasaDao.getAllPOD().map { it.toPODDomainModel() }
@@ -55,6 +87,15 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifRight = { null }
         )
 
+    override suspend fun clearPODList() {
+        tryCall {
+            nasaDao.clearPODList(false)
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+    }
+
     override suspend fun saveEarthList(items: List<EarthItem>): Error? =
         tryCall {
             nasaDao.insertEarthEntities(items.fromEarthDomainModel())
@@ -71,6 +112,15 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifRight = { null }
         )
 
+    override suspend fun clearEarthList() {
+        tryCall {
+            nasaDao.clearEarthList(false)
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+    }
+
     override suspend fun saveMarsList(items: List<MarsItem>): Error? =
         tryCall {
             nasaDao.insertMarsEntities(items.fromMarsDomainModel())
@@ -86,6 +136,16 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifLeft = { it },
             ifRight = { null }
         )
+
+    override suspend fun clearMarsList() {
+        tryCall {
+            nasaDao.clearMarsList(false)
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+
+    }
 }
 
 private fun List<DbPOD>.toPODDomainModel(): List<PictureOfDayItem> =
@@ -105,7 +165,6 @@ private fun DbPOD.toDomainModel(): PictureOfDayItem =
         description = description,
         url = url,
         favorite = favorite,
-        lastRequest = lastRequest,
         copyRight = copyRight
     )
 
@@ -116,8 +175,7 @@ private fun DbEarth.toDomainModel(): EarthItem =
         title = title,
         description = description,
         url = url,
-        favorite = favorite,
-        lastRequest = lastRequest
+        favorite = favorite
     )
 
 private fun DbMars.toDomainModel(): MarsItem =
@@ -128,7 +186,6 @@ private fun DbMars.toDomainModel(): MarsItem =
         description = description,
         url = url,
         favorite = favorite,
-        lastRequest = lastRequest,
         sun = sun,
         cameraName = cameraName ?: "",
         roverName = roverName ?: "",
@@ -148,7 +205,6 @@ private fun PictureOfDayItem.fromDomainModel(): DbPOD = DbPOD(
     url = url,
     copyRight = copyRight,
     favorite = favorite,
-    lastRequest = Calendar.getInstance(),
     type = type
 )
 
@@ -162,7 +218,6 @@ private fun EarthItem.fromDomainModel(): DbEarth = DbEarth(
     description = description,
     url = url,
     favorite = favorite,
-    lastRequest = Calendar.getInstance(),
     type = type
 )
 
@@ -182,6 +237,5 @@ private fun MarsItem.fromDomainModel(): DbMars = DbMars(
     roverLaunchingDate = roverLaunchingDate,
     roverMissionStatus = roverMissionStatus,
     favorite = favorite,
-    lastRequest = Calendar.getInstance(),
     type = type
 )

@@ -4,5 +4,5 @@ import com.mariomanzano.nasaexplorer.repositories.MarsRepository
 
 class RequestMarsListUseCase(private val repository: MarsRepository) {
 
-    suspend operator fun invoke(dayChanged: Boolean) = repository.requestMarsList(dayChanged)
+    suspend operator fun invoke() = repository.requestMarsList()
 }

@@ -9,25 +9,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mariomanzano.domain.entities.EarthItem
 import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
 import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
+import com.mariomanzano.nasaexplorer.repositories.LastDbUpdateRepository
 import com.mariomanzano.nasaexplorer.repositories.MarsRepository
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
-import com.mariomanzano.nasaexplorer.usecases.FindEarthUseCase
-import com.mariomanzano.nasaexplorer.usecases.GetEarthUseCase
-import com.mariomanzano.nasaexplorer.usecases.RequestEarthListUseCase
-import com.mariomanzano.nasaexplorer.usecases.SwitchItemToFavoriteUseCase
+import com.mariomanzano.nasaexplorer.usecases.*
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun EarthScreen(
     onClick: (EarthItem) -> Unit,
-    earthRepository: DailyEarthRepository
+    earthRepository: DailyEarthRepository,
+    lastDbUpdateRepository: LastDbUpdateRepository
 ) {
     val viewModel: DailyEarthViewModel = viewModel(
         factory = DailyEarthViewModelFactory(
             GetEarthUseCase(earthRepository),
-            RequestEarthListUseCase(earthRepository)
+            RequestEarthListUseCase(earthRepository),
+            ResetEarthListUseCase(earthRepository),
+            GetLastEarthUpdateUseCase(lastDbUpdateRepository),
+            UpdateLastUpdateUseCase(lastDbUpdateRepository)
         )
     )
     val state by viewModel.state.collectAsState()

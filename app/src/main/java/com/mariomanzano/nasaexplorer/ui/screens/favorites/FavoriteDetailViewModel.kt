@@ -35,7 +35,7 @@ class FavoriteDetailViewModel(
         viewModelScope.launch {
             _state.value.nasaItem?.let { item ->
                 val error = switchFavoriteUseCase(
-                    item.id ?: 0,
+                    item.id,
                     item.type,
                     !item.favorite
                 )

@@ -9,25 +9,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
 import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
+import com.mariomanzano.nasaexplorer.repositories.LastDbUpdateRepository
 import com.mariomanzano.nasaexplorer.repositories.MarsRepository
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.PODItemsListScreen
-import com.mariomanzano.nasaexplorer.usecases.FindPODUseCase
-import com.mariomanzano.nasaexplorer.usecases.GetPODUseCase
-import com.mariomanzano.nasaexplorer.usecases.RequestPODListUseCase
-import com.mariomanzano.nasaexplorer.usecases.SwitchItemToFavoriteUseCase
+import com.mariomanzano.nasaexplorer.usecases.*
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun DailyPictureScreen(
     onClick: (PictureOfDayItem) -> Unit,
-    dailyPicturesRepository: DailyPicturesRepository
+    dailyPicturesRepository: DailyPicturesRepository,
+    lastDbUpdateRepository: LastDbUpdateRepository
 ) {
     val viewModel: DailyPictureViewModel = viewModel(
         factory = DailyPictureViewModelFactory(
             GetPODUseCase(dailyPicturesRepository),
-            RequestPODListUseCase(dailyPicturesRepository)
+            RequestPODListUseCase(dailyPicturesRepository),
+            ResetPODListUseCase(dailyPicturesRepository),
+            GetLastPODUpdateUseCase(lastDbUpdateRepository),
+            UpdateLastUpdateUseCase(lastDbUpdateRepository)
         )
     )
     val state by viewModel.state.collectAsState()

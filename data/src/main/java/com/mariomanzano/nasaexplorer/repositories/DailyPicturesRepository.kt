@@ -5,6 +5,7 @@ import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.PODRemoteDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 class DailyPicturesRepository(
     private val localDataSource: PODLocalDataSource,
@@ -15,15 +16,32 @@ class DailyPicturesRepository(
 
     fun findById(id: Int): Flow<PictureOfDayItem> = localDataSource.findPODById(id)
 
-    suspend fun requestPODList(dayChanged: Boolean): Error? {
-        if (dayChanged)
-            localDataSource.savePODList(emptyList())
-        if (localDataSource.isPODListEmpty()) {
-            val items = remoteDataSource.findPODitems()
-            items.fold(ifLeft = { return it }) {
-                localDataSource.savePODList(it)
+    suspend fun requestPODList(): Error? {
+        val items = remoteDataSource.findPODitems()
+        items.fold(ifLeft = { return it }) { serverList ->
+            podList.first { true }.also { list ->
+                val favourites = list.filter { it.favorite }
+                serverList.map { pod ->
+                    val element = favourites.find {
+                        it.date == pod.date &&
+                                it.title == pod.title &&
+                                it.description == pod.description &&
+                                it.url == pod.url &&
+                                it.type == pod.type
+                    }
+                    if (element != null) {
+                        pod.id = element.id
+                        pod.favorite = true
+                    }
+                }
+                localDataSource.savePODList(serverList)
             }
         }
+        return null
+    }
+
+    suspend fun resetPODList(): Error? {
+        localDataSource.clearPODList()
         return null
     }
 

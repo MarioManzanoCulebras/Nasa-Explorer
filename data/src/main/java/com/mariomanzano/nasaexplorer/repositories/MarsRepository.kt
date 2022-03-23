@@ -5,6 +5,7 @@ import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.MarsRemoteDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 class MarsRepository(
     private val localDataSource: MarsLocalDataSource,
@@ -15,14 +16,32 @@ class MarsRepository(
 
     fun findById(id: Int): Flow<MarsItem> = localDataSource.findMarsById(id)
 
-    suspend fun requestMarsList(dayChanged: Boolean): Error? {
-        if (dayChanged) localDataSource.saveMarsList(emptyList())
-        if (localDataSource.isMarsListEmpty()) {
-            val items = remoteDataSource.findMarsItems()
-            items.fold(ifLeft = { return it }) {
-                localDataSource.saveMarsList(it)
+    suspend fun requestMarsList(): Error? {
+        val items = remoteDataSource.findMarsItems()
+        items.fold(ifLeft = { return it }) { serverList ->
+            marsList.first { true }.also { list ->
+                val favourites = list.filter { it.favorite }
+                serverList.map { pod ->
+                    val element = favourites.find {
+                        it.date == pod.date &&
+                                it.title == pod.title &&
+                                it.description == pod.description &&
+                                it.url == pod.url &&
+                                it.type == pod.type
+                    }
+                    if (element != null) {
+                        pod.id = element.id
+                        pod.favorite = true
+                    }
+                }
+                localDataSource.saveMarsList(serverList)
             }
         }
+        return null
+    }
+
+    suspend fun resetMarsList(): Error? {
+        localDataSource.clearMarsList()
         return null
     }
 

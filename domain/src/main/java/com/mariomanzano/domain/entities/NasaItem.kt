@@ -3,12 +3,11 @@ package com.mariomanzano.domain.entities
 import java.util.*
 
 interface NasaItem {
-    val id: Int?
+    var id: Int
     val date: Calendar
     val title: String?
     val description: String?
     val url: String?
-    val favorite: Boolean
-    var lastRequest: Calendar
+    var favorite: Boolean
     val type: String
 }

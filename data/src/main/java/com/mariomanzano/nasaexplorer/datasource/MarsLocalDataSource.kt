@@ -11,4 +11,5 @@ interface MarsLocalDataSource {
     fun findMarsById(id: Int): Flow<MarsItem>
     suspend fun saveMarsList(items: List<MarsItem>): Error?
     suspend fun updateMarsList(id: Int, favorite: Boolean): Error?
+    suspend fun clearMarsList()
 }

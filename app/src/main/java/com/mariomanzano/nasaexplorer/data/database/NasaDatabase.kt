@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [DbPOD::class, DbEarth::class, DbMars::class],
+    entities = [DbPODLastUpdate::class, DbEarthLastUpdate::class, DbMarsLastUpdate::class, DbPOD::class, DbEarth::class, DbMars::class],
     version = 1,
     exportSchema = false
 )
