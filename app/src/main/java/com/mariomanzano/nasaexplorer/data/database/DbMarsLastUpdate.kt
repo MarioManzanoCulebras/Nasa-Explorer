@@ -7,5 +7,6 @@ import java.util.*
 @Entity
 data class DbMarsLastUpdate(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val date: Calendar
+    val date: Calendar,
+    val updatedNeed: Boolean
 )

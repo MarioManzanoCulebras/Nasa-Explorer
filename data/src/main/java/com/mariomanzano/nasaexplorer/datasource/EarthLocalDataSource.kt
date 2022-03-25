@@ -9,7 +9,7 @@ interface EarthLocalDataSource {
 
     suspend fun isEarthListEmpty(): Boolean
     fun findEarthById(id: Int): Flow<EarthItem>
+    suspend fun saveEarthFavoriteList(items: List<EarthItem>): Error?
     suspend fun saveEarthList(items: List<EarthItem>): Error?
     suspend fun updateEarthList(id: Int, favorite: Boolean): Error?
-    suspend fun clearEarthList()
 }

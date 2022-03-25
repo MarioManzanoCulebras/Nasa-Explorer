@@ -2,6 +2,7 @@ package com.mariomanzano.nasaexplorer.data.database
 
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.EarthItem
+import com.mariomanzano.domain.entities.LastUpdateInfo
 import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource
@@ -16,32 +17,37 @@ import java.util.*
 class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, EarthLocalDataSource,
     MarsLocalDataSource, LastDbUpdateDataSource {
 
-    override val podTableUpdatedDay: Flow<Calendar?> = nasaDao.getPODLastUpdate().map { it?.date }
+    override val podTableUpdatedDay: Flow<LastUpdateInfo?> =
+        nasaDao.getPODLastUpdate().map { it?.toLastDomainModel() }
 
-    override val earthTableUpdatedDay: Flow<Calendar?> =
-        nasaDao.getEarthLastUpdate().map { it?.date }
+    override val earthTableUpdatedDay: Flow<LastUpdateInfo?> =
+        nasaDao.getEarthLastUpdate().map { it?.toLastDomainModel() }
 
-    override val marsTableUpdatedDay: Flow<Calendar?> = nasaDao.getMarsLastUpdate().map { it?.date }
+    override val marsTableUpdatedDay: Flow<LastUpdateInfo?> =
+        nasaDao.getMarsLastUpdate().map { it?.toLastDomainModel() }
 
-    override suspend fun updatePODDate(date: Calendar): Error? =
+    override suspend fun updatePODDate(item: LastUpdateInfo?): Error? =
         tryCall {
-            nasaDao.updatePODDbLastUpdate(DbPODLastUpdate(0, date))
+            val save = item ?: LastUpdateInfo(0, Calendar.getInstance(), true)
+            nasaDao.updatePODDbLastUpdate(save.fromDomainPODModel())
         }.fold(
             ifLeft = { it },
             ifRight = { null }
         )
 
-    override suspend fun updateEarthDate(date: Calendar): Error? =
+    override suspend fun updateEarthDate(item: LastUpdateInfo?): Error? =
         tryCall {
-            nasaDao.updateEarthDbLastUpdate(DbEarthLastUpdate(0, date))
+            val save = item ?: LastUpdateInfo(0, Calendar.getInstance(), true)
+            nasaDao.updateEarthDbLastUpdate(save.fromDomainEarthModel())
         }.fold(
             ifLeft = { it },
             ifRight = { null }
         )
 
-    override suspend fun updateMarsDate(date: Calendar): Error? =
+    override suspend fun updateMarsDate(item: LastUpdateInfo?): Error? =
         tryCall {
-            nasaDao.updateMarsDbLastUpdate(DbMarsLastUpdate(0, date))
+            val save = item ?: LastUpdateInfo(0, Calendar.getInstance(), true)
+            nasaDao.updateMarsDbLastUpdate(save.fromDomainMarsModel())
         }.fold(
             ifLeft = { it },
             ifRight = { null }
@@ -71,6 +77,14 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
     override fun findMarsById(id: Int): Flow<MarsItem> =
         nasaDao.findMarsById(id).map { it.toDomainModel() }
 
+    override suspend fun savePODFavoriteList(items: List<PictureOfDayItem>): Error? =
+        tryCall {
+            nasaDao.insertPODOnDb(items.fromPODDomainModel())
+        }.fold(
+            ifLeft = { it },
+            ifRight = { null }
+        )
+
     override suspend fun savePODList(items: List<PictureOfDayItem>): Error? =
         tryCall {
             nasaDao.insertPODEntities(items.fromPODDomainModel())
@@ -87,14 +101,13 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifRight = { null }
         )
 
-    override suspend fun clearPODList() {
+    override suspend fun saveEarthFavoriteList(items: List<EarthItem>): Error? =
         tryCall {
-            nasaDao.clearPODList(false)
+            nasaDao.insertEarthOnDb(items.fromEarthDomainModel())
         }.fold(
             ifLeft = { it },
             ifRight = { null }
         )
-    }
 
     override suspend fun saveEarthList(items: List<EarthItem>): Error? =
         tryCall {
@@ -112,14 +125,13 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifRight = { null }
         )
 
-    override suspend fun clearEarthList() {
+    override suspend fun saveMarsFavoriteList(items: List<MarsItem>): Error? =
         tryCall {
-            nasaDao.clearEarthList(false)
+            nasaDao.insertMarsOnDb(items.fromMarsDomainModel())
         }.fold(
             ifLeft = { it },
             ifRight = { null }
         )
-    }
 
     override suspend fun saveMarsList(items: List<MarsItem>): Error? =
         tryCall {
@@ -136,17 +148,16 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
             ifLeft = { it },
             ifRight = { null }
         )
-
-    override suspend fun clearMarsList() {
-        tryCall {
-            nasaDao.clearMarsList(false)
-        }.fold(
-            ifLeft = { it },
-            ifRight = { null }
-        )
-
-    }
 }
+
+private fun DbPODLastUpdate.toLastDomainModel(): LastUpdateInfo =
+    LastUpdateInfo(id, date, updatedNeed)
+
+private fun DbEarthLastUpdate.toLastDomainModel(): LastUpdateInfo =
+    LastUpdateInfo(id, date, updatedNeed)
+
+private fun DbMarsLastUpdate.toLastDomainModel(): LastUpdateInfo =
+    LastUpdateInfo(id, date, updatedNeed)
 
 private fun List<DbPOD>.toPODDomainModel(): List<PictureOfDayItem> =
     map { it.toDomainModel() }
@@ -193,6 +204,24 @@ private fun DbMars.toDomainModel(): MarsItem =
         roverLaunchingDate = roverLaunchingDate,
         roverMissionStatus = roverMissionStatus ?: "",
     )
+
+private fun LastUpdateInfo.fromDomainPODModel(): DbPODLastUpdate = DbPODLastUpdate(
+    id = id,
+    date = date,
+    updatedNeed = updateNeed
+)
+
+private fun LastUpdateInfo.fromDomainEarthModel(): DbEarthLastUpdate = DbEarthLastUpdate(
+    id = id,
+    date = date,
+    updatedNeed = updateNeed
+)
+
+private fun LastUpdateInfo.fromDomainMarsModel(): DbMarsLastUpdate = DbMarsLastUpdate(
+    id = id,
+    date = date,
+    updatedNeed = updateNeed
+)
 
 private fun List<PictureOfDayItem>.fromPODDomainModel(): List<DbPOD> =
     map { it.fromDomainModel() }

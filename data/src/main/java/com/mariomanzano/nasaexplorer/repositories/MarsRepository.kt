@@ -40,13 +40,8 @@ class MarsRepository(
         return null
     }
 
-    suspend fun resetMarsList(): Error? {
-        localDataSource.clearMarsList()
-        return null
-    }
-
     suspend fun switchFavorite(marsItem: MarsItem): Error? {
         val updated = marsItem.copy(favorite = !marsItem.favorite)
-        return localDataSource.saveMarsList(listOf(updated))
+        return localDataSource.saveMarsFavoriteList(listOf(updated))
     }
 }

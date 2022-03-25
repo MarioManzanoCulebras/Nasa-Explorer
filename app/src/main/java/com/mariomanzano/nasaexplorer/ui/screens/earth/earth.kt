@@ -27,9 +27,8 @@ fun EarthScreen(
         factory = DailyEarthViewModelFactory(
             GetEarthUseCase(earthRepository),
             RequestEarthListUseCase(earthRepository),
-            ResetEarthListUseCase(earthRepository),
-            GetLastEarthUpdateUseCase(lastDbUpdateRepository),
-            UpdateLastUpdateUseCase(lastDbUpdateRepository)
+            GetLastEarthUpdateDateNeedUseCase(lastDbUpdateRepository),
+            UpdateLastEarthUpdateUseCase(lastDbUpdateRepository)
         )
     )
     val state by viewModel.state.collectAsState()

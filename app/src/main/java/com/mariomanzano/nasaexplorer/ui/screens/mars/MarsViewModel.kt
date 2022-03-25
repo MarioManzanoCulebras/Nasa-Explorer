@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.MarsItem
-import com.mariomanzano.nasaexplorer.data.utils.checkIfDayAfter
 import com.mariomanzano.nasaexplorer.network.toError
-import com.mariomanzano.nasaexplorer.usecases.*
+import com.mariomanzano.nasaexplorer.usecases.GetLastMarsUpdateDateUseCase
+import com.mariomanzano.nasaexplorer.usecases.GetMarsUseCase
+import com.mariomanzano.nasaexplorer.usecases.RequestMarsListUseCase
+import com.mariomanzano.nasaexplorer.usecases.UpdateLastMarsUpdateUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -17,15 +19,12 @@ import kotlinx.coroutines.launch
 class MarsViewModel(
     getMarsUseCase: GetMarsUseCase,
     private val requestMarsListUseCase: RequestMarsListUseCase,
-    private val resetMarsListUseCase: ResetMarsListUseCase,
-    private val getLastMarsUpdateUseCase: GetLastMarsUpdateUseCase,
-    private val updateLastUpdateUseCase: UpdateLastUpdateUseCase
+    private val getLastMarsUpdateDateUseCase: GetLastMarsUpdateDateUseCase,
+    private val updateLastMarsUpdateUseCase: UpdateLastMarsUpdateUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
     val state = _state.asStateFlow()
-
-    private var requestedUpdate = false
 
     init {
         viewModelScope.launch {
@@ -35,45 +34,29 @@ class MarsViewModel(
                     _state.update { it.copy(error = cause.toError()) }
                 }
                 .collect { items ->
-                    if (requestedUpdate) {
-                        _state.update {
-                            _state.value.copy(
-                                loading = true,
-                                marsPictures = emptyList()
-                            )
-                        }
-                        requestUpdate(requestedUpdate)
-                    } else if (items.isNotEmpty()) {
+                    if (items.isNotEmpty()) {
                         _state.update { _state.value.copy(loading = false, marsPictures = items) }
                     }
                 }
         }
         viewModelScope.launch {
-            getLastMarsUpdateUseCase()
+            getLastMarsUpdateDateUseCase()
                 .catch { cause ->
                     _state.update { it.copy(error = cause.toError()) }
                 }
-                .collect { date ->
-                    when {
-                        date == null -> {
-                            updateLastUpdateUseCase()
-                            requestUpdate(true)
-                        }
-                        date.checkIfDayAfter() -> {
-                            resetMarsListUseCase()
-                            requestedUpdate = true
-                        }
+                .collect { info ->
+                    if (info?.updateNeed == true) {
+                        updateLastMarsUpdateUseCase(info.apply { updateNeed = false })
+                        launchUpdate()
                     }
                 }
         }
     }
 
-    private fun requestUpdate(request: Boolean) {
+    private fun launchUpdate() {
         viewModelScope.launch {
-            if (request) {
-                requestMarsListUseCase()
-                requestedUpdate = false
-            }
+            _state.update { _state.value.copy(loading = true, marsPictures = emptyList()) }
+            requestMarsListUseCase()
         }
     }
 
@@ -88,18 +71,16 @@ class MarsViewModel(
 class MarsViewModelFactory(
     private val getMarsUseCase: GetMarsUseCase,
     private val requestMarsListUseCase: RequestMarsListUseCase,
-    private val resetMarsListUseCase: ResetMarsListUseCase,
-    private val getLastMarsUpdateUseCase: GetLastMarsUpdateUseCase,
-    private val updateLastUpdateUseCase: UpdateLastUpdateUseCase
+    private val getLastMarsUpdateDateUseCase: GetLastMarsUpdateDateUseCase,
+    private val updateLastMarsUpdateUseCase: UpdateLastMarsUpdateUseCase
 ) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MarsViewModel(
             getMarsUseCase,
             requestMarsListUseCase,
-            resetMarsListUseCase,
-            getLastMarsUpdateUseCase,
-            updateLastUpdateUseCase
+            getLastMarsUpdateDateUseCase,
+            updateLastMarsUpdateUseCase
         ) as T
     }
 }

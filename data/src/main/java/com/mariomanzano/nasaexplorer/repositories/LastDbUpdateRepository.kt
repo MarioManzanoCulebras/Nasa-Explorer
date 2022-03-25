@@ -1,7 +1,7 @@
 package com.mariomanzano.nasaexplorer.repositories
 
+import com.mariomanzano.domain.entities.LastUpdateInfo
 import com.mariomanzano.nasaexplorer.datasource.LastDbUpdateDataSource
-import java.util.*
 
 class LastDbUpdateRepository(
     private val lastDbUpdateDataSource: LastDbUpdateDataSource,
@@ -10,7 +10,12 @@ class LastDbUpdateRepository(
     val lastEarthUpdate = lastDbUpdateDataSource.earthTableUpdatedDay
     val lastMarsUpdate = lastDbUpdateDataSource.marsTableUpdatedDay
 
-    suspend fun updatePODLastUpdate(date: Calendar) = lastDbUpdateDataSource.updatePODDate(date)
-    suspend fun updateEarthLastUpdate(date: Calendar) = lastDbUpdateDataSource.updateEarthDate(date)
-    suspend fun updateMarsLastUpdate(date: Calendar) = lastDbUpdateDataSource.updateMarsDate(date)
+    suspend fun updatePODLastUpdate(item: LastUpdateInfo?) =
+        lastDbUpdateDataSource.updatePODDate(item)
+
+    suspend fun updateEarthLastUpdate(item: LastUpdateInfo?) =
+        lastDbUpdateDataSource.updateEarthDate(item)
+
+    suspend fun updateMarsLastUpdate(item: LastUpdateInfo?) =
+        lastDbUpdateDataSource.updateMarsDate(item)
 }

@@ -9,7 +9,7 @@ interface PODLocalDataSource {
 
     suspend fun isPODListEmpty(): Boolean
     fun findPODById(id: Int): Flow<PictureOfDayItem>
+    suspend fun savePODFavoriteList(items: List<PictureOfDayItem>): Error?
     suspend fun savePODList(items: List<PictureOfDayItem>): Error?
     suspend fun updatePODList(id: Int, favorite: Boolean): Error?
-    suspend fun clearPODList()
 }

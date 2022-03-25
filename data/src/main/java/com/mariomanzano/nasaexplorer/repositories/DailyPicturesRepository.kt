@@ -30,23 +30,19 @@ class DailyPicturesRepository(
                                 it.type == pod.type
                     }
                     if (element != null) {
-                        pod.id = element.id
+                        pod.id = 0
                         pod.favorite = true
                     }
                 }
+                serverList.sortedByDescending { it.date }
                 localDataSource.savePODList(serverList)
             }
         }
         return null
     }
 
-    suspend fun resetPODList(): Error? {
-        localDataSource.clearPODList()
-        return null
-    }
-
     suspend fun switchFavorite(pictureOfDayItem: PictureOfDayItem): Error? {
         val updatedPOD = pictureOfDayItem.copy(favorite = !pictureOfDayItem.favorite)
-        return localDataSource.savePODList(listOf(updatedPOD))
+        return localDataSource.savePODFavoriteList(listOf(updatedPOD))
     }
 }

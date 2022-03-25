@@ -27,9 +27,8 @@ fun MarsScreen(
         factory = MarsViewModelFactory(
             GetMarsUseCase(marsRepository),
             RequestMarsListUseCase(marsRepository),
-            ResetMarsListUseCase(marsRepository),
-            GetLastMarsUpdateUseCase(lastDbUpdateRepository),
-            UpdateLastUpdateUseCase(lastDbUpdateRepository)
+            GetLastMarsUpdateDateUseCase(lastDbUpdateRepository),
+            UpdateLastMarsUpdateUseCase(lastDbUpdateRepository)
         )
     )
     val state by viewModel.state.collectAsState()

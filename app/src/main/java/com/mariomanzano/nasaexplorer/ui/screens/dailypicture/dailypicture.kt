@@ -27,9 +27,8 @@ fun DailyPictureScreen(
         factory = DailyPictureViewModelFactory(
             GetPODUseCase(dailyPicturesRepository),
             RequestPODListUseCase(dailyPicturesRepository),
-            ResetPODListUseCase(dailyPicturesRepository),
-            GetLastPODUpdateUseCase(lastDbUpdateRepository),
-            UpdateLastUpdateUseCase(lastDbUpdateRepository)
+            GetLastPODUpdateDateUseCase(lastDbUpdateRepository),
+            UpdateLastPODUpdateUseCase(lastDbUpdateRepository)
         )
     )
     val state by viewModel.state.collectAsState()

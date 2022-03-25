@@ -6,7 +6,7 @@ import java.util.*
 
 @Entity
 data class DbPOD(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) var id: Int,
     val date: Calendar,
     val title: String,
     val description: String,

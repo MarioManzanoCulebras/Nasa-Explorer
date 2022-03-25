@@ -9,7 +9,7 @@ interface MarsLocalDataSource {
 
     suspend fun isMarsListEmpty(): Boolean
     fun findMarsById(id: Int): Flow<MarsItem>
+    suspend fun saveMarsFavoriteList(items: List<MarsItem>): Error?
     suspend fun saveMarsList(items: List<MarsItem>): Error?
     suspend fun updateMarsList(id: Int, favorite: Boolean): Error?
-    suspend fun clearMarsList()
 }

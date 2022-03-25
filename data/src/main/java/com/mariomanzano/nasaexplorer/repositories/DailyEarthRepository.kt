@@ -40,13 +40,8 @@ class DailyEarthRepository(
         return null
     }
 
-    suspend fun resetEarthList(): Error? {
-        localDataSource.clearEarthList()
-        return null
-    }
-
     suspend fun switchFavorite(earthItem: EarthItem): Error? {
         val updated = earthItem.copy(favorite = !earthItem.favorite)
-        return localDataSource.saveEarthList(listOf(updated))
+        return localDataSource.saveEarthFavoriteList(listOf(updated))
     }
 }

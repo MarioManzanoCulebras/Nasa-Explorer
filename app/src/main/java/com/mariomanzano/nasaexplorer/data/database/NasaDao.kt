@@ -1,10 +1,8 @@
 package com.mariomanzano.nasaexplorer.data.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 @Dao
 interface NasaDao {
@@ -19,13 +17,13 @@ interface NasaDao {
     fun getMarsLastUpdate(): Flow<DbMarsLastUpdate?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updatePODDbLastUpdate(date: DbPODLastUpdate)
+    suspend fun updatePODDbLastUpdate(item: DbPODLastUpdate)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateEarthDbLastUpdate(date: DbEarthLastUpdate)
+    suspend fun updateEarthDbLastUpdate(item: DbEarthLastUpdate)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateMarsDbLastUpdate(date: DbMarsLastUpdate)
+    suspend fun updateMarsDbLastUpdate(item: DbMarsLastUpdate)
 
     @Query("SELECT * FROM DbPOD")
     fun getAllPOD(): Flow<List<DbPOD>>
@@ -54,30 +52,87 @@ interface NasaDao {
     @Query("SELECT COUNT(id) FROM DbMars")
     suspend fun getMarsCount(): Int
 
+    @Delete
+    suspend fun deletePOD(item: DbPOD)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPODEntities(items: List<DbPOD>)
+    suspend fun insertPODOnDb(items: List<DbPOD>)
+
+    @Transaction
+    suspend fun insertPODEntities(items: List<DbPOD>) {
+        getAllPOD().first { true }.also { list ->
+            items.map { pod ->
+                val element = list.find {
+                    it.date == pod.date &&
+                            it.title == pod.title &&
+                            it.description == pod.description &&
+                            it.url == pod.url &&
+                            it.type == pod.type
+                }
+                if (element != null) {
+                    deletePOD(element)
+                }
+            }
+            insertPODOnDb(items)
+        }
+    }
 
     @Query("UPDATE DbPOD SET favorite = :favorite WHERE id = :id")
     suspend fun updatePODEntities(id: Int, favorite: Boolean)
 
-    @Query("DELETE FROM DbPOD WHERE favorite = :clearFavorites")
-    suspend fun clearPODList(clearFavorites: Boolean)
+    @Delete
+    suspend fun deleteEarth(item: DbEarth)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertEarthEntities(items: List<DbEarth>)
+    suspend fun insertEarthOnDb(items: List<DbEarth>)
+
+    @Transaction
+    suspend fun insertEarthEntities(items: List<DbEarth>) {
+        getAllEarth().first { true }.also { list ->
+            items.map { pod ->
+                val element = list.find {
+                    it.date == pod.date &&
+                            it.title == pod.title &&
+                            it.description == pod.description &&
+                            it.url == pod.url &&
+                            it.type == pod.type
+                }
+                if (element != null) {
+                    deleteEarth(element)
+                }
+            }
+            insertEarthOnDb(items)
+        }
+    }
 
     @Query("UPDATE DbEarth SET favorite = :favorite WHERE id = :id")
     suspend fun updateEarthEntities(id: Int, favorite: Boolean)
 
-    @Query("DELETE FROM DbEarth WHERE favorite = :clearFavorites")
-    suspend fun clearEarthList(clearFavorites: Boolean)
+    @Delete
+    suspend fun deleteMars(item: DbMars)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMarsEntities(items: List<DbMars>)
+    suspend fun insertMarsOnDb(items: List<DbMars>)
+
+    @Transaction
+    suspend fun insertMarsEntities(items: List<DbMars>) {
+        getAllMars().first { true }.also { list ->
+            items.map { pod ->
+                val element = list.find {
+                    it.date == pod.date &&
+                            it.title == pod.title &&
+                            it.description == pod.description &&
+                            it.url == pod.url &&
+                            it.type == pod.type
+                }
+                if (element != null) {
+                    deleteMars(element)
+                }
+            }
+            insertMarsOnDb(items)
+        }
+    }
 
     @Query("UPDATE DbMars SET favorite = :favorite WHERE id = :id")
     suspend fun updateMarsEntities(id: Int, favorite: Boolean)
-
-    @Query("DELETE FROM DbMars WHERE favorite = :clearFavorites")
-    suspend fun clearMarsList(clearFavorites: Boolean)
 }
