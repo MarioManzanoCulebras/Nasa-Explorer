@@ -52,84 +52,87 @@ interface NasaDao {
     @Query("SELECT COUNT(id) FROM DbMars")
     suspend fun getMarsCount(): Int
 
-    @Delete
-    suspend fun deletePOD(item: DbPOD)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPODOnDb(items: List<DbPOD>)
 
     @Transaction
     suspend fun insertPODEntities(items: List<DbPOD>) {
-        getAllPOD().first { true }.also { list ->
+        getAllPOD().first { true }.also { localList ->
+            val mergeList = localList.toMutableList()
             items.map { pod ->
-                val element = list.find {
+                val localElement = localList.find {
                     it.date == pod.date &&
                             it.title == pod.title &&
                             it.description == pod.description &&
                             it.url == pod.url &&
                             it.type == pod.type
                 }
-                if (element != null) {
-                    deletePOD(element)
+                if (localElement != null) {
+                    pod.favorite = localElement.favorite
+                } else {
+                    mergeList.add(pod)
                 }
             }
-            insertPODOnDb(items)
+            mergeList.sortByDescending { it.date }
+            insertPODOnDb(mergeList)
         }
     }
 
     @Query("UPDATE DbPOD SET favorite = :favorite WHERE id = :id")
     suspend fun updatePODEntities(id: Int, favorite: Boolean)
 
-    @Delete
-    suspend fun deleteEarth(item: DbEarth)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEarthOnDb(items: List<DbEarth>)
 
     @Transaction
     suspend fun insertEarthEntities(items: List<DbEarth>) {
-        getAllEarth().first { true }.also { list ->
+        getAllEarth().first { true }.also { localList ->
+            val mergeList = localList.toMutableList()
             items.map { pod ->
-                val element = list.find {
+                val localElement = localList.find {
                     it.date == pod.date &&
                             it.title == pod.title &&
                             it.description == pod.description &&
                             it.url == pod.url &&
                             it.type == pod.type
                 }
-                if (element != null) {
-                    deleteEarth(element)
+                if (localElement != null) {
+                    pod.favorite = localElement.favorite
+                } else {
+                    mergeList.add(pod)
                 }
             }
-            insertEarthOnDb(items)
+            mergeList.sortByDescending { it.date }
+            insertEarthOnDb(mergeList)
         }
     }
 
     @Query("UPDATE DbEarth SET favorite = :favorite WHERE id = :id")
     suspend fun updateEarthEntities(id: Int, favorite: Boolean)
 
-    @Delete
-    suspend fun deleteMars(item: DbMars)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMarsOnDb(items: List<DbMars>)
 
     @Transaction
     suspend fun insertMarsEntities(items: List<DbMars>) {
-        getAllMars().first { true }.also { list ->
+        getAllMars().first { true }.also { localList ->
+            val mergeList = localList.toMutableList()
             items.map { pod ->
-                val element = list.find {
+                val localElement = localList.find {
                     it.date == pod.date &&
                             it.title == pod.title &&
                             it.description == pod.description &&
                             it.url == pod.url &&
                             it.type == pod.type
                 }
-                if (element != null) {
-                    deleteMars(element)
+                if (localElement != null) {
+                    pod.favorite = localElement.favorite
+                } else {
+                    mergeList.add(pod)
                 }
             }
-            insertMarsOnDb(items)
+            mergeList.sortByDescending { it.date }
+            insertMarsOnDb(mergeList)
         }
     }
 
