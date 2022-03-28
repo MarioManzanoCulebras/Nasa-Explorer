@@ -23,7 +23,10 @@ class MainViewModel(
                 .collect { info ->
                     if (info == null || info.date.checkIfDayAfter()) {
                         val infoNotNull = info ?: LastUpdateInfo(0, Calendar.getInstance(), true)
-                        updateLastPODUpdateUseCase(infoNotNull.apply { updateNeed = true })
+                        updateLastPODUpdateUseCase(infoNotNull.apply {
+                            date = Calendar.getInstance()
+                            updateNeed = true
+                        })
                     }
                 }
         }
@@ -32,7 +35,10 @@ class MainViewModel(
                 .collect { info ->
                     if (info == null || info.date.checkIfDayAfter()) {
                         val infoNotNull = info ?: LastUpdateInfo(0, Calendar.getInstance(), true)
-                        updateLastEarthUpdateUseCase(infoNotNull.apply { updateNeed = true })
+                        updateLastEarthUpdateUseCase(infoNotNull.apply {
+                            date = Calendar.getInstance()
+                            updateNeed = true
+                        })
                     }
                 }
         }
@@ -41,7 +47,10 @@ class MainViewModel(
                 .collect { info ->
                     if (info == null || info.date.checkIfDayAfter()) {
                         val infoNotNull = info ?: LastUpdateInfo(0, Calendar.getInstance(), true)
-                        updateLastMarsUpdateUseCase(infoNotNull.apply { updateNeed = true })
+                        updateLastMarsUpdateUseCase(infoNotNull.apply {
+                            date = Calendar.getInstance()
+                            updateNeed = true
+                        })
                     }
                 }
         }

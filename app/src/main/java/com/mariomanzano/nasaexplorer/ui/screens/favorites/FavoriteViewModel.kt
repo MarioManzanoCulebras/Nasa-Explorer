@@ -27,7 +27,7 @@ class FavoriteViewModel(
             getFavoritesUseCase()
                 .catch { cause -> _state.update { it.copy(error = cause.toError()) } }
                 .collect { items ->
-                    favoriteList.addAll(items.filter { it.favorite })
+                    favoriteList.addAll(items.filter { it.favorite }.sortedBy { it.type })
                     _state.update {
                         UiState(items = favoriteList)
                     }

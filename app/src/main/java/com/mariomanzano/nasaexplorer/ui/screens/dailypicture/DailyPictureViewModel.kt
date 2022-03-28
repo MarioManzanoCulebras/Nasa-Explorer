@@ -46,7 +46,9 @@ class DailyPictureViewModel(
                 }
                 .collect { info ->
                     if (info?.updateNeed == true) {
-                        updateLastPODUpdateUseCase(info.apply { updateNeed = false })
+                        updateLastPODUpdateUseCase(info.apply {
+                            updateNeed = false
+                        })
                         launchUpdate()
                     }
                 }
