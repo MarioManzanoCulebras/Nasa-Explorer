@@ -18,7 +18,7 @@ fun Int.monthApiCorrection(): String {
     }
 }
 
-fun Calendar.checkIfDayAfter(): Boolean {
+fun Calendar.checkIfDayAfterToday(): Boolean {
     val currentDay = Calendar.getInstance()
     val dayOfMonth = this.get(Calendar.DAY_OF_MONTH)
     val month = this.get(Calendar.MONTH)

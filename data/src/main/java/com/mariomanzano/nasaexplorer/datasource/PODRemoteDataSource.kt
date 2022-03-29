@@ -6,6 +6,11 @@ import com.mariomanzano.domain.entities.PictureOfDayItem
 import java.util.*
 
 interface PODRemoteDataSource {
+
+    suspend fun findPODDay(
+        date: Calendar = Calendar.getInstance()
+    ): Either<Error, PictureOfDayItem>
+
     suspend fun findPODitems(
         from: Calendar = Calendar.getInstance().apply {
             set(

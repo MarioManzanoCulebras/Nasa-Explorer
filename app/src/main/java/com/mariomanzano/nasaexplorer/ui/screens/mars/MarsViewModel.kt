@@ -4,17 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.mariomanzano.domain.Error
+import com.mariomanzano.domain.entities.LastUpdateInfo
 import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.nasaexplorer.network.toError
 import com.mariomanzano.nasaexplorer.usecases.GetLastMarsUpdateDateUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetMarsUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestMarsListUseCase
 import com.mariomanzano.nasaexplorer.usecases.UpdateLastMarsUpdateUseCase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MarsViewModel(
     getMarsUseCase: GetMarsUseCase,
@@ -35,7 +38,10 @@ class MarsViewModel(
                 }
                 .collect { items ->
                     if (items.isNotEmpty()) {
-                        _state.update { _state.value.copy(loading = false, marsPictures = items) }
+                        _state.update {
+                            _state.value.copy(loading = false,
+                                marsPictures = items.sortedByDescending { it.date })
+                        }
                     }
                 }
         }
@@ -45,18 +51,28 @@ class MarsViewModel(
                     _state.update { it.copy(error = cause.toError()) }
                 }
                 .collect { info ->
-                    if (info?.updateNeed == true) {
+                    if (info == null) {
+                        updateLastMarsUpdateUseCase(
+                            LastUpdateInfo(
+                                0,
+                                Calendar.getInstance(),
+                                false
+                            )
+                        )
+                    } else if (info.updateNeed) {
                         updateLastMarsUpdateUseCase(info.apply { updateNeed = false })
-                        launchUpdate()
                     }
+                    launchUpdate()
                 }
         }
     }
 
-    private fun launchUpdate() {
+    fun launchUpdate() {
         viewModelScope.launch {
-            _state.update { _state.value.copy(loading = true, marsPictures = emptyList()) }
+            _state.update { _state.value.copy(loading = true) }
             requestMarsListUseCase()
+            delay(3000)
+            _state.update { _state.value.copy(loading = false) }
         }
     }
 

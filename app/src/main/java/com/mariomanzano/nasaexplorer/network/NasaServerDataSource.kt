@@ -18,6 +18,14 @@ class NasaServerDataSource : PODRemoteDataSource,
     EarthRemoteDataSource,
     MarsRemoteDataSource {
 
+    override suspend fun findPODDay(date: Calendar): Either<Error, PictureOfDayItem> =
+        tryCall {
+            ApiClient
+                .dailyPicturesService
+                .getPictureOfTheDay(DateFormatter.Simple.formatter.format(date.time))
+                .asPictureOfTheDayItem()
+        }
+
     override suspend fun findPODitems(
         from: Calendar,
         to: Calendar

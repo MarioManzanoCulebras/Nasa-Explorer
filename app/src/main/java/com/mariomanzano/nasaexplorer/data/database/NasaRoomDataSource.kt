@@ -77,17 +77,9 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
     override fun findMarsById(id: Int): Flow<MarsItem> =
         nasaDao.findMarsById(id).map { it.toDomainModel() }
 
-    override suspend fun savePODFavoriteList(items: List<PictureOfDayItem>): Error? =
-        tryCall {
-            nasaDao.insertPODOnDb(items.fromPODDomainModel())
-        }.fold(
-            ifLeft = { it },
-            ifRight = { null }
-        )
-
     override suspend fun savePODList(items: List<PictureOfDayItem>): Error? =
         tryCall {
-            nasaDao.insertPODEntities(items.fromPODDomainModel())
+            nasaDao.insertPODOnDb(items.fromPODDomainModel())
         }.fold(
             ifLeft = { it },
             ifRight = { null }

@@ -55,29 +55,6 @@ interface NasaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPODOnDb(items: List<DbPOD>)
 
-    @Transaction
-    suspend fun insertPODEntities(items: List<DbPOD>) {
-        getAllPOD().first { true }.also { localList ->
-            val mergeList = localList.toMutableList()
-            items.map { pod ->
-                val localElement = localList.find {
-                    it.date == pod.date &&
-                            it.title == pod.title &&
-                            it.description == pod.description &&
-                            it.url == pod.url &&
-                            it.type == pod.type
-                }
-                if (localElement != null) {
-                    pod.favorite = localElement.favorite
-                } else {
-                    mergeList.add(pod)
-                }
-            }
-            mergeList.sortByDescending { it.date }
-            insertPODOnDb(mergeList)
-        }
-    }
-
     @Query("UPDATE DbPOD SET favorite = :favorite WHERE id = :id")
     suspend fun updatePODEntities(id: Int, favorite: Boolean)
 

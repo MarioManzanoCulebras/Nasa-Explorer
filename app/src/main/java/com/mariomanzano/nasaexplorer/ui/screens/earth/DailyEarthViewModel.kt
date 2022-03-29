@@ -5,16 +5,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.EarthItem
+import com.mariomanzano.domain.entities.LastUpdateInfo
 import com.mariomanzano.nasaexplorer.network.toError
 import com.mariomanzano.nasaexplorer.usecases.GetEarthUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetLastEarthUpdateDateNeedUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestEarthListUseCase
 import com.mariomanzano.nasaexplorer.usecases.UpdateLastEarthUpdateUseCase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.*
 
 class DailyEarthViewModel(
     getEarthUseCase: GetEarthUseCase,
@@ -35,7 +38,10 @@ class DailyEarthViewModel(
                 }
                 .collect { items ->
                     if (items.isNotEmpty()) {
-                        _state.update { _state.value.copy(loading = false, dailyPictures = items) }
+                        _state.update {
+                            _state.value.copy(loading = false,
+                                dailyPictures = items.sortedByDescending { it.date })
+                        }
                     }
                 }
         }
@@ -45,18 +51,28 @@ class DailyEarthViewModel(
                     _state.update { it.copy(error = cause.toError()) }
                 }
                 .collect { info ->
-                    if (info?.updateNeed == true) {
+                    if (info == null) {
+                        updateLastEarthUpdateUseCase(
+                            LastUpdateInfo(
+                                0,
+                                Calendar.getInstance(),
+                                false
+                            )
+                        )
+                    } else if (info.updateNeed) {
                         updateLastEarthUpdateUseCase(info.apply { updateNeed = false })
-                        launchUpdate()
                     }
+                    launchUpdate()
                 }
         }
     }
 
-    private fun launchUpdate() {
+    fun launchUpdate() {
         viewModelScope.launch {
-            _state.update { _state.value.copy(loading = true, dailyPictures = emptyList()) }
+            _state.update { _state.value.copy(loading = true) }
             requestEarthListUseCase()
+            delay(3000)
+            _state.update { _state.value.copy(loading = false) }
         }
     }
 

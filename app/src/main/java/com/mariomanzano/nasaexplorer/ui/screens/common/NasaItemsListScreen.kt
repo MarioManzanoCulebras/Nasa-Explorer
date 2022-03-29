@@ -17,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import kotlinx.coroutines.launch
@@ -27,7 +29,8 @@ import kotlinx.coroutines.launch
 fun <T : NasaItem> NasaItemsListScreen(
     loading: Boolean = false,
     items: List<T>?,
-    onClick: (T) -> Unit
+    onClick: (T) -> Unit,
+    onRefresh: (() -> Unit)? = null
 ) {
     var bottomSheetItem by remember { mutableStateOf<T?>(null) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -60,7 +63,8 @@ fun <T : NasaItem> NasaItemsListScreen(
                     bottomSheetItem = it
                     sheetState.show()
                 }
-            }
+            },
+            onRefresh = onRefresh
         )
     }
 }
@@ -71,7 +75,8 @@ fun <T : NasaItem> NasaItemsListScreen(
 fun PODItemsListScreen(
     loading: Boolean = false,
     items: List<PictureOfDayItem>?,
-    onClick: (PictureOfDayItem) -> Unit
+    onClick: (PictureOfDayItem) -> Unit,
+    onRefresh: () -> Unit
 ) {
     var bottomSheetItem by remember { mutableStateOf<PictureOfDayItem?>(null) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -104,7 +109,8 @@ fun PODItemsListScreen(
                     bottomSheetItem = it
                     sheetState.show()
                 }
-            }
+            },
+            onRefresh = onRefresh
         )
     }
 }
@@ -141,6 +147,7 @@ fun <T : NasaItem> NasaItemsList(
     items: List<T>?,
     onItemClick: (T) -> Unit,
     onItemMore: (T) -> Unit,
+    onRefresh: (() -> Unit)?,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -154,17 +161,23 @@ fun <T : NasaItem> NasaItemsList(
 
         items?.let { list ->
             if (list.isNotEmpty()) {
-                LazyVerticalGrid(
-                    cells = GridCells.Adaptive(180.dp),
-                    contentPadding = PaddingValues(4.dp)
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(loading),
+                    onRefresh = { onRefresh?.invoke() },
+                    swipeEnabled = onRefresh != null
                 ) {
+                    LazyVerticalGrid(
+                        cells = GridCells.Adaptive(180.dp),
+                        contentPadding = PaddingValues(4.dp)
+                    ) {
 
-                    items(list) {
-                        NasaListItem(
-                            nasaItem = it,
-                            onItemMore = onItemMore,
-                            modifier = Modifier.clickable { onItemClick(it) }
-                        )
+                        items(list) {
+                            NasaListItem(
+                                nasaItem = it,
+                                onItemMore = onItemMore,
+                                modifier = Modifier.clickable { onItemClick(it) }
+                            )
+                        }
                     }
                 }
             }
@@ -179,6 +192,7 @@ fun PODItemsList(
     items: List<PictureOfDayItem>?,
     onItemClick: (PictureOfDayItem) -> Unit,
     onItemMore: (PictureOfDayItem) -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -192,15 +206,20 @@ fun PODItemsList(
 
         items?.let { list ->
             if (list.isNotEmpty()) {
-                LazyColumn(
-                    contentPadding = PaddingValues(4.dp)
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(loading),
+                    onRefresh = { onRefresh() },
                 ) {
-                    items(list) {
-                        NasaListItem(
-                            nasaItem = it,
-                            onItemMore = onItemMore,
-                            modifier = Modifier.clickable { onItemClick(it) }
-                        )
+                    LazyColumn(
+                        contentPadding = PaddingValues(4.dp)
+                    ) {
+                        items(list) {
+                            NasaListItem(
+                                nasaItem = it,
+                                onItemMore = onItemMore,
+                                modifier = Modifier.clickable { onItemClick(it) }
+                            )
+                        }
                     }
                 }
             }

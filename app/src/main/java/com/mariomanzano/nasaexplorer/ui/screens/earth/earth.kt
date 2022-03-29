@@ -36,7 +36,8 @@ fun EarthScreen(
     NasaItemsListScreen(
         loading = state.loading,
         items = state.dailyPictures,
-        onClick = onClick
+        onClick = onClick,
+        onRefresh = { viewModel.launchUpdate() }
     )
 }
 

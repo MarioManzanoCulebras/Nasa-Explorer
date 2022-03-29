@@ -36,7 +36,8 @@ fun MarsScreen(
     NasaItemsListScreen(
         loading = state.loading,
         items = state.marsPictures,
-        onClick = onClick
+        onClick = onClick,
+        onRefresh = { viewModel.launchUpdate() }
     )
 }
 

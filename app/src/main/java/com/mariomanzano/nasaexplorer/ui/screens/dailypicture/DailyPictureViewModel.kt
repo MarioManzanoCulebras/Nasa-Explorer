@@ -4,21 +4,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.mariomanzano.domain.Error
+import com.mariomanzano.domain.entities.LastUpdateInfo
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.network.toError
-import com.mariomanzano.nasaexplorer.usecases.GetLastPODUpdateDateUseCase
-import com.mariomanzano.nasaexplorer.usecases.GetPODUseCase
-import com.mariomanzano.nasaexplorer.usecases.RequestPODListUseCase
-import com.mariomanzano.nasaexplorer.usecases.UpdateLastPODUpdateUseCase
+import com.mariomanzano.nasaexplorer.usecases.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.*
 
 class DailyPictureViewModel(
     getPODUseCase: GetPODUseCase,
     private val requestPODListUseCase: RequestPODListUseCase,
+    private val requestPODSingleDayUseCase: RequestPODSingleDayUseCase,
     private val getLastPODUpdateDateUseCase: GetLastPODUpdateDateUseCase,
     private val updateLastPODUpdateUseCase: UpdateLastPODUpdateUseCase
 ) : ViewModel() {
@@ -35,7 +36,10 @@ class DailyPictureViewModel(
                 }
                 .collect { items ->
                     if (items.isNotEmpty()) {
-                        _state.update { _state.value.copy(loading = false, dailyPictures = items) }
+                        _state.update {
+                            _state.value.copy(loading = false,
+                                dailyPictures = items.sortedByDescending { it.date })
+                        }
                     }
                 }
         }
@@ -45,22 +49,35 @@ class DailyPictureViewModel(
                     _state.update { it.copy(error = cause.toError()) }
                 }
                 .collect { info ->
-                    if (info?.updateNeed == true) {
+                    if (info == null) {
+                        launchListCompleteRequest()
+                        updateLastPODUpdateUseCase(LastUpdateInfo(0, Calendar.getInstance(), false))
+                    } else if (info.updateNeed) {
                         updateLastPODUpdateUseCase(info.apply {
                             updateNeed = false
                         })
-                        launchUpdate()
+                        launchDayRequest()
                     }
                 }
         }
     }
 
-    private fun launchUpdate() {
+    private fun launchListCompleteRequest() {
         viewModelScope.launch {
             _state.update { _state.value.copy(loading = true, dailyPictures = emptyList()) }
             requestPODListUseCase()
         }
     }
+
+    fun launchDayRequest() {
+        viewModelScope.launch {
+            _state.update { _state.value.copy(loading = true) }
+            requestPODSingleDayUseCase()
+            delay(3000)
+            _state.update { _state.value.copy(loading = false) }
+        }
+    }
+
 
     data class UiState(
         val loading: Boolean = false,
@@ -73,6 +90,7 @@ class DailyPictureViewModel(
 class DailyPictureViewModelFactory(
     private val getPODUseCase: GetPODUseCase,
     private val requestPODListUseCase: RequestPODListUseCase,
+    private val requestPODSingleDayUseCase: RequestPODSingleDayUseCase,
     private val getLastPODUpdateDateUseCase: GetLastPODUpdateDateUseCase,
     private val updateLastPODUpdateUseCase: UpdateLastPODUpdateUseCase
 ) :
@@ -81,6 +99,7 @@ class DailyPictureViewModelFactory(
         return DailyPictureViewModel(
             getPODUseCase,
             requestPODListUseCase,
+            requestPODSingleDayUseCase,
             getLastPODUpdateDateUseCase,
             updateLastPODUpdateUseCase
         ) as T

@@ -27,6 +27,7 @@ fun DailyPictureScreen(
         factory = DailyPictureViewModelFactory(
             GetPODUseCase(dailyPicturesRepository),
             RequestPODListUseCase(dailyPicturesRepository),
+            RequestPODSingleDayUseCase(dailyPicturesRepository),
             GetLastPODUpdateDateUseCase(lastDbUpdateRepository),
             UpdateLastPODUpdateUseCase(lastDbUpdateRepository)
         )
@@ -36,7 +37,8 @@ fun DailyPictureScreen(
     PODItemsListScreen(
         loading = state.loading,
         items = state.dailyPictures,
-        onClick = onClick
+        onClick = onClick,
+        onRefresh = { viewModel.launchDayRequest() }
     )
 }
 

@@ -2,8 +2,7 @@ package com.mariomanzano.nasaexplorer.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mariomanzano.domain.entities.LastUpdateInfo
-import com.mariomanzano.nasaexplorer.data.utils.checkIfDayAfter
+import com.mariomanzano.nasaexplorer.data.utils.checkIfDayAfterToday
 import com.mariomanzano.nasaexplorer.usecases.*
 import kotlinx.coroutines.launch
 import java.util.*
@@ -21,9 +20,8 @@ class MainViewModel(
         viewModelScope.launch {
             getLastPODUpdateDateUseCase()
                 .collect { info ->
-                    if (info == null || info.date.checkIfDayAfter()) {
-                        val infoNotNull = info ?: LastUpdateInfo(0, Calendar.getInstance(), true)
-                        updateLastPODUpdateUseCase(infoNotNull.apply {
+                    if (info?.date?.checkIfDayAfterToday() == true) {
+                        updateLastPODUpdateUseCase(info.apply {
                             date = Calendar.getInstance()
                             updateNeed = true
                         })
@@ -33,9 +31,8 @@ class MainViewModel(
         viewModelScope.launch {
             getLastEarthUpdateDateNeedUseCase()
                 .collect { info ->
-                    if (info == null || info.date.checkIfDayAfter()) {
-                        val infoNotNull = info ?: LastUpdateInfo(0, Calendar.getInstance(), true)
-                        updateLastEarthUpdateUseCase(infoNotNull.apply {
+                    if (info?.date?.checkIfDayAfterToday() == true) {
+                        updateLastEarthUpdateUseCase(info.apply {
                             date = Calendar.getInstance()
                             updateNeed = true
                         })
@@ -45,9 +42,8 @@ class MainViewModel(
         viewModelScope.launch {
             getLastMarsUpdateDateUseCase()
                 .collect { info ->
-                    if (info == null || info.date.checkIfDayAfter()) {
-                        val infoNotNull = info ?: LastUpdateInfo(0, Calendar.getInstance(), true)
-                        updateLastMarsUpdateUseCase(infoNotNull.apply {
+                    if (info?.date?.checkIfDayAfterToday() == true) {
+                        updateLastMarsUpdateUseCase(info.apply {
                             date = Calendar.getInstance()
                             updateNeed = true
                         })
