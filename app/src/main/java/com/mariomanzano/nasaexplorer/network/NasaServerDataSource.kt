@@ -37,7 +37,6 @@ class NasaServerDataSource : PODRemoteDataSource,
                     startDate = DateFormatter.Simple.formatter.format(from.time),
                     endDate = DateFormatter.Simple.formatter.format(to.time)
                 )
-                .filter { it.media_type == "image" }
                 .map { it.asPictureOfTheDayItem() }
                 .sortedByDescending { it.date }
         }

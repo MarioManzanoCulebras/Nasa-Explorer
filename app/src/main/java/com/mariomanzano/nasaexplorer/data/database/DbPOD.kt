@@ -11,6 +11,7 @@ data class DbPOD(
     val title: String,
     val description: String,
     val url: String,
+    val mediaType: String,
     val copyRight: String,
     var favorite: Boolean,
     val type: String

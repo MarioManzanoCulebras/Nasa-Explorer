@@ -29,7 +29,7 @@ fun NasaItemDetailScaffold(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { shareCharacter(context, nasaItem.title?:"", nasaItem.url?:"") }
+                onClick = { shareNasaItem(context, nasaItem.title ?: "", nasaItem.url ?: "") }
             ) {
                 Icon(imageVector = Icons.Default.Share, contentDescription = null)
             }
@@ -58,7 +58,7 @@ fun NasaItemDetailScaffold(
     )
 }
 
-private fun shareCharacter(context: Context, name: String, url: String) {
+private fun shareNasaItem(context: Context, name: String, url: String) {
     val intent = ShareCompat
         .IntentBuilder(context)
         .setType("text/plain")

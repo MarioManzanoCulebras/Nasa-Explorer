@@ -8,6 +8,7 @@ data class MarsItem(
     override val title: String,
     override val description: String,
     override val url: String,
+    override val mediaType: String?,
     override var favorite: Boolean = false,
     override val type: String = "mars",
     val sun: Int,

@@ -8,6 +8,7 @@ data class EarthItem(
     override val title: String,
     override val description: String,
     override val url: String,
+    override val mediaType: String?,
     override var favorite: Boolean = false,
     override val type: String = "earth"
 ) : NasaItem

@@ -167,6 +167,7 @@ private fun DbPOD.toDomainModel(): PictureOfDayItem =
         title = title,
         description = description,
         url = url,
+        mediaType = mediaType,
         favorite = favorite,
         copyRight = copyRight
     )
@@ -178,6 +179,7 @@ private fun DbEarth.toDomainModel(): EarthItem =
         title = title,
         description = description,
         url = url,
+        mediaType = "image",
         favorite = favorite
     )
 
@@ -188,6 +190,7 @@ private fun DbMars.toDomainModel(): MarsItem =
         title = title,
         description = description,
         url = url,
+        mediaType = "image",
         favorite = favorite,
         sun = sun,
         cameraName = cameraName ?: "",
@@ -224,6 +227,7 @@ private fun PictureOfDayItem.fromDomainModel(): DbPOD = DbPOD(
     title = title,
     description = description,
     url = url,
+    mediaType = mediaType,
     copyRight = copyRight,
     favorite = favorite,
     type = type

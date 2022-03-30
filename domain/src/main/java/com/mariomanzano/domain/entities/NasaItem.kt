@@ -8,6 +8,7 @@ interface NasaItem {
     val title: String?
     val description: String?
     val url: String?
+    val mediaType: String?
     var favorite: Boolean
     val type: String
 }
