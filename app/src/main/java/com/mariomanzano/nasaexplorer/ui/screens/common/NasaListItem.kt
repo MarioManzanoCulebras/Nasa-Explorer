@@ -1,5 +1,6 @@
 package com.mariomanzano.nasaexplorer.ui.screens.common
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -101,9 +102,16 @@ fun <T : NasaItem> NasaListItem(
 }
 
 fun openYoutubeWithUrl(url: String?, context: Context) {
-    val intent = Intent(Intent.ACTION_VIEW)
-    intent.data = Uri.parse(url)
-    intent.setPackage("com.google.android.youtube")
-    startActivity(context, intent, null)
-    //Todo: Check if youtube not installed start the browser youtube
+    val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+        setPackage("com.google.android.youtube")
+    }
+    val webIntent = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse(url)
+    )
+    try {
+        startActivity(context, appIntent, null)
+    } catch (ex: ActivityNotFoundException) {
+        startActivity(context, webIntent, null)
+    }
 }
