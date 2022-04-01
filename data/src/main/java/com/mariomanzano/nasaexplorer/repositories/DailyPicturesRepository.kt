@@ -33,6 +33,7 @@ class DailyPicturesRepository(
     suspend fun requestPODList(): Error? {
         val items = remoteDataSource.findPODitems()
         items.fold(ifLeft = { return it }) { serverList ->
+            if (serverList.isEmpty()) return Error.NoData
             localDataSource.savePODList(serverList)
         }
         return null

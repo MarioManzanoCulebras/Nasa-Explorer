@@ -37,7 +37,9 @@ fun EarthScreen(
         loading = state.loading,
         items = state.dailyPictures,
         onClick = onClick,
-        onRefresh = { viewModel.launchUpdate() }
+        onRefreshComplete = { viewModel.launchUpdate() },
+        onSimpleRefresh = { viewModel.launchUpdate() },
+        error = state.error
     )
 }
 

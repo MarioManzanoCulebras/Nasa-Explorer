@@ -56,11 +56,20 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
     override val podList: Flow<List<PictureOfDayItem>> =
         nasaDao.getAllPOD().map { it.toPODDomainModel() }
 
+    override val podListFavorite: Flow<List<PictureOfDayItem>> =
+        nasaDao.getAllPOD().map { pod -> pod.toPODDomainModel().filter { it.favorite } }
+
     override val earthList: Flow<List<EarthItem>> =
         nasaDao.getAllEarth().map { it.toEarthDomainModel() }
 
+    override val earthListFavorite: Flow<List<EarthItem>> =
+        nasaDao.getAllEarth().map { earth -> earth.toEarthDomainModel().filter { it.favorite } }
+
     override val marsList: Flow<List<MarsItem>> =
         nasaDao.getAllMars().map { it.toMarsDomainModel() }
+
+    override val marsListFavorite: Flow<List<MarsItem>> =
+        nasaDao.getAllMars().map { mars -> mars.toMarsDomainModel().filter { it.favorite } }
 
     override suspend fun isPODListEmpty(): Boolean = nasaDao.getPODCount() == 0
 

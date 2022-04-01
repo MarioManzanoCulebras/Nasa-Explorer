@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MarsLocalDataSource {
     val marsList: Flow<List<MarsItem>>
+    val marsListFavorite: Flow<List<MarsItem>>
 
     suspend fun isMarsListEmpty(): Boolean
     fun findMarsById(id: Int): Flow<MarsItem>

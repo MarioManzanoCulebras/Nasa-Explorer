@@ -7,10 +7,8 @@ import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.nasaexplorer.network.toError
 import com.mariomanzano.nasaexplorer.usecases.GetFavoritesUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(
@@ -25,13 +23,33 @@ class FavoriteViewModel(
     init {
         viewModelScope.launch {
             getFavoritesUseCase()
-                .catch { cause -> _state.update { it.copy(error = cause.toError()) } }
-                .collect { items ->
-                    favoriteList.addAll(items.filter { it.favorite }.sortedBy { it.type })
+                .flowOn(Dispatchers.IO)
+                .onStart { _state.update { it.copy(loading = true) } }
+                .catch { cause ->
                     _state.update {
-                        UiState(items = favoriteList)
+                        it.copy(
+                            loading = false,
+                            error = cause.toError()
+                        )
                     }
                 }
+                .onEach { flow ->
+                    flow.first { true }.also { items ->
+                        favoriteList.addAll(items.sortedBy { it.type })
+                        favoriteList
+                    }
+                }
+                .onCompletion {
+                    if (favoriteList.isEmpty()) {
+                        _state.update {
+                            it.copy(loading = false, error = Error.NoData)
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(loading = false, items = favoriteList)
+                        }
+                    }
+                }.collect()
         }
     }
 

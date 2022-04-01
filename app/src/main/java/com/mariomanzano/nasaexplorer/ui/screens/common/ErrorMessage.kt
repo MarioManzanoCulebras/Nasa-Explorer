@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,10 +21,11 @@ import com.mariomanzano.domain.Error
 import com.mariomanzano.nasaexplorer.ui.NasaExploreScreen
 
 @Composable
-fun ErrorMessage(error: Error) {
+fun ErrorMessage(error: Error, onClickRetry: (() -> Unit)? = null) {
     val message = when (error) {
         Error.Connectivity -> "Connectivity Error"
         is Error.Server -> "Server Error: ${error.code}"
+        is Error.NoData -> "No Data"
         is Error.Unknown -> "Unknown Error: ${error.message}"
     }
 
@@ -32,16 +35,23 @@ fun ErrorMessage(error: Error) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            imageVector = Icons.Default.Warning,
+            imageVector = if (error is Error.NoData) Icons.Default.Info else Icons.Default.Warning,
             contentDescription = message,
             modifier = Modifier.size(128.dp),
-            tint = MaterialTheme.colors.error
+            tint = if (error is Error.NoData) MaterialTheme.colors.primary else MaterialTheme.colors.error
         )
         Text(
             text = message,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h4
         )
+        if (onClickRetry != null) {
+            Button(
+                onClick = { onClickRetry() }
+            ) {
+                Text(text = "Retry")
+            }
+        }
     }
 }
 
@@ -49,6 +59,6 @@ fun ErrorMessage(error: Error) {
 @Composable
 fun ErrorMessagePreview() {
     NasaExploreScreen {
-        ErrorMessage(error = Error.Connectivity)
+        ErrorMessage(error = Error.Connectivity) {}
     }
 }

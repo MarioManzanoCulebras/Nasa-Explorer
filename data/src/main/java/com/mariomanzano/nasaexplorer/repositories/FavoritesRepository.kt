@@ -6,6 +6,7 @@ import com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.merge
 
 class FavoritesRepository(
@@ -14,11 +15,11 @@ class FavoritesRepository(
     private val marsDataSource: MarsLocalDataSource
 ) {
 
-    private val podList = pODDataSource.podList
-    private val earthList = earthDataSource.earthList
-    private val marsList = marsDataSource.marsList
+    private val podList = pODDataSource.podListFavorite
+    private val earthList = earthDataSource.earthListFavorite
+    private val marsList = marsDataSource.marsListFavorite
 
-    fun getList() = merge(podList, earthList, marsList)
+    fun getList() = merge(flowOf(podList, earthList, marsList))
 
     fun findByIdAndType(id: Int, type: String): Flow<NasaItem> {
         return when (type) {

@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import kotlinx.coroutines.launch
@@ -30,42 +31,48 @@ fun <T : NasaItem> NasaItemsListScreen(
     loading: Boolean = false,
     items: List<T>?,
     onClick: (T) -> Unit,
-    onRefresh: (() -> Unit)? = null
+    onRefreshComplete: (() -> Unit)? = null,
+    onSimpleRefresh: (() -> Unit)? = null,
+    error: Error? = null
 ) {
-    var bottomSheetItem by remember { mutableStateOf<T?>(null) }
-    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    val scope = rememberCoroutineScope()
+    if (error != null && !loading) {
+        ErrorMessage(error = error, onRefreshComplete)
+    } else {
+        var bottomSheetItem by remember { mutableStateOf<T?>(null) }
+        val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+        val scope = rememberCoroutineScope()
 
-    BackPressedHandler(sheetState.isVisible) {
-        scope.launch { sheetState.hide() }
-    }
+        BackPressedHandler(sheetState.isVisible) {
+            scope.launch { sheetState.hide() }
+        }
 
-    ModalBottomSheetLayout(
-        sheetContent = {
-            NasaItemBottomPreview(
-                item = bottomSheetItem,
-                onGoToDetail = {
-                    scope.launch {
-                        sheetState.hide()
-                        onClick(it)
+        ModalBottomSheetLayout(
+            sheetContent = {
+                NasaItemBottomPreview(
+                    item = bottomSheetItem,
+                    onGoToDetail = {
+                        scope.launch {
+                            sheetState.hide()
+                            onClick(it)
+                        }
                     }
-                }
-            )
-        },
-        sheetState = sheetState
-    ) {
-        NasaItemsList(
-            loading = loading,
-            items = items,
-            onItemClick = onClick,
-            onItemMore = {
-                scope.launch {
-                    bottomSheetItem = it
-                    sheetState.show()
-                }
+                )
             },
-            onRefresh = onRefresh
-        )
+            sheetState = sheetState
+        ) {
+            NasaItemsList(
+                loading = loading,
+                items = items,
+                onItemClick = onClick,
+                onItemMore = {
+                    scope.launch {
+                        bottomSheetItem = it
+                        sheetState.show()
+                    }
+                },
+                onRefresh = onSimpleRefresh
+            )
+        }
     }
 }
 
@@ -76,42 +83,48 @@ fun PODItemsListScreen(
     loading: Boolean = false,
     items: List<PictureOfDayItem>?,
     onClick: (PictureOfDayItem) -> Unit,
-    onRefresh: () -> Unit
+    onRefreshComplete: () -> Unit,
+    onSimpleRefresh: () -> Unit,
+    error: Error?
 ) {
-    var bottomSheetItem by remember { mutableStateOf<PictureOfDayItem?>(null) }
-    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-    val scope = rememberCoroutineScope()
+    if (error != null && !loading) {
+        ErrorMessage(error = error, onRefreshComplete)
+    } else {
+        var bottomSheetItem by remember { mutableStateOf<PictureOfDayItem?>(null) }
+        val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+        val scope = rememberCoroutineScope()
 
-    BackPressedHandler(sheetState.isVisible) {
-        scope.launch { sheetState.hide() }
-    }
+        BackPressedHandler(sheetState.isVisible) {
+            scope.launch { sheetState.hide() }
+        }
 
-    ModalBottomSheetLayout(
-        sheetContent = {
-            NasaItemBottomPreview(
-                item = bottomSheetItem,
-                onGoToDetail = {
-                    scope.launch {
-                        sheetState.hide()
-                        onClick(it)
+        ModalBottomSheetLayout(
+            sheetContent = {
+                NasaItemBottomPreview(
+                    item = bottomSheetItem,
+                    onGoToDetail = {
+                        scope.launch {
+                            sheetState.hide()
+                            onClick(it)
+                        }
                     }
-                }
-            )
-        },
-        sheetState = sheetState
-    ) {
-        PODItemsList(
-            loading = loading,
-            items = items,
-            onItemClick = onClick,
-            onItemMore = {
-                scope.launch {
-                    bottomSheetItem = it
-                    sheetState.show()
-                }
+                )
             },
-            onRefresh = onRefresh
-        )
+            sheetState = sheetState
+        ) {
+            PODItemsList(
+                loading = loading,
+                items = items,
+                onItemClick = onClick,
+                onItemMore = {
+                    scope.launch {
+                        bottomSheetItem = it
+                        sheetState.show()
+                    }
+                },
+                onSimpleRefresh = onSimpleRefresh
+            )
+        }
     }
 }
 
@@ -192,7 +205,7 @@ fun PODItemsList(
     items: List<PictureOfDayItem>?,
     onItemClick: (PictureOfDayItem) -> Unit,
     onItemMore: (PictureOfDayItem) -> Unit,
-    onRefresh: () -> Unit,
+    onSimpleRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -208,7 +221,7 @@ fun PODItemsList(
             if (list.isNotEmpty()) {
                 SwipeRefresh(
                     state = rememberSwipeRefreshState(loading),
-                    onRefresh = { onRefresh() },
+                    onRefresh = { onSimpleRefresh() },
                 ) {
                     LazyColumn(
                         contentPadding = PaddingValues(4.dp)

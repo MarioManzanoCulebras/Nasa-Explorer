@@ -59,10 +59,11 @@ class DailyEarthViewModel(
                                 false
                             )
                         )
+                        launchUpdate()
                     } else if (info.updateNeed) {
                         updateLastEarthUpdateUseCase(info.apply { updateNeed = false })
+                        launchUpdate()
                     }
-                    launchUpdate()
                 }
         }
     }
@@ -70,9 +71,8 @@ class DailyEarthViewModel(
     fun launchUpdate() {
         viewModelScope.launch {
             _state.update { _state.value.copy(loading = true) }
-            requestEarthListUseCase()
             delay(3000)
-            _state.update { _state.value.copy(loading = false) }
+            _state.update { _state.value.copy(loading = false, error = requestEarthListUseCase()) }
         }
     }
 

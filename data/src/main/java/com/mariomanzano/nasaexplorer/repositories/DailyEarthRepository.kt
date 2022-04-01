@@ -18,6 +18,7 @@ class DailyEarthRepository(
     suspend fun requestEarthList(): Error? {
         val items = remoteDataSource.findEarthItems()
         items.fold(ifLeft = { return it }) { serverList ->
+            if (serverList.isEmpty()) return Error.NoData
             localDataSource.saveEarthList(serverList)
         }
         return null

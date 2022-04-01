@@ -37,7 +37,9 @@ fun MarsScreen(
         loading = state.loading,
         items = state.marsPictures,
         onClick = onClick,
-        onRefresh = { viewModel.launchUpdate() }
+        onRefreshComplete = { viewModel.launchUpdate() },
+        onSimpleRefresh = { viewModel.launchUpdate() },
+        error = state.error
     )
 }
 

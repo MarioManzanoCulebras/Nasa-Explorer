@@ -18,6 +18,7 @@ class MarsRepository(
     suspend fun requestMarsList(): Error? {
         val items = remoteDataSource.findMarsItems()
         items.fold(ifLeft = { return it }) { serverList ->
+            if (serverList.isEmpty()) return Error.NoData
             localDataSource.saveMarsList(serverList)
         }
         return null

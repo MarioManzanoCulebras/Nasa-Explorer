@@ -62,19 +62,27 @@ class DailyPictureViewModel(
         }
     }
 
-    private fun launchListCompleteRequest() {
+    fun launchListCompleteRequest() {
         viewModelScope.launch {
             _state.update { _state.value.copy(loading = true, dailyPictures = emptyList()) }
-            requestPODListUseCase()
+            _state.value = UiState(
+                loading = false,
+                dailyPictures = emptyList(),
+                error = requestPODListUseCase()
+            )
         }
     }
 
     fun launchDayRequest() {
         viewModelScope.launch {
             _state.update { _state.value.copy(loading = true) }
-            requestPODSingleDayUseCase()
             delay(3000)
-            _state.update { _state.value.copy(loading = false) }
+            _state.update {
+                _state.value.copy(
+                    loading = false,
+                    error = requestPODSingleDayUseCase()
+                )
+            }
         }
     }
 

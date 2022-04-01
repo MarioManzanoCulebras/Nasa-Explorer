@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PODLocalDataSource {
     val podList: Flow<List<PictureOfDayItem>>
+    val podListFavorite: Flow<List<PictureOfDayItem>>
 
     suspend fun isPODListEmpty(): Boolean
     fun findPODById(id: Int): Flow<PictureOfDayItem>

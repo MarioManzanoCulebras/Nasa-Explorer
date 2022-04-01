@@ -31,7 +31,8 @@ fun FavoritesScreen(
     NasaItemsListScreen(
         loading = state.loading,
         items = state.items,
-        onClick = onClick
+        onClick = onClick,
+        error = state.error
     )
 }
 

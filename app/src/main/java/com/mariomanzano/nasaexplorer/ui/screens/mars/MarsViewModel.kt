@@ -59,10 +59,11 @@ class MarsViewModel(
                                 false
                             )
                         )
+                        launchUpdate()
                     } else if (info.updateNeed) {
                         updateLastMarsUpdateUseCase(info.apply { updateNeed = false })
+                        launchUpdate()
                     }
-                    launchUpdate()
                 }
         }
     }
@@ -70,9 +71,8 @@ class MarsViewModel(
     fun launchUpdate() {
         viewModelScope.launch {
             _state.update { _state.value.copy(loading = true) }
-            requestMarsListUseCase()
             delay(3000)
-            _state.update { _state.value.copy(loading = false) }
+            _state.update { _state.value.copy(loading = false, error = requestMarsListUseCase()) }
         }
     }
 

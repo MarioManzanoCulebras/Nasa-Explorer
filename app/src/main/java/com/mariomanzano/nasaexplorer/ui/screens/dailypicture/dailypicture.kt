@@ -38,7 +38,9 @@ fun DailyPictureScreen(
         loading = state.loading,
         items = state.dailyPictures,
         onClick = onClick,
-        onRefresh = { viewModel.launchDayRequest() }
+        onRefreshComplete = { viewModel.launchListCompleteRequest() },
+        onSimpleRefresh = { viewModel.launchDayRequest() },
+        state.error
     )
 }
 

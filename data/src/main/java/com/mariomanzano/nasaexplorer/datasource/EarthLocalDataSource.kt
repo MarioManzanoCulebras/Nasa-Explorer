@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface EarthLocalDataSource {
     val earthList: Flow<List<EarthItem>>
+    val earthListFavorite: Flow<List<EarthItem>>
 
     suspend fun isEarthListEmpty(): Boolean
     fun findEarthById(id: Int): Flow<EarthItem>
