@@ -2,9 +2,10 @@ package com.mariomanzano.nasaexplorer.ui.screens.favorites
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.nasaexplorer.repositories.FavoritesRepository
@@ -27,6 +28,20 @@ fun FavoritesScreen(
         )
     )
     val state by viewModel.state.collectAsState()
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val observer = remember {
+        LifecycleEventObserver { _, event ->
+            if (event.targetState.isAtLeast(Lifecycle.State.RESUMED)) {
+                viewModel.getFavorites()
+            }
+        }
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     NasaItemsListScreen(
         loading = state.loading,

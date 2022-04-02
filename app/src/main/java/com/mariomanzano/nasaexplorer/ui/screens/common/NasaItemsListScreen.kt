@@ -1,7 +1,6 @@
 package com.mariomanzano.nasaexplorer.ui.screens.common
 
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,7 +14,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -42,7 +40,7 @@ fun <T : NasaItem> NasaItemsListScreen(
         val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val scope = rememberCoroutineScope()
 
-        BackPressedHandler(sheetState.isVisible) {
+        BackHandler(sheetState.isVisible) {
             scope.launch { sheetState.hide() }
         }
 
@@ -94,7 +92,7 @@ fun PODItemsListScreen(
         val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val scope = rememberCoroutineScope()
 
-        BackPressedHandler(sheetState.isVisible) {
+        BackHandler(sheetState.isVisible) {
             scope.launch { sheetState.hide() }
         }
 
@@ -125,31 +123,6 @@ fun PODItemsListScreen(
                 onSimpleRefresh = onSimpleRefresh
             )
         }
-    }
-}
-
-@Composable
-fun BackPressedHandler(enabled: Boolean, onBack: () -> Unit) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val backDispatcher =
-        requireNotNull(LocalOnBackPressedDispatcherOwner.current).onBackPressedDispatcher
-
-    val backCallback = remember {
-        object : OnBackPressedCallback(enabled) {
-            override fun handleOnBackPressed() {
-                onBack()
-            }
-        }
-    }
-
-    SideEffect {
-        backCallback.isEnabled = enabled
-    }
-
-    DisposableEffect(lifecycleOwner, backDispatcher) {
-        backDispatcher.addCallback(lifecycleOwner, backCallback)
-
-        onDispose { backCallback.remove() }
     }
 }
 

@@ -20,11 +20,16 @@ class FavoriteViewModel(
 
     private val favoriteList: MutableList<NasaItem> = mutableListOf()
 
-    init {
+    fun getFavorites() {
         viewModelScope.launch {
             getFavoritesUseCase()
                 .flowOn(Dispatchers.IO)
-                .onStart { _state.update { it.copy(loading = true) } }
+                .onStart {
+                    favoriteList.clear()
+                    _state.update {
+                        it.copy(loading = true, items = favoriteList)
+                    }
+                }
                 .catch { cause ->
                     _state.update {
                         it.copy(
