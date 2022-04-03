@@ -82,11 +82,12 @@ fun PODItemsListScreen(
     items: List<PictureOfDayItem>?,
     onClick: (PictureOfDayItem) -> Unit,
     onRefreshComplete: () -> Unit,
+    onSeeLocalData: () -> Unit,
     onSimpleRefresh: () -> Unit,
     error: Error?
 ) {
     if (error != null && !loading) {
-        ErrorMessage(error = error, onRefreshComplete)
+        ErrorMessage(error = error, onRefreshComplete, onSeeLocalData)
     } else {
         var bottomSheetItem by remember { mutableStateOf<PictureOfDayItem?>(null) }
         val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)

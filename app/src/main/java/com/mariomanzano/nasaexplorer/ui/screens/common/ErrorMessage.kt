@@ -21,7 +21,11 @@ import com.mariomanzano.domain.Error
 import com.mariomanzano.nasaexplorer.ui.NasaExploreScreen
 
 @Composable
-fun ErrorMessage(error: Error, onClickRetry: (() -> Unit)? = null) {
+fun ErrorMessage(
+    error: Error,
+    onClickRetry: (() -> Unit)? = null,
+    onSeeLocalData: (() -> Unit)? = null
+) {
     val message = when (error) {
         Error.Connectivity -> "Connectivity Error"
         is Error.Server -> "Server Error: ${error.code}"
@@ -52,6 +56,13 @@ fun ErrorMessage(error: Error, onClickRetry: (() -> Unit)? = null) {
                 Text(text = "Retry")
             }
         }
+        if (onSeeLocalData != null) {
+            Button(
+                onClick = { onSeeLocalData() }
+            ) {
+                Text(text = "See Local Data")
+            }
+        }
     }
 }
 
@@ -59,6 +70,6 @@ fun ErrorMessage(error: Error, onClickRetry: (() -> Unit)? = null) {
 @Composable
 fun ErrorMessagePreview() {
     NasaExploreScreen {
-        ErrorMessage(error = Error.Connectivity) {}
+        ErrorMessage(error = Error.Connectivity, {}, {})
     }
 }
