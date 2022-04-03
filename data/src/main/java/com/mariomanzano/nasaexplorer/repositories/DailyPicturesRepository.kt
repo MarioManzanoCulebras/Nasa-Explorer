@@ -41,6 +41,6 @@ class DailyPicturesRepository(
 
     suspend fun switchFavorite(pictureOfDayItem: PictureOfDayItem): Error? {
         val updatedPOD = pictureOfDayItem.copy(favorite = !pictureOfDayItem.favorite)
-        return localDataSource.savePODList(listOf(updatedPOD))
+        return localDataSource.savePODFavoriteList(listOf(updatedPOD))
     }
 }
