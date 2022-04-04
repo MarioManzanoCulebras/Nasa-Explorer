@@ -33,7 +33,7 @@ fun <T : NasaItem> NasaItemsListScreen(
     onSimpleRefresh: (() -> Unit)? = null,
     error: Error? = null
 ) {
-    if (error != null && !loading) {
+    if (error != null && !loading && items?.isEmpty() == true) {
         ErrorMessage(error = error, onRefreshComplete)
     } else {
         var bottomSheetItem by remember { mutableStateOf<T?>(null) }
@@ -82,12 +82,11 @@ fun PODItemsListScreen(
     items: List<PictureOfDayItem>?,
     onClick: (PictureOfDayItem) -> Unit,
     onRefreshComplete: () -> Unit,
-    onSeeLocalData: () -> Unit,
     onSimpleRefresh: () -> Unit,
     error: Error?
 ) {
-    if (error != null && !loading) {
-        ErrorMessage(error = error, onRefreshComplete, onSeeLocalData)
+    if (error != null && !loading && items?.isEmpty() == true) {
+        ErrorMessage(error = error, onRefreshComplete)
     } else {
         var bottomSheetItem by remember { mutableStateOf<PictureOfDayItem?>(null) }
         val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)

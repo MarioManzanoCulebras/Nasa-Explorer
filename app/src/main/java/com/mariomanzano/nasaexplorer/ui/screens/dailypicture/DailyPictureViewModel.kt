@@ -28,7 +28,21 @@ class DailyPictureViewModel(
     val state = _state.asStateFlow()
 
     init {
-        getLocalData()
+        viewModelScope.launch {
+            _state.update { _state.value.copy(loading = true) }
+            getPODUseCase()
+                .catch { cause ->
+                    _state.update { it.copy(error = cause.toError()) }
+                }
+                .collect { items ->
+                    if (items.isNotEmpty()) {
+                        _state.update {
+                            _state.value.copy(loading = false,
+                                dailyPictures = items.sortedByDescending { it.date })
+                        }
+                    }
+                }
+        }
         viewModelScope.launch {
             getLastPODUpdateDateUseCase()
                 .catch { cause ->
@@ -43,24 +57,6 @@ class DailyPictureViewModel(
                             updateNeed = false
                         })
                         launchDayRequest()
-                    }
-                }
-        }
-    }
-
-    fun getLocalData() {
-        viewModelScope.launch {
-            _state.update { _state.value.copy(loading = true) }
-            getPODUseCase()
-                .catch { cause ->
-                    _state.update { it.copy(error = cause.toError()) }
-                }
-                .collect { items ->
-                    if (items.isNotEmpty()) {
-                        _state.update {
-                            _state.value.copy(loading = false,
-                                dailyPictures = items.sortedByDescending { it.date })
-                        }
                     }
                 }
         }

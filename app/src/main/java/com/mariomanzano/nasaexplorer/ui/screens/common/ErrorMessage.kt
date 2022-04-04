@@ -24,7 +24,6 @@ import com.mariomanzano.nasaexplorer.ui.NasaExploreScreen
 fun ErrorMessage(
     error: Error,
     onClickRetry: (() -> Unit)? = null,
-    onSeeLocalData: (() -> Unit)? = null
 ) {
     val message = when (error) {
         Error.Connectivity -> "Connectivity Error"
@@ -56,13 +55,6 @@ fun ErrorMessage(
                 Text(text = "Retry")
             }
         }
-        if (onSeeLocalData != null) {
-            Button(
-                onClick = { onSeeLocalData() }
-            ) {
-                Text(text = "See Local Data")
-            }
-        }
     }
 }
 
@@ -70,6 +62,6 @@ fun ErrorMessage(
 @Composable
 fun ErrorMessagePreview() {
     NasaExploreScreen {
-        ErrorMessage(error = Error.Connectivity, {}, {})
+        ErrorMessage(error = Error.Connectivity) {}
     }
 }

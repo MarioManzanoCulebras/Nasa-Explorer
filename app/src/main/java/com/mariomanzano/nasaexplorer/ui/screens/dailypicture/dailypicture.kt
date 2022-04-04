@@ -39,7 +39,6 @@ fun DailyPictureScreen(
         items = state.dailyPictures,
         onClick = onClick,
         onRefreshComplete = { viewModel.launchListCompleteRequest() },
-        onSeeLocalData = { viewModel.getLocalData() },
         onSimpleRefresh = { viewModel.launchDayRequest() },
         state.error
     )
