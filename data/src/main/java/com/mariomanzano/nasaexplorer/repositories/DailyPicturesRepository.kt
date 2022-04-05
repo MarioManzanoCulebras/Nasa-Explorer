@@ -8,8 +8,9 @@ import com.mariomanzano.nasaexplorer.sameDay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.util.*
+import javax.inject.Inject
 
-class DailyPicturesRepository(
+class DailyPicturesRepository @Inject constructor(
     private val localDataSource: PODLocalDataSource,
     private val remoteDataSource: PODRemoteDataSource
 ) {

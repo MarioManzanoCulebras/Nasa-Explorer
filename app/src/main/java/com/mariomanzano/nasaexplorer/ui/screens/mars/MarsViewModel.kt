@@ -1,7 +1,6 @@
 package com.mariomanzano.nasaexplorer.ui.screens.mars
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.LastUpdateInfo
@@ -11,6 +10,7 @@ import com.mariomanzano.nasaexplorer.usecases.GetLastMarsUpdateDateUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetMarsUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestMarsListUseCase
 import com.mariomanzano.nasaexplorer.usecases.UpdateLastMarsUpdateUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,8 +18,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class MarsViewModel(
+@HiltViewModel
+class MarsViewModel @Inject constructor(
     getMarsUseCase: GetMarsUseCase,
     private val requestMarsListUseCase: RequestMarsListUseCase,
     private val getLastMarsUpdateDateUseCase: GetLastMarsUpdateDateUseCase,
@@ -81,22 +83,4 @@ class MarsViewModel(
         val marsPictures: List<MarsItem>? = null,
         val error: Error? = null
     )
-}
-
-@Suppress("UNCHECKED_CAST")
-class MarsViewModelFactory(
-    private val getMarsUseCase: GetMarsUseCase,
-    private val requestMarsListUseCase: RequestMarsListUseCase,
-    private val getLastMarsUpdateDateUseCase: GetLastMarsUpdateDateUseCase,
-    private val updateLastMarsUpdateUseCase: UpdateLastMarsUpdateUseCase
-) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MarsViewModel(
-            getMarsUseCase,
-            requestMarsListUseCase,
-            getLastMarsUpdateDateUseCase,
-            updateLastMarsUpdateUseCase
-        ) as T
-    }
 }

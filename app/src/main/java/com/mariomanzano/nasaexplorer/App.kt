@@ -1,20 +1,7 @@
 package com.mariomanzano.nasaexplorer
 
 import android.app.Application
-import androidx.room.Room
-import com.mariomanzano.nasaexplorer.data.database.NasaDatabase
+import dagger.hilt.android.HiltAndroidApp
 
-class App : Application() {
-
-    lateinit var db: NasaDatabase
-        private set
-
-    override fun onCreate() {
-        super.onCreate()
-
-        db = Room.databaseBuilder(
-            this,
-            NasaDatabase::class.java, "nasa-db"
-        ).build()
-    }
-}
+@HiltAndroidApp
+class App : Application()

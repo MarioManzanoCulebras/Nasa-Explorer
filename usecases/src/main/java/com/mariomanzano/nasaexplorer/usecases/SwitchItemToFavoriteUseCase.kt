@@ -8,8 +8,9 @@ import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
 import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
 import com.mariomanzano.nasaexplorer.repositories.MarsRepository
+import javax.inject.Inject
 
-class SwitchItemToFavoriteUseCase(
+class SwitchItemToFavoriteUseCase @Inject constructor(
     private val dailyPicturesRepository: DailyPicturesRepository,
     private val dailyEarthRepository: DailyEarthRepository,
     private val marsRepository: MarsRepository

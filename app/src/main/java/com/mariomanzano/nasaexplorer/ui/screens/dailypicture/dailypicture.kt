@@ -5,33 +5,18 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mariomanzano.domain.entities.PictureOfDayItem
-import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
-import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
-import com.mariomanzano.nasaexplorer.repositories.LastDbUpdateRepository
-import com.mariomanzano.nasaexplorer.repositories.MarsRepository
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.PODItemsListScreen
-import com.mariomanzano.nasaexplorer.usecases.*
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun DailyPictureScreen(
     onClick: (PictureOfDayItem) -> Unit,
-    dailyPicturesRepository: DailyPicturesRepository,
-    lastDbUpdateRepository: LastDbUpdateRepository
+    viewModel: DailyPictureViewModel = hiltViewModel()
 ) {
-    val viewModel: DailyPictureViewModel = viewModel(
-        factory = DailyPictureViewModelFactory(
-            GetPODUseCase(dailyPicturesRepository),
-            RequestPODListUseCase(dailyPicturesRepository),
-            RequestPODSingleDayUseCase(dailyPicturesRepository),
-            GetLastPODUpdateDateUseCase(lastDbUpdateRepository),
-            UpdateLastPODUpdateUseCase(lastDbUpdateRepository)
-        )
-    )
     val state by viewModel.state.collectAsState()
 
     PODItemsListScreen(
@@ -46,19 +31,7 @@ fun DailyPictureScreen(
 
 @ExperimentalMaterialApi
 @Composable
-fun DailyPictureDetailScreen(
-    itemId: Int,
-    dailyPicturesRepository: DailyPicturesRepository,
-    earthRepository: DailyEarthRepository,
-    marsRepository: MarsRepository
-) {
-    val viewModel: DailyPictureDetailViewModel = viewModel(
-        factory = DailyPictureDetailViewModelFactory(
-            itemId,
-            FindPODUseCase(dailyPicturesRepository),
-            SwitchItemToFavoriteUseCase(dailyPicturesRepository, earthRepository, marsRepository)
-        )
-    )
+fun DailyPictureDetailScreen(viewModel: DailyPictureDetailViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
 
     NasaItemDetailScreen(

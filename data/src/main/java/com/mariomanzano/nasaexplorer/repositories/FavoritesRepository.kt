@@ -8,8 +8,9 @@ import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.merge
+import javax.inject.Inject
 
-class FavoritesRepository(
+class FavoritesRepository @Inject constructor(
     private val pODDataSource: PODLocalDataSource,
     private val earthDataSource: EarthLocalDataSource,
     private val marsDataSource: MarsLocalDataSource

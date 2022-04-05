@@ -2,8 +2,9 @@ package com.mariomanzano.nasaexplorer.repositories
 
 import com.mariomanzano.domain.entities.LastUpdateInfo
 import com.mariomanzano.nasaexplorer.datasource.LastDbUpdateDataSource
+import javax.inject.Inject
 
-class LastDbUpdateRepository(
+class LastDbUpdateRepository @Inject constructor(
     private val lastDbUpdateDataSource: LastDbUpdateDataSource,
 ) {
     val lastPODUpdate = lastDbUpdateDataSource.podTableUpdatedDay

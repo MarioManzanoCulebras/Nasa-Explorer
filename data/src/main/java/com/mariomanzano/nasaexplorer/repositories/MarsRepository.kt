@@ -5,8 +5,9 @@ import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.MarsRemoteDataSource
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class MarsRepository(
+class MarsRepository @Inject constructor(
     private val localDataSource: MarsLocalDataSource,
     private val remoteDataSource: MarsRemoteDataSource
 ) {

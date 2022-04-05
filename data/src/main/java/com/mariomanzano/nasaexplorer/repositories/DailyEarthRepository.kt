@@ -5,8 +5,9 @@ import com.mariomanzano.domain.entities.EarthItem
 import com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.EarthRemoteDataSource
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class DailyEarthRepository(
+class DailyEarthRepository @Inject constructor(
     private val localDataSource: EarthLocalDataSource,
     private val remoteDataSource: EarthRemoteDataSource
 ) {

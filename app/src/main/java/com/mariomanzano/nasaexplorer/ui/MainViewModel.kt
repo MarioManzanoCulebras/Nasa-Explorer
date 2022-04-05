@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mariomanzano.nasaexplorer.data.utils.checkIfDayAfterToday
 import com.mariomanzano.nasaexplorer.usecases.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val getLastPODUpdateDateUseCase: GetLastPODUpdateDateUseCase,
     private val getLastEarthUpdateDateNeedUseCase: GetLastEarthUpdateDateNeedUseCase,
     private val getLastMarsUpdateDateUseCase: GetLastMarsUpdateDateUseCase,

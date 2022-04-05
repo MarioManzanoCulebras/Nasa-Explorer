@@ -4,29 +4,20 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mariomanzano.domain.entities.NasaItem
-import com.mariomanzano.nasaexplorer.repositories.FavoritesRepository
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
-import com.mariomanzano.nasaexplorer.usecases.FindFavoriteUseCase
-import com.mariomanzano.nasaexplorer.usecases.GetFavoritesUseCase
-import com.mariomanzano.nasaexplorer.usecases.SwitchFavoriteUseCase
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun FavoritesScreen(
     onClick: (NasaItem) -> Unit,
-    favoritesRepository: FavoritesRepository
+    viewModel: FavoriteViewModel = hiltViewModel()
 ) {
-    val viewModel: FavoriteViewModel = viewModel(
-        factory = FavoriteViewModelFactory(
-            GetFavoritesUseCase(favoritesRepository)
-        )
-    )
     val state by viewModel.state.collectAsState()
 
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -53,19 +44,7 @@ fun FavoritesScreen(
 
 @ExperimentalMaterialApi
 @Composable
-fun FavoritesDetailScreen(
-    itemId: Int,
-    itemType: String,
-    favoritesRepository: FavoritesRepository
-) {
-    val viewModel: FavoriteDetailViewModel = viewModel(
-        factory = FavoriteDetailViewModelFactory(
-            itemId,
-            itemType,
-            FindFavoriteUseCase(favoritesRepository),
-            SwitchFavoriteUseCase(favoritesRepository)
-        )
-    )
+fun FavoritesDetailScreen(viewModel: FavoriteDetailViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
 
     NasaItemDetailScreen(

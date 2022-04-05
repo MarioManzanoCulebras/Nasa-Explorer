@@ -1,7 +1,6 @@
 package com.mariomanzano.nasaexplorer.ui.screens.earth
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.EarthItem
@@ -11,6 +10,7 @@ import com.mariomanzano.nasaexplorer.usecases.GetEarthUseCase
 import com.mariomanzano.nasaexplorer.usecases.GetLastEarthUpdateDateNeedUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestEarthListUseCase
 import com.mariomanzano.nasaexplorer.usecases.UpdateLastEarthUpdateUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,8 +18,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class DailyEarthViewModel(
+@HiltViewModel
+class DailyEarthViewModel @Inject constructor(
     getEarthUseCase: GetEarthUseCase,
     private val requestEarthListUseCase: RequestEarthListUseCase,
     private val getLastEarthUpdateDateNeedUseCase: GetLastEarthUpdateDateNeedUseCase,
@@ -81,22 +83,4 @@ class DailyEarthViewModel(
         val dailyPictures: List<EarthItem>? = null,
         val error: Error? = null
     )
-}
-
-@Suppress("UNCHECKED_CAST")
-class DailyEarthViewModelFactory(
-    private val getEarthUseCase: GetEarthUseCase,
-    private val requestEarthListUseCase: RequestEarthListUseCase,
-    private val getLastEarthUpdateDateNeedUseCase: GetLastEarthUpdateDateNeedUseCase,
-    private val updateLastEarthUpdateUseCase: UpdateLastEarthUpdateUseCase
-) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return DailyEarthViewModel(
-            getEarthUseCase,
-            requestEarthListUseCase,
-            getLastEarthUpdateDateNeedUseCase,
-            updateLastEarthUpdateUseCase
-        ) as T
-    }
 }
