@@ -1,6 +1,5 @@
 package com.mariomanzano.nasaexplorer.ui.screens.common
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -8,10 +7,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.nasaexplorer.R
 
@@ -22,10 +19,9 @@ fun <T : NasaItem> NasaItemBottomPreview(item: T?, onGoToDetail: (T) -> Unit) {
             modifier = Modifier.padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Image(
-                painter = rememberImagePainter(item.url),
+            NasaImageWithLoader(
+                urlImage = item.url,
                 contentDescription = item.title,
-                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .width(96.dp)
                     .aspectRatio(1 / 1.5f)

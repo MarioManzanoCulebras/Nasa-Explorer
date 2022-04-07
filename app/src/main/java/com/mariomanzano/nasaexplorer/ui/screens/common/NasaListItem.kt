@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -16,13 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
-import coil.compose.rememberImagePainter
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.nasaexplorer.R
 
@@ -40,15 +36,7 @@ fun <T : NasaItem> NasaListItem(
     ) {
         Card {
             if (nasaItem.mediaType == "image") {
-                Image(
-                    painter = rememberImagePainter(data = nasaItem.url),
-                    contentDescription = nasaItem.title,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.LightGray)
-                        .aspectRatio(1f)
-                )
+                NasaImageWithLoader(urlImage = nasaItem.url)
             } else {
                 IconButton(
                     onClick = { openYoutubeWithUrl(nasaItem.url, context) },
