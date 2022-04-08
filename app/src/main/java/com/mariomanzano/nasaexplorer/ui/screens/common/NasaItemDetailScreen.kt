@@ -3,6 +3,7 @@ package com.mariomanzano.nasaexplorer.ui.screens.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -97,11 +98,13 @@ private fun Header(nasaItem: NasaItem) {
                     .padding(16.dp, 0.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = nasaItem.description ?: "",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.padding(16.dp, 0.dp)
-            )
+            SelectionContainer {
+                Text(
+                    text = nasaItem.description ?: "",
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.padding(16.dp, 0.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
         } else {
             ExtraMarsHeader(marsItem = nasaItem)
