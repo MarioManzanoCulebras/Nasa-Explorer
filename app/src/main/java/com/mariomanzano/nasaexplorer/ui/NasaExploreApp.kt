@@ -19,7 +19,7 @@ import com.mariomanzano.nasaexplorer.R
 import com.mariomanzano.nasaexplorer.ui.navigation.*
 import com.mariomanzano.nasaexplorer.ui.screens.common.BuildIcon
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaIcon
-import com.mariomanzano.nasaexplorer.ui.theme.NasaexplorerTheme
+import com.mariomanzano.nasaexplorer.ui.theme.NasaExplorerTheme
 
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
@@ -72,7 +72,7 @@ fun NasaExploreApp(appState: NasaExploreAppState = rememberMarvelAppState()) {
 
 @Composable
 fun NasaExploreScreen(content: @Composable () -> Unit) {
-    NasaexplorerTheme {
+    NasaExplorerTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = MaterialTheme.colors.background) {
             content()
