@@ -82,11 +82,11 @@ fun NasaExploreScreen(content: @Composable () -> Unit) {
 
 @Composable
 private fun SetStatusBarColorEffect(
-    color: Color = MaterialTheme.colors.primaryVariant,
+    color: Color = MaterialTheme.colors.primary,
     systemUiController: SystemUiController = rememberSystemUiController()
 ) {
 
     SideEffect {
-        systemUiController.setStatusBarColor(color)
+        systemUiController.setSystemBarsColor(color)
     }
 }
