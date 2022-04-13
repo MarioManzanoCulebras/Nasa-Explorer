@@ -45,11 +45,11 @@ fun NasaItemDetailScaffold(
                 IconButton(onClick = onFavoriteClick) {
                     if (nasaItem.favorite) BuildIcon(
                         icon = Icons.Default.Favorite,
-                        nasaIcon = NasaIcon.FavoriteOn
+                        nasaIcon = NasaIcon.FavoriteOnLight
                     )
                     else BuildIcon(
                         icon = Icons.Default.FavoriteBorder,
-                        nasaIcon = NasaIcon.FavoriteOff
+                        nasaIcon = NasaIcon.FavoriteOffLight
                     )
                 }
             }

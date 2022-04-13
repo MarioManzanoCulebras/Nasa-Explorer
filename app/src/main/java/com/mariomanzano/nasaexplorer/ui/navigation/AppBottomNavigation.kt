@@ -5,6 +5,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import com.mariomanzano.nasaexplorer.ui.screens.common.BuildIcon
 
@@ -16,12 +18,20 @@ fun AppBottomNavigation(
 ) {
     NasaBottomNavigation {
         bottomNavOptions.forEach { item ->
-            val title = stringResource(item.title?:0)
+            val title = stringResource(item.title ?: 0)
+            val selected = currentRoute.contains(item.navCommand.feature.route)
 
             BottomNavigationItem(
-                selected = currentRoute.contains(item.navCommand.feature.route),
+                selected = selected,
+                selectedContentColor = Color.White,
+                unselectedContentColor = Color.Black,
                 icon = {
-                    BuildIcon(icon = item.icon?: Icons.Default.Flight, nasaIcon = item.nasaIcon, title = title)
+                    BuildIcon(
+                        icon = item.icon ?: Icons.Default.Flight,
+                        nasaIcon = item.nasaIcon,
+                        title = title,
+                        colorFilter = ColorFilter.tint(if (selected) Color.White else Color.Black)
+                    )
                 },
                 label = { Text(text = title) },
                 onClick = { onNavItemClick(item) }

@@ -65,7 +65,7 @@ fun <T : NasaItem> NasaListItem(
 
             if (nasaItem.favorite) BuildIcon(
                 icon = Icons.Default.Favorite,
-                nasaIcon = NasaIcon.FavoriteOn
+                nasaIcon = NasaIcon.FavoriteOnLight
             )
         }
         Row(

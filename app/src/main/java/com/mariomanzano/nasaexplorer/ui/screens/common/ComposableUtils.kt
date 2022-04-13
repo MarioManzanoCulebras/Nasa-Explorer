@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -22,13 +23,15 @@ fun BuildIcon(
     icon: ImageVector,
     modifier: Modifier = Modifier,
     nasaIcon: NasaIcon? = null,
-    title: String? = null
+    title: String? = null,
+    colorFilter: ColorFilter? = null
 ) {
     if (nasaIcon != null) {
         Image(
             painter = painterResource(nasaIcon.resourceId),
             modifier = nasaIcon.modifier,
-            contentDescription = title
+            contentDescription = title,
+            colorFilter = colorFilter
         )
     } else {
         Icon(imageVector = icon, modifier = modifier, contentDescription = title)
