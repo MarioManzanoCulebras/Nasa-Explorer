@@ -47,7 +47,9 @@ private fun Header(nasaItem: NasaItem) {
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp)
     ) {
         if (nasaItem.mediaType == "image") {
             NasaImageWithLoader(
@@ -105,7 +107,7 @@ private fun Header(nasaItem: NasaItem) {
                     modifier = Modifier.padding(16.dp, 0.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
         } else {
             ExtraMarsHeader(marsItem = nasaItem)
         }
