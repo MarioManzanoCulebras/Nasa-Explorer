@@ -161,6 +161,7 @@ fun <T : NasaItem> NasaItemsList(
                             NasaListItem(
                                 nasaItem = it,
                                 onItemMore = onItemMore,
+                                showFooterInside = false,
                                 modifier = Modifier.clickable { onItemClick(it) }
                             )
                         }
@@ -203,6 +204,7 @@ fun PODItemsList(
                             NasaListItem(
                                 nasaItem = it,
                                 onItemMore = onItemMore,
+                                showFooterInside = true,
                                 modifier = Modifier.clickable { onItemClick(it) }
                             )
                         }

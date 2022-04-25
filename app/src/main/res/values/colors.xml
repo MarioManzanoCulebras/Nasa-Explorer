@@ -13,4 +13,5 @@
     <color name="red">#FFDD361C</color>
     <color name="red_dark">#FF99231B</color>
     <color name="purple">#FF4C2C92</color>
+    <color name="grey_with_alpha">#803F3F3F</color>
 </resources>

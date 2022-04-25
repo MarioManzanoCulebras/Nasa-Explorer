@@ -1,8 +1,6 @@
 package com.mariomanzano.nasaexplorer.ui.navigation
 
 import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -15,24 +13,18 @@ enum class NavItem(
     val nasaIcon: NasaIcon? = null,
     @StringRes val title: Int?
 ) {
-    HOME(NavCommand.ContentType(Feature.DAILY_PICTURE), Icons.Default.Home, title = R.string.home),
-    NASA_LIBRARY(
-        NavCommand.ContentType(Feature.NASA_LIBRARY),
-        nasaIcon = NasaIcon.NasaLogo,
-        title = R.string.nasa_library
-    ),
-    DAILY_PICTURES(
+    Pictures(
         NavCommand.ContentType(Feature.DAILY_PICTURE),
         nasaIcon = NasaIcon.Spacecraft,
         title = R.string.daily_pictures
     ),
-    MARS(
+    Earth(NavCommand.ContentType(Feature.EARTH), nasaIcon = NasaIcon.Earth, title = R.string.earth),
+    Mars(
         NavCommand.ContentType(Feature.MARS),
         nasaIcon = NasaIcon.RocketVertical,
         title = R.string.mars
     ),
-    EARTH(NavCommand.ContentType(Feature.EARTH), nasaIcon = NasaIcon.Earth, title = R.string.earth),
-    FAVORITES(
+    Favorites(
         NavCommand.ContentType(Feature.FAVORITES),
         nasaIcon = NasaIcon.FavoriteOn,
         title = R.string.favorites

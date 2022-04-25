@@ -7,6 +7,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.mariomanzano.nasaexplorer.ui.screens.common.NasaContainerScreen
 import com.mariomanzano.nasaexplorer.ui.screens.dailypicture.DailyPictureDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.dailypicture.DailyPictureScreen
 import com.mariomanzano.nasaexplorer.ui.screens.earth.EarthDetailScreen
@@ -16,6 +17,8 @@ import com.mariomanzano.nasaexplorer.ui.screens.favorites.FavoritesScreen
 import com.mariomanzano.nasaexplorer.ui.screens.mars.MarsDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.mars.MarsScreen
 
+const val CONTAINER = "Container"
+
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -24,18 +27,29 @@ fun Navigation(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = Feature.DAILY_PICTURE.route
+        startDestination = CONTAINER
     ) {
-        dailyPictureNav(navController)
-        earthNav(navController)
-        marsNav(navController)
-        favoritesNav(navController)
+        composable(CONTAINER) {
+            NasaContainerScreen(navController = navController)
+        }
+        composable(NavCommand.ContentTypeDetailById(Feature.DAILY_PICTURE)) {
+            DailyPictureDetailScreen()
+        }
+        composable(NavCommand.ContentTypeDetailById(Feature.EARTH)) {
+            EarthDetailScreen()
+        }
+        composable(NavCommand.ContentTypeDetailById(Feature.MARS)) {
+            MarsDetailScreen()
+        }
+        composable(NavCommand.ContentTypeDetailByIdAndType(Feature.FAVORITES)) {
+            FavoritesDetailScreen()
+        }
     }
 }
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
-private fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
+fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.DAILY_PICTURE).route,
         route = Feature.DAILY_PICTURE.route
@@ -61,7 +75,7 @@ private fun NavGraphBuilder.dailyPictureNav(navController: NavController) {
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
-private fun NavGraphBuilder.earthNav(navController: NavController) {
+fun NavGraphBuilder.earthNav(navController: NavController) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.EARTH).route,
         route = Feature.EARTH.route
@@ -86,7 +100,7 @@ private fun NavGraphBuilder.earthNav(navController: NavController) {
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
-private fun NavGraphBuilder.marsNav(navController: NavController) {
+fun NavGraphBuilder.marsNav(navController: NavController) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.MARS).route,
         route = Feature.MARS.route
@@ -111,7 +125,7 @@ private fun NavGraphBuilder.marsNav(navController: NavController) {
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
-private fun NavGraphBuilder.favoritesNav(navController: NavController) {
+fun NavGraphBuilder.favoritesNav(navController: NavController) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.FAVORITES).route,
         route = Feature.FAVORITES.route

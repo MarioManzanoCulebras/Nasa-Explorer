@@ -2,8 +2,7 @@
 <resources>
 
     <style name="Theme.Nasaexplorer" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/blue</item>
-        <item name="android:navigationBarColor">@color/blue</item>
-        <item name="android:background">@color/blue</item>
+        <item name="android:statusBarColor">@color/blue_dark</item>
+        <item name="android:background">@color/blue_dark</item>
     </style>
 </resources>

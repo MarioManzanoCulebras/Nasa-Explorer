@@ -14,4 +14,3 @@ val Red = Color(0xFFDD361C)
 val RedDark = Color(0xFF99231B)
 val Purple = Color(0XFF4C2C92)
 val BlackPale = Color(0xFF121212)
-

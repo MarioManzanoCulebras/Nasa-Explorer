@@ -16,17 +16,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.nasaexplorer.R
 
-
 @Composable
 fun <T : NasaItem> NasaListItem(
     nasaItem: T,
     onItemMore: (T) -> Unit,
+    showFooterInside: Boolean,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -35,56 +36,69 @@ fun <T : NasaItem> NasaListItem(
         modifier = modifier.padding(8.dp)
     ) {
         Card {
-            if (nasaItem.mediaType == "image") {
-                NasaImageWithLoader(urlImage = nasaItem.url)
-            } else {
-                IconButton(
-                    onClick = { openYoutubeWithUrl(nasaItem.url, context) },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .aspectRatio(1f)
-                        .background(
-                            Brush.verticalGradient(
-                                listOf(
-                                    MaterialTheme.colors.primaryVariant,
-                                    MaterialTheme.colors.secondary
+            Box {
+                if (nasaItem.mediaType == "image") {
+                    NasaImageWithLoader(urlImage = nasaItem.url)
+                } else {
+                    IconButton(
+                        onClick = { openYoutubeWithUrl(nasaItem.url, context) },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .aspectRatio(1f)
+                            .background(
+                                Brush.verticalGradient(
+                                    listOf(
+                                        MaterialTheme.colors.primaryVariant,
+                                        MaterialTheme.colors.secondary
+                                    )
                                 )
                             )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = ""
                         )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "",
-                        modifier = Modifier.align(
-                            Alignment.CenterHorizontally
-                        )
-                    )
+                    }
                 }
-            }
+                if (showFooterInside) {
+                    Surface(
+                        color = colorResource(R.color.grey_with_alpha),
+                        modifier = Modifier.align(Alignment.BottomEnd)
+                    ) {
+                        FooterRow(nasaItem = nasaItem, onItemMore = onItemMore)
+                    }
+                }
 
-
-            if (nasaItem.favorite) BuildIcon(
-                icon = Icons.Default.Favorite,
-                nasaIcon = NasaIcon.FavoriteOnLight
-            )
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = nasaItem.title?:"",
-                style = MaterialTheme.typography.subtitle1,
-                maxLines = 2,
-                modifier = Modifier
-                    .padding(8.dp, 16.dp)
-                    .weight(1f)
-            )
-            IconButton(onClick = { onItemMore(nasaItem) }) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = stringResource(id = R.string.more_options)
+                if (nasaItem.favorite) BuildIcon(
+                    icon = Icons.Default.Favorite,
+                    nasaIcon = NasaIcon.FavoriteOn
                 )
             }
+        }
+        if (!showFooterInside) {
+            FooterRow(nasaItem = nasaItem, onItemMore = onItemMore)
+        }
+    }
+}
+
+@Composable
+fun <T : NasaItem> FooterRow(nasaItem: T, onItemMore: (T) -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = nasaItem.title ?: "",
+            style = MaterialTheme.typography.subtitle1,
+            maxLines = 2,
+            modifier = Modifier
+                .padding(8.dp, 16.dp)
+                .weight(1f)
+        )
+        IconButton(onClick = { onItemMore(nasaItem) }) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = stringResource(id = R.string.more_options)
+            )
         }
     }
 }

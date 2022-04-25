@@ -21,7 +21,6 @@ import com.skydoves.landscapist.glide.GlideImage
 @Composable
 fun BuildIcon(
     icon: ImageVector,
-    modifier: Modifier = Modifier,
     nasaIcon: NasaIcon? = null,
     title: String? = null,
     colorFilter: ColorFilter? = null
@@ -29,12 +28,11 @@ fun BuildIcon(
     if (nasaIcon != null) {
         Image(
             painter = painterResource(nasaIcon.resourceId),
-            modifier = nasaIcon.modifier,
             contentDescription = title,
             colorFilter = colorFilter
         )
     } else {
-        Icon(imageVector = icon, modifier = modifier, contentDescription = title)
+        Icon(imageVector = icon, contentDescription = title)
     }
 }
 
