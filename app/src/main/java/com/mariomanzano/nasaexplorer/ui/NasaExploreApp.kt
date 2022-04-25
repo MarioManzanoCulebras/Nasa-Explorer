@@ -8,9 +8,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mariomanzano.nasaexplorer.ui.navigation.Navigation
 import com.mariomanzano.nasaexplorer.ui.theme.NasaExplorerTheme
 
@@ -25,6 +29,19 @@ fun NasaExploreApp() {
                 Navigation(rememberNavController())
             }
         }
+        SetStatusAndNavigationBarsColorEffect()
+    }
+}
+
+@Composable
+private fun SetStatusAndNavigationBarsColorEffect(
+    color: Color = MaterialTheme.colors.background,
+    systemUiController: SystemUiController = rememberSystemUiController()
+) {
+
+    SideEffect {
+        systemUiController.setStatusBarColor(color)
+        systemUiController.setNavigationBarColor(color)
     }
 }
 
