@@ -16,6 +16,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import com.mariomanzano.nasaexplorer.ui.common.floorMod
 import com.mariomanzano.nasaexplorer.ui.navigation.Feature
 import com.mariomanzano.nasaexplorer.ui.navigation.NavCommand
 import com.mariomanzano.nasaexplorer.ui.navigation.NavItem
@@ -25,6 +26,8 @@ import com.mariomanzano.nasaexplorer.ui.screens.favorites.FavoritesScreen
 import com.mariomanzano.nasaexplorer.ui.screens.mars.MarsScreen
 import kotlinx.coroutines.launch
 
+const val startIndex = Int.MAX_VALUE / 2
+
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -33,7 +36,7 @@ fun NasaContainerScreen(
     navController: NavHostController
 ) {
     val list = NavItem.values().toList()
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(initialPage = startIndex)
     Scaffold(
         bottomBar = {
             TabRow(
@@ -44,10 +47,10 @@ fun NasaContainerScreen(
     ) {
         Column {
             HorizontalPager(
-                count = list.size,
+                count = Int.MAX_VALUE,
                 state = pagerState
-            ) { page ->
-                when (page) {
+            ) { index ->
+                when ((index - startIndex).floorMod(list.size)) {
                     0 -> {
                         DailyPictureScreen(
                             onClick = { pictureOfTheDay ->
@@ -105,17 +108,22 @@ private fun TabRow(
     list: List<NavItem>
 ) {
     val scope = rememberCoroutineScope()
-
+    val pageIndex = (pagerState.currentPage - startIndex).floorMod(list.size)
     TabRow(
         backgroundColor = MaterialTheme.colors.primary,
         selectedTabIndex = pagerState.currentPage,
         indicator = {}
     ) {
         list.forEach {
-            val selected = it.ordinal == pagerState.currentPage
+            val selected = (it.ordinal == pageIndex)
             Tab(
                 selected = selected,
-                onClick = { scope.launch { pagerState.animateScrollToPage(it.ordinal) } },
+                onClick = {
+                    scope.launch {
+                        val diff = it.ordinal - pageIndex
+                        pagerState.animateScrollToPage(pagerState.currentPage + diff)
+                    }
+                },
                 text = {
                     Text(
                         text = it.name,
