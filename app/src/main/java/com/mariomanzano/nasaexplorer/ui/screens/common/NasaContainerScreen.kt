@@ -119,10 +119,7 @@ private fun TabRow(
             Tab(
                 selected = selected,
                 onClick = {
-                    scope.launch {
-                        val diff = it.ordinal - pageIndex
-                        pagerState.animateScrollToPage(pagerState.currentPage + diff)
-                    }
+                    scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + it.ordinal - pageIndex) }
                 },
                 text = {
                     Text(
