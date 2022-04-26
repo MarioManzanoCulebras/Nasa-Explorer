@@ -1,6 +1,7 @@
 package com.mariomanzano.nasaexplorer.ui.screens.favorites
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -15,6 +16,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 @ExperimentalFoundationApi
 @Composable
 fun FavoritesScreen(
+    listState: LazyListState,
     onClick: (NasaItem) -> Unit,
     viewModel: FavoriteViewModel = hiltViewModel()
 ) {
@@ -38,7 +40,8 @@ fun FavoritesScreen(
         loading = state.loading,
         items = state.items,
         onClick = onClick,
-        error = state.error
+        error = state.error,
+        listState = listState
     )
 }
 

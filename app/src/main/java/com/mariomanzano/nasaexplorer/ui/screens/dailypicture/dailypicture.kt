@@ -1,6 +1,7 @@
 package com.mariomanzano.nasaexplorer.ui.screens.dailypicture
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,6 +15,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.PODItemsListScreen
 @ExperimentalFoundationApi
 @Composable
 fun DailyPictureScreen(
+    listState: LazyListState,
     onClick: (PictureOfDayItem) -> Unit,
     viewModel: DailyPictureViewModel = hiltViewModel()
 ) {
@@ -25,7 +27,8 @@ fun DailyPictureScreen(
         onClick = onClick,
         onRefreshComplete = { viewModel.launchListCompleteRequest() },
         onSimpleRefresh = { viewModel.launchDayRequest() },
-        state.error
+        state.error,
+        listState = listState
     )
 }
 

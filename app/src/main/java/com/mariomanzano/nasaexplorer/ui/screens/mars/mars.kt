@@ -1,6 +1,7 @@
 package com.mariomanzano.nasaexplorer.ui.screens.mars
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,6 +15,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 @ExperimentalFoundationApi
 @Composable
 fun MarsScreen(
+    listState: LazyListState,
     onClick: (MarsItem) -> Unit,
     viewModel: MarsViewModel = hiltViewModel()
 ) {
@@ -25,7 +27,8 @@ fun MarsScreen(
         onClick = onClick,
         onRefreshComplete = { viewModel.launchUpdate() },
         onSimpleRefresh = { viewModel.launchUpdate() },
-        error = state.error
+        error = state.error,
+        listState = listState
     )
 }
 

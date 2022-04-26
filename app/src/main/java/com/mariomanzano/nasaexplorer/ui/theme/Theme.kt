@@ -1,6 +1,5 @@
 package com.mariomanzano.nasaexplorer.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
@@ -30,7 +29,7 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun NasaExplorerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun NasaExplorerTheme(content: @Composable () -> Unit) {
 
     //Force always to use DarkColorPalette
     /*val colors = if (darkTheme) {

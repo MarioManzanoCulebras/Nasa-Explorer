@@ -6,10 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +28,8 @@ fun <T : NasaItem> NasaItemsListScreen(
     onClick: (T) -> Unit,
     onRefreshComplete: (() -> Unit)? = null,
     onSimpleRefresh: (() -> Unit)? = null,
-    error: Error? = null
+    error: Error? = null,
+    listState: LazyListState
 ) {
     if (error != null && !loading && items?.isEmpty() == true) {
         ErrorMessage(error = error, onRefreshComplete)
@@ -68,7 +66,8 @@ fun <T : NasaItem> NasaItemsListScreen(
                         sheetState.show()
                     }
                 },
-                onRefresh = onSimpleRefresh
+                onRefresh = onSimpleRefresh,
+                listState = listState
             )
         }
     }
@@ -83,7 +82,8 @@ fun PODItemsListScreen(
     onClick: (PictureOfDayItem) -> Unit,
     onRefreshComplete: () -> Unit,
     onSimpleRefresh: () -> Unit,
-    error: Error?
+    error: Error?,
+    listState: LazyListState
 ) {
     if (error != null && !loading && items?.isEmpty() == true) {
         ErrorMessage(error = error, onRefreshComplete)
@@ -120,7 +120,8 @@ fun PODItemsListScreen(
                         sheetState.show()
                     }
                 },
-                onSimpleRefresh = onSimpleRefresh
+                onSimpleRefresh = onSimpleRefresh,
+                listState = listState
             )
         }
     }
@@ -134,6 +135,7 @@ fun <T : NasaItem> NasaItemsList(
     onItemClick: (T) -> Unit,
     onItemMore: (T) -> Unit,
     onRefresh: (() -> Unit)?,
+    listState: LazyListState,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -153,6 +155,7 @@ fun <T : NasaItem> NasaItemsList(
                     swipeEnabled = onRefresh != null
                 ) {
                     LazyVerticalGrid(
+                        state = listState,
                         cells = GridCells.Adaptive(180.dp),
                         contentPadding = PaddingValues(4.dp)
                     ) {
@@ -180,7 +183,8 @@ fun PODItemsList(
     onItemClick: (PictureOfDayItem) -> Unit,
     onItemMore: (PictureOfDayItem) -> Unit,
     onSimpleRefresh: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listState: LazyListState
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -198,6 +202,7 @@ fun PODItemsList(
                     onRefresh = { onSimpleRefresh() },
                 ) {
                     LazyColumn(
+                        state = listState,
                         contentPadding = PaddingValues(4.dp)
                     ) {
                         items(list) {

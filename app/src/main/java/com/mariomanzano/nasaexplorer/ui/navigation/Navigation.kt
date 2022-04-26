@@ -3,19 +3,17 @@ package com.mariomanzano.nasaexplorer.ui.navigation
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.navigation.*
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaContainerScreen
 import com.mariomanzano.nasaexplorer.ui.screens.dailypicture.DailyPictureDetailScreen
-import com.mariomanzano.nasaexplorer.ui.screens.dailypicture.DailyPictureScreen
 import com.mariomanzano.nasaexplorer.ui.screens.earth.EarthDetailScreen
-import com.mariomanzano.nasaexplorer.ui.screens.earth.EarthScreen
 import com.mariomanzano.nasaexplorer.ui.screens.favorites.FavoritesDetailScreen
-import com.mariomanzano.nasaexplorer.ui.screens.favorites.FavoritesScreen
 import com.mariomanzano.nasaexplorer.ui.screens.mars.MarsDetailScreen
-import com.mariomanzano.nasaexplorer.ui.screens.mars.MarsScreen
 
 const val CONTAINER = "Container"
 
@@ -46,6 +44,21 @@ fun Navigation(navController: NavHostController) {
         }
     }
 }
+
+private fun NavGraphBuilder.composable(
+    navCommand: NavCommand,
+    content: @Composable (NavBackStackEntry) -> Unit
+) {
+    composable(
+        route = navCommand.route,
+        arguments = navCommand.args
+    ) {
+        content(it)
+    }
+}
+
+/*
+Code with creation of nested graphs
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -147,14 +160,5 @@ fun NavGraphBuilder.favoritesNav(navController: NavController) {
     }
 }
 
-private fun NavGraphBuilder.composable(
-    navCommand: NavCommand,
-    content: @Composable (NavBackStackEntry) -> Unit
-) {
-    composable(
-        route = navCommand.route,
-        arguments = navCommand.args
-    ) {
-        content(it)
-    }
-}
+
+ */
