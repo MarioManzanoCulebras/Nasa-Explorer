@@ -17,6 +17,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.PODItemsListScreen
 fun DailyPictureScreen(
     listState: LazyListState,
     onClick: (PictureOfDayItem) -> Unit,
+    onItemsMoreClicked: () -> Unit,
     viewModel: DailyPictureViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -28,7 +29,8 @@ fun DailyPictureScreen(
         onRefreshComplete = { viewModel.launchListCompleteRequest() },
         onSimpleRefresh = { viewModel.launchDayRequest() },
         state.error,
-        listState = listState
+        listState = listState,
+        onItemsMoreClicked = onItemsMoreClicked
     )
 }
 

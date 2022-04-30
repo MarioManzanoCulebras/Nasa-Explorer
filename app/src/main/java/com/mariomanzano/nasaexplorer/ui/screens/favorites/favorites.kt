@@ -18,6 +18,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 fun FavoritesScreen(
     listState: LazyListState,
     onClick: (NasaItem) -> Unit,
+    onItemsMoreClicked: () -> Unit,
     viewModel: FavoriteViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -41,7 +42,8 @@ fun FavoritesScreen(
         items = state.items,
         onClick = onClick,
         error = state.error,
-        listState = listState
+        listState = listState,
+        onItemsMoreClicked = onItemsMoreClicked
     )
 }
 

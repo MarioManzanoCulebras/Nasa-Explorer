@@ -5,10 +5,10 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.mariomanzano.nasaexplorer.ui.NasaExplorerAppState
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaContainerScreen
 import com.mariomanzano.nasaexplorer.ui.screens.dailypicture.DailyPictureDetailScreen
 import com.mariomanzano.nasaexplorer.ui.screens.earth.EarthDetailScreen
@@ -21,14 +21,14 @@ const val CONTAINER = "Container"
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
-fun Navigation(navController: NavHostController) {
+fun Navigation(appState: NasaExplorerAppState) {
 
     NavHost(
-        navController = navController,
+        navController = appState.navController,
         startDestination = CONTAINER
     ) {
         composable(CONTAINER) {
-            NasaContainerScreen(navController = navController)
+            NasaContainerScreen(appState = appState)
         }
         composable(NavCommand.ContentTypeDetailById(Feature.DAILY_PICTURE)) {
             DailyPictureDetailScreen()

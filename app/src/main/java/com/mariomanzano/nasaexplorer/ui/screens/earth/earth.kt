@@ -17,6 +17,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 fun EarthScreen(
     listState: LazyListState,
     onClick: (EarthItem) -> Unit,
+    onItemsMoreClicked: () -> Unit,
     viewModel: DailyEarthViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -28,7 +29,8 @@ fun EarthScreen(
         onRefreshComplete = { viewModel.launchUpdate() },
         onSimpleRefresh = { viewModel.launchUpdate() },
         error = state.error,
-        listState = listState
+        listState = listState,
+        onItemsMoreClicked = onItemsMoreClicked
     )
 }
 

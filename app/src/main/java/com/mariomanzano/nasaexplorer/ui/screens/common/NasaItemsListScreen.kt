@@ -29,7 +29,8 @@ fun <T : NasaItem> NasaItemsListScreen(
     onRefreshComplete: (() -> Unit)? = null,
     onSimpleRefresh: (() -> Unit)? = null,
     error: Error? = null,
-    listState: LazyListState
+    listState: LazyListState,
+    onItemsMoreClicked: () -> Unit,
 ) {
     if (error != null && !loading && items?.isEmpty() == true) {
         ErrorMessage(error = error, onRefreshComplete)
@@ -61,9 +62,10 @@ fun <T : NasaItem> NasaItemsListScreen(
                 items = items,
                 onItemClick = onClick,
                 onItemMore = {
+                    onItemsMoreClicked.invoke()
                     scope.launch {
                         bottomSheetItem = it
-                        sheetState.show()
+                        sheetState.animateTo(ModalBottomSheetValue.Expanded)
                     }
                 },
                 onRefresh = onSimpleRefresh,
@@ -83,7 +85,8 @@ fun PODItemsListScreen(
     onRefreshComplete: () -> Unit,
     onSimpleRefresh: () -> Unit,
     error: Error?,
-    listState: LazyListState
+    listState: LazyListState,
+    onItemsMoreClicked: () -> Unit
 ) {
     if (error != null && !loading && items?.isEmpty() == true) {
         ErrorMessage(error = error, onRefreshComplete)
@@ -115,6 +118,7 @@ fun PODItemsListScreen(
                 items = items,
                 onItemClick = onClick,
                 onItemMore = {
+                    onItemsMoreClicked.invoke()
                     scope.launch {
                         bottomSheetItem = it
                         sheetState.show()

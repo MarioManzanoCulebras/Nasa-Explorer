@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mariomanzano.domain.entities.EarthItem
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.nasaexplorer.R
 
@@ -30,13 +32,13 @@ fun <T : NasaItem> NasaItemBottomPreview(item: T?, onGoToDetail: (T) -> Unit) {
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                if (item is com.mariomanzano.domain.entities.EarthItem) Text(
+                if (item is EarthItem) Text(
                     text = DateFormatter.OnlyTime.formatter.format(item.date.time),
                     style = MaterialTheme.typography.h4,
                 )
                 Text(text = DateFormatter.Simple.formatter.format(item.date.time))
                 Text(text = item.title ?: "", style = MaterialTheme.typography.h6)
-                Text(text = item.description ?: "")
+                Text(text = item.description ?: "", maxLines = 10, overflow = TextOverflow.Ellipsis)
                 Button(
                     onClick = { onGoToDetail(item) },
                     modifier = Modifier.align(Alignment.End)

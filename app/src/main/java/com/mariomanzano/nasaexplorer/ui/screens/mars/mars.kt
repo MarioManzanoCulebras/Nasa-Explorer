@@ -17,6 +17,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 fun MarsScreen(
     listState: LazyListState,
     onClick: (MarsItem) -> Unit,
+    onItemsMoreClicked: () -> Unit,
     viewModel: MarsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -28,7 +29,8 @@ fun MarsScreen(
         onRefreshComplete = { viewModel.launchUpdate() },
         onSimpleRefresh = { viewModel.launchUpdate() },
         error = state.error,
-        listState = listState
+        listState = listState,
+        onItemsMoreClicked = onItemsMoreClicked
     )
 }
 

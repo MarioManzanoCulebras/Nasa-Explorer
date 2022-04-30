@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -22,11 +21,11 @@ import com.mariomanzano.nasaexplorer.ui.theme.NasaExplorerTheme
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun NasaExploreApp() {
+fun NasaExploreApp(appState: NasaExplorerAppState = rememberNasaExplorerAppState()) {
     NasaExploreScreen {
         Scaffold { padding ->
             Box(modifier = Modifier.padding(padding)) {
-                Navigation(rememberNavController())
+                Navigation(appState)
             }
         }
         SetStatusAndNavigationBarsColorEffect()
