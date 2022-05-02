@@ -17,27 +17,22 @@ import com.mariomanzano.nasaexplorer.R
 @Composable
 fun <T : NasaItem> NasaItemBottomPreview(item: T?, onGoToDetail: (T) -> Unit) {
     if (item != null) {
-        Row(
+        Column(
             modifier = Modifier.padding(20.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            if (item is EarthItem) Text(
+                text = DateFormatter.OnlyTime.formatter.format(item.date.time),
+                style = MaterialTheme.typography.h4,
+            )
+            Text(text = DateFormatter.Simple.formatter.format(item.date.time))
+            Text(text = item.title ?: "", style = MaterialTheme.typography.h6)
+            Text(text = item.description ?: "", maxLines = 10, overflow = TextOverflow.Ellipsis)
+            Button(
+                onClick = { onGoToDetail(item) },
+                modifier = Modifier.align(Alignment.End)
             ) {
-                if (item is EarthItem) Text(
-                    text = DateFormatter.OnlyTime.formatter.format(item.date.time),
-                    style = MaterialTheme.typography.h4,
-                )
-                Text(text = DateFormatter.Simple.formatter.format(item.date.time))
-                Text(text = item.title ?: "", style = MaterialTheme.typography.h6)
-                Text(text = item.description ?: "", maxLines = 10, overflow = TextOverflow.Ellipsis)
-                Button(
-                    onClick = { onGoToDetail(item) },
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Text(text = stringResource(id = R.string.go_to_detail))
-                }
+                Text(text = stringResource(id = R.string.go_to_detail))
             }
         }
     } else {
