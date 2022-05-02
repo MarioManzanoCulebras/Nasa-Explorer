@@ -4,7 +4,7 @@ package com.mariomanzano.nasaexplorer.buildsrc
 
 object Libs {
 
-    const val androidGradlePlugin = "com.android.tools.build:gradle:7.1.2"
+    const val androidGradlePlugin = "com.android.tools.build:gradle:7.1.3"
     const val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.42.0"
 
     object Kotlin {
@@ -12,7 +12,7 @@ object Libs {
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
 
         object Coroutines {
-            private const val version = "1.6.0"
+            private const val version = "1.6.1"
             const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         }
 
@@ -33,7 +33,7 @@ object Libs {
         }
 
         object Navigation {
-            private const val version = "2.4.1"
+            private const val version = "2.4.2"
             const val gradlePlugin =
                 "androidx.navigation:navigation-safe-args-gradle-plugin:$version"
         }
@@ -59,7 +59,7 @@ object Libs {
 
         object Compose {
             const val liveData = "androidx.compose.runtime:runtime-livedata:1.2.0-alpha08"
-            const val navigation = "androidx.navigation:navigation-compose:2.4.0"
+            const val navigation = "androidx.navigation:navigation-compose:2.4.2"
             const val activity = "androidx.activity:activity-compose:1.4.0"
 
             const val version = "1.1.1"
@@ -82,7 +82,7 @@ object Libs {
     }
 
     object OkHttp3 {
-        private const val version = "4.9.2"
+        private const val version = "4.9.3"
         const val loginInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
     }
 
@@ -93,7 +93,7 @@ object Libs {
     }
 
     object Arrow {
-        private const val version = "1.0.1"
+        private const val version = "1.1.2"
         const val core = "io.arrow-kt:arrow-core:$version"
     }
 
