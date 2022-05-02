@@ -1,3 +1,5 @@
+import com.mariomanzano.nasaexplorer.buildsrc.Libs
+
 plugins {
     id 'java-library'
     id 'org.jetbrains.kotlin.jvm'
@@ -6,10 +8,10 @@ plugins {
 dependencies {
     implementation project(":domain")
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
-    implementation "io.arrow-kt:arrow-core:1.0.1"
+    implementation Libs.Kotlin.Coroutines.core
+    implementation Libs.Arrow.core
 
-    implementation "javax.inject:javax.inject:1"
+    implementation Libs.JavaX.inject
 }
 
 java {

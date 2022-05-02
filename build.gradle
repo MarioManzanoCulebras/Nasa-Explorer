@@ -1,22 +1,35 @@
+import com.mariomanzano.nasaexplorer.buildsrc.Libs
+
+apply plugin: "com.github.ben-manes.versions"
+
 buildscript {
-    ext.kotlin_version = '1.6.10'
     ext {
-        compose_version = '1.1.1'
-        accompanist_version = '0.22.1-rc'
-        hilt_version = '2.38.1'
+        compose_version = Libs.AndroidX.Compose.version
     }
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        classpath Libs.androidGradlePlugin
+        classpath Libs.Kotlin.gradlePlugin
+        classpath Libs.AndroidX.Navigation.gradlePlugin
+        classpath Libs.Hilt.gradlePlugin
+        classpath Libs.gradleVersionsPlugin
+    }
+}
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+// Taken from https://github.com/ben-manes/gradle-versions-plugin
+def isNonStable = { String version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+
+tasks.named("dependencyUpdates").configure {
+    rejectVersionIf {
+        isNonStable(it.candidate.version) && !isNonStable(it.currentVersion)
     }
 }
 
