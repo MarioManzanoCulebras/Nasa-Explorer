@@ -18,16 +18,9 @@ import com.mariomanzano.nasaexplorer.R
 fun <T : NasaItem> NasaItemBottomPreview(item: T?, onGoToDetail: (T) -> Unit) {
     if (item != null) {
         Row(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(20.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            NasaImageWithLoader(
-                urlImage = item.url,
-                contentDescription = item.title,
-                modifier = Modifier
-                    .width(96.dp)
-                    .aspectRatio(1 / 1.5f)
-            )
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)

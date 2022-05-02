@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -84,7 +85,10 @@ fun <T : NasaItem> NasaListItem(
 @Composable
 fun <T : NasaItem> FooterRow(nasaItem: T, onItemMore: (T) -> Unit) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            onItemMore(nasaItem)
+        }
     ) {
         Text(
             text = nasaItem.title ?: "",
