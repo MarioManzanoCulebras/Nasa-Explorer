@@ -11,7 +11,9 @@ sealed class NasaIcon(val resourceId: Int) {
 
     object NasaLogo : NasaIcon(R.drawable.ic_nasa_logo)
 
-    object FavoriteOn : NasaIcon(R.drawable.ic_favorite_on)
+    object FavoriteMenu : NasaIcon(R.drawable.ic_favorite_off)
 
-    object FavoriteOff : NasaIcon(R.drawable.ic_favorite_off)
+    object FavoriteOn : NasaIcon(R.drawable.ic_favorite_on_light)
+
+    object FavoriteOff : NasaIcon(R.drawable.ic_favorite_off_light)
 }

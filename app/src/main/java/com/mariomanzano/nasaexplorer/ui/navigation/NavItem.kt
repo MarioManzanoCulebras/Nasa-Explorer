@@ -26,7 +26,7 @@ enum class NavItem(
     ),
     Favorites(
         NavCommand.ContentType(Feature.FAVORITES),
-        nasaIcon = NasaIcon.FavoriteOn,
+        nasaIcon = NasaIcon.FavoriteMenu,
         title = R.string.favorites
     )
 }
