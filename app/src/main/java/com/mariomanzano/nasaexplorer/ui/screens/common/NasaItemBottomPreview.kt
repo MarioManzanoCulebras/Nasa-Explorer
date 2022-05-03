@@ -8,8 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mariomanzano.domain.entities.EarthItem
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.nasaexplorer.R
@@ -25,9 +31,34 @@ fun <T : NasaItem> NasaItemBottomPreview(item: T?, onGoToDetail: (T) -> Unit) {
                 text = DateFormatter.OnlyTime.formatter.format(item.date.time),
                 style = MaterialTheme.typography.h4,
             )
-            Text(text = DateFormatter.Simple.formatter.format(item.date.time))
-            Text(text = item.title ?: "", style = MaterialTheme.typography.h6)
-            Text(text = item.description ?: "", maxLines = 10, overflow = TextOverflow.Ellipsis)
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = DateFormatter.Simple.formatter.format(item.date.time),
+                textAlign = TextAlign.Center
+            )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = item.title ?: "",
+                style = MaterialTheme.typography.h6,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = buildAnnotatedString {
+                    append(
+                        AnnotatedString(
+                            text = item.description ?: "",
+                            paragraphStyle = ParagraphStyle(
+                                textIndent = TextIndent(
+                                    firstLine = 25.sp,
+                                    restLine = 10.sp
+                                )
+                            )
+                        )
+                    )
+                },
+                maxLines = 10,
+                overflow = TextOverflow.Ellipsis
+            )
             Button(
                 onClick = { onGoToDetail(item) },
                 modifier = Modifier.align(Alignment.End)

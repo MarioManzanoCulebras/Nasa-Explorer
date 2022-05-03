@@ -14,8 +14,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.domain.entities.NasaItem
 import com.mariomanzano.domain.entities.PictureOfDayItem
@@ -102,7 +107,19 @@ private fun Header(nasaItem: NasaItem) {
             Spacer(modifier = Modifier.height(16.dp))
             SelectionContainer {
                 Text(
-                    text = nasaItem.description ?: "",
+                    text = buildAnnotatedString {
+                        append(
+                            AnnotatedString(
+                                text = nasaItem.description ?: "",
+                                paragraphStyle = ParagraphStyle(
+                                    textIndent = TextIndent(
+                                        firstLine = 25.sp,
+                                        restLine = 10.sp
+                                    )
+                                )
+                            )
+                        )
+                    },
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier.padding(16.dp, 0.dp)
                 )
