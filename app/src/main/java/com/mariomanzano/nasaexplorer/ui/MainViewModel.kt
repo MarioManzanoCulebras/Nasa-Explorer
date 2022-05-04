@@ -12,7 +12,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getLastPODUpdateDateUseCase: GetLastPODUpdateDateUseCase,
-    private val getLastEarthUpdateDateNeedUseCase: GetLastEarthUpdateDateNeedUseCase,
+    private val getLastEarthUpdateDateUseCase: GetLastEarthUpdateDateUseCase,
     private val getLastMarsUpdateDateUseCase: GetLastMarsUpdateDateUseCase,
     private val updateLastPODUpdateUseCase: UpdateLastPODUpdateUseCase,
     private val updateLastEarthUpdateUseCase: UpdateLastEarthUpdateUseCase,
@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(
                 }
         }
         viewModelScope.launch {
-            getLastEarthUpdateDateNeedUseCase()
+            getLastEarthUpdateDateUseCase()
                 .collect { info ->
                     if (info?.date?.checkIfDayAfterToday() == true) {
                         updateLastEarthUpdateUseCase(info.apply {

@@ -7,7 +7,7 @@ import com.mariomanzano.domain.entities.EarthItem
 import com.mariomanzano.domain.entities.LastUpdateInfo
 import com.mariomanzano.nasaexplorer.network.toError
 import com.mariomanzano.nasaexplorer.usecases.GetEarthUseCase
-import com.mariomanzano.nasaexplorer.usecases.GetLastEarthUpdateDateNeedUseCase
+import com.mariomanzano.nasaexplorer.usecases.GetLastEarthUpdateDateUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestEarthListUseCase
 import com.mariomanzano.nasaexplorer.usecases.UpdateLastEarthUpdateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class DailyEarthViewModel @Inject constructor(
     getEarthUseCase: GetEarthUseCase,
     private val requestEarthListUseCase: RequestEarthListUseCase,
-    private val getLastEarthUpdateDateNeedUseCase: GetLastEarthUpdateDateNeedUseCase,
+    private val getLastEarthUpdateDateUseCase: GetLastEarthUpdateDateUseCase,
     private val updateLastEarthUpdateUseCase: UpdateLastEarthUpdateUseCase
 ) : ViewModel() {
 
@@ -48,7 +48,7 @@ class DailyEarthViewModel @Inject constructor(
                 }
         }
         viewModelScope.launch {
-            getLastEarthUpdateDateNeedUseCase()
+            getLastEarthUpdateDateUseCase()
                 .catch { cause ->
                     _state.update { it.copy(error = cause.toError()) }
                 }
