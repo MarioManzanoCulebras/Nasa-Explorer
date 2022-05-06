@@ -2,7 +2,7 @@ package com.mariomanzano.nasaexplorer.data.di
 
 import android.app.Application
 import androidx.room.Room
-import com.mariomanzano.nasaexplorer.BuildConfig
+import com.mariomanzano.nasaexplorer.R
 import com.mariomanzano.nasaexplorer.data.database.*
 import com.mariomanzano.nasaexplorer.datasource.*
 import com.mariomanzano.nasaexplorer.network.*
@@ -25,7 +25,7 @@ object AppModule {
     @Provides
     @Singleton
     @ApiKey
-    fun providePrivateApiKey(): String = BuildConfig.NASA_API_KEY
+    fun providePrivateApiKey(app: Application): String = app.getString(R.string.api_key)
 
     @Provides
     @Singleton
@@ -41,7 +41,7 @@ object AppModule {
 
     @Provides
     @ApiEndPoint
-    fun providesApiEndPoint(): String = BuildConfig.API_ENDPOINT
+    fun providesApiEndPoint(app: Application): String = app.getString(R.string.api_endPoint)
 
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {

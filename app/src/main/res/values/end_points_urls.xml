@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api_endPoint">https://api.nasa.gov/</string>
+    <string name="earth_api_images_base_url">https://epic.gsfc.nasa.gov/archive/natural/</string>
+</resources>
