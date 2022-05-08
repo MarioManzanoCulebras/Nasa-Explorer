@@ -1,4 +1,4 @@
-package com.mariomanzano.nasaexplorer.usecases
+package com.devexperto.architectcoders.testshared
 
 import com.mariomanzano.domain.entities.EarthItem
 import com.mariomanzano.domain.entities.LastUpdateInfo
@@ -6,7 +6,7 @@ import com.mariomanzano.domain.entities.MarsItem
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import java.util.*
 
-internal val samplePOD = PictureOfDayItem(
+val samplePOD = PictureOfDayItem(
     id = 0,
     date = Calendar.getInstance(),
     title = "Title",
@@ -17,7 +17,7 @@ internal val samplePOD = PictureOfDayItem(
     copyRight = "copyRight"
 )
 
-internal val sampleEarth = EarthItem(
+val sampleEarth = EarthItem(
     id = 0,
     date = Calendar.getInstance(),
     title = "Title",
@@ -27,7 +27,7 @@ internal val sampleEarth = EarthItem(
     favorite = false
 )
 
-internal val sampleMars = MarsItem(
+val sampleMars = MarsItem(
     id = 0,
     date = Calendar.getInstance(),
     title = "Title",
@@ -43,7 +43,7 @@ internal val sampleMars = MarsItem(
     roverMissionStatus = "MissionStatus"
 )
 
-internal val sampleLastUpdateInfo = LastUpdateInfo(
+val sampleLastUpdateInfo = LastUpdateInfo(
     id = 0,
     date = Calendar.getInstance(),
     updateNeed = false

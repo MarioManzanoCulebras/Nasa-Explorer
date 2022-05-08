@@ -1,5 +1,6 @@
 package com.mariomanzano.nasaexplorer.usecases
 
+import com.devexperto.architectcoders.testshared.sampleEarth
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals

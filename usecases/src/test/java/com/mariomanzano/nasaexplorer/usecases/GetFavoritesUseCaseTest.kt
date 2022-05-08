@@ -1,5 +1,8 @@
 package com.mariomanzano.nasaexplorer.usecases
 
+import com.devexperto.architectcoders.testshared.sampleEarth
+import com.devexperto.architectcoders.testshared.sampleMars
+import com.devexperto.architectcoders.testshared.samplePOD
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals

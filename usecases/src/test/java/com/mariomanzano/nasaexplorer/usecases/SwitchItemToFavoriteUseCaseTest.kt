@@ -1,5 +1,8 @@
 package com.mariomanzano.nasaexplorer.usecases
 
+import com.devexperto.architectcoders.testshared.sampleEarth
+import com.devexperto.architectcoders.testshared.sampleMars
+import com.devexperto.architectcoders.testshared.samplePOD
 import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
 import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
 import com.mariomanzano.nasaexplorer.repositories.MarsRepository

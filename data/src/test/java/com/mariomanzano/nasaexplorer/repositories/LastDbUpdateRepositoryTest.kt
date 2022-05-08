@@ -1,5 +1,6 @@
 package com.mariomanzano.nasaexplorer.repositories
 
+import com.devexperto.architectcoders.testshared.sampleLastUpdateInfo
 import com.mariomanzano.nasaexplorer.datasource.LastDbUpdateDataSource
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking

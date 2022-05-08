@@ -2,6 +2,7 @@ package com.mariomanzano.nasaexplorer.repositories
 
 import arrow.core.left
 import arrow.core.right
+import com.devexperto.architectcoders.testshared.samplePOD
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.PictureOfDayItem
 import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource

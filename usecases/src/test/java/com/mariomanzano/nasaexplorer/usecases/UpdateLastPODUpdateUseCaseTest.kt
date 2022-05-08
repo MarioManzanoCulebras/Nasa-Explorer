@@ -1,5 +1,6 @@
 package com.mariomanzano.nasaexplorer.usecases
 
+import com.devexperto.architectcoders.testshared.sampleLastUpdateInfo
 import com.mariomanzano.nasaexplorer.repositories.LastDbUpdateRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Test

@@ -1,5 +1,8 @@
 package com.mariomanzano.nasaexplorer.repositories
 
+import com.devexperto.architectcoders.testshared.sampleEarth
+import com.devexperto.architectcoders.testshared.sampleMars
+import com.devexperto.architectcoders.testshared.samplePOD
 import com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
 import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
