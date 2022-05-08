@@ -1,5 +1,6 @@
 package com.mariomanzano.nasaexplorer.repositories
 
+import arrow.core.left
 import arrow.core.right
 import com.mariomanzano.domain.Error
 import com.mariomanzano.domain.entities.PictureOfDayItem
@@ -49,6 +50,21 @@ class DailyPicturesRepositoryTest {
             dailyPicturesRepository.requestPODSingleDay(Calendar.getInstance())
 
             verify(podRemoteDataSource, never()).findPODDay(any())
+            verify(podLocalDataSource, never()).savePODList(any())
+        }
+
+    @Test
+    fun `Request to find Pod of the day is done if param Day is not at one of the local list and if request fail should not call to save`(): Unit =
+        runBlocking {
+            whenever(podRemoteDataSource.findPODDay(any())).thenReturn(Error.Connectivity.left())
+
+            val result = dailyPicturesRepository.requestPODSingleDay(Calendar.getInstance().apply {
+                set(
+                    Calendar.YEAR,
+                    Calendar.getInstance().get(Calendar.YEAR) - 1
+                )
+            })
+            assertEquals(Error.Connectivity, result)
             verify(podLocalDataSource, never()).savePODList(any())
         }
 
