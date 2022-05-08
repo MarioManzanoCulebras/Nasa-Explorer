@@ -53,7 +53,9 @@ class FavoriteViewModel @Inject constructor(
                         }
                     } else {
                         _state.update {
-                            it.copy(loading = false, items = favoriteList)
+                            it.copy(
+                                loading = false,
+                                items = favoriteList.sortedByDescending { favorite -> favorite.date })
                         }
                     }
                 }.collect()
