@@ -8,7 +8,6 @@ interface MarsLocalDataSource {
     val marsList: Flow<List<MarsItem>>
     val marsListFavorite: Flow<List<MarsItem>>
 
-    suspend fun isMarsListEmpty(): Boolean
     fun findMarsById(id: Int): Flow<MarsItem>
     suspend fun saveMarsFavoriteList(items: List<MarsItem>): Error?
     suspend fun saveMarsList(items: List<MarsItem>): Error?

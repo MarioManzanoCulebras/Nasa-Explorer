@@ -71,12 +71,6 @@ class NasaRoomDataSource(private val nasaDao: NasaDao) : PODLocalDataSource, Ear
     override val marsListFavorite: Flow<List<MarsItem>> =
         nasaDao.getAllMars().map { mars -> mars.toMarsDomainModel().filter { it.favorite } }
 
-    override suspend fun isPODListEmpty(): Boolean = nasaDao.getPODCount() == 0
-
-    override suspend fun isEarthListEmpty(): Boolean = nasaDao.getEarthCount() == 0
-
-    override suspend fun isMarsListEmpty(): Boolean = nasaDao.getMarsCount() == 0
-
     override fun findPODById(id: Int): Flow<PictureOfDayItem> =
         nasaDao.findPODById(id).map { it.toDomainModel() }
 

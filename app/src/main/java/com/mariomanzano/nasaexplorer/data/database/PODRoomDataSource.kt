@@ -16,8 +16,6 @@ class PODRoomDataSource @Inject constructor(private val nasaDao: NasaDao) : PODL
     override val podListFavorite: Flow<List<PictureOfDayItem>> =
         nasaDao.getAllPOD().map { pod -> pod.toPODDomainModel().filter { it.favorite } }
 
-    override suspend fun isPODListEmpty(): Boolean = nasaDao.getPODCount() == 0
-
     override fun findPODById(id: Int): Flow<PictureOfDayItem> =
         nasaDao.findPODById(id).map { it.toDomainModel() }
 

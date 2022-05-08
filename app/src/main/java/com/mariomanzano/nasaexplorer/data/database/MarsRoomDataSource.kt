@@ -16,8 +16,6 @@ class MarsRoomDataSource @Inject constructor(private val nasaDao: NasaDao) : Mar
     override val marsListFavorite: Flow<List<MarsItem>> =
         nasaDao.getAllMars().map { mars -> mars.toMarsDomainModel().filter { it.favorite } }
 
-    override suspend fun isMarsListEmpty(): Boolean = nasaDao.getMarsCount() == 0
-
     override fun findMarsById(id: Int): Flow<MarsItem> =
         nasaDao.findMarsById(id).map { it.toDomainModel() }
 

@@ -16,8 +16,6 @@ class EarthRoomDataSource @Inject constructor(private val nasaDao: NasaDao) : Ea
     override val earthListFavorite: Flow<List<EarthItem>> =
         nasaDao.getAllEarth().map { earth -> earth.toEarthDomainModel().filter { it.favorite } }
 
-    override suspend fun isEarthListEmpty(): Boolean = nasaDao.getEarthCount() == 0
-
     override fun findEarthById(id: Int): Flow<EarthItem> =
         nasaDao.findEarthById(id).map { it.toDomainModel() }
 
