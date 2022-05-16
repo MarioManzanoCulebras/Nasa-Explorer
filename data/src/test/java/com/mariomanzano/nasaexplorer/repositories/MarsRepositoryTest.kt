@@ -88,7 +88,7 @@ class MarsRepositoryTest {
     }
 
     @Test
-    fun `Switching favorite marks as favorite an unfavorite movie`(): Unit = runBlocking {
+    fun `Switching favorite marks as favorite an unfavorite item`(): Unit = runBlocking {
         val element = sampleMars.copy(favorite = false)
 
         marsRepository.switchFavorite(element)
@@ -97,7 +97,7 @@ class MarsRepositoryTest {
     }
 
     @Test
-    fun `Switching favorite marks as unfavorite a favorite movie`(): Unit = runBlocking {
+    fun `Switching favorite marks as unfavorite a favorite item`(): Unit = runBlocking {
         val element = sampleMars.copy(favorite = true)
 
         marsRepository.switchFavorite(element)

@@ -88,7 +88,7 @@ class DailyEarthRepositoryTest {
     }
 
     @Test
-    fun `Switching favorite marks as favorite an unfavorite movie`(): Unit = runBlocking {
+    fun `Switching favorite marks as favorite an unfavorite item`(): Unit = runBlocking {
         val element = sampleEarth.copy(favorite = false)
 
         earthRepository.switchFavorite(element)
@@ -97,7 +97,7 @@ class DailyEarthRepositoryTest {
     }
 
     @Test
-    fun `Switching favorite marks as unfavorite a favorite movie`(): Unit = runBlocking {
+    fun `Switching favorite marks as unfavorite a favorite item`(): Unit = runBlocking {
         val element = sampleEarth.copy(favorite = true)
 
         earthRepository.switchFavorite(element)

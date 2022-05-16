@@ -131,7 +131,7 @@ class DailyPicturesRepositoryTest {
     }
 
     @Test
-    fun `Switching favorite marks as favorite an unfavorite movie`(): Unit = runBlocking {
+    fun `Switching favorite marks as favorite an unfavorite item`(): Unit = runBlocking {
         val element = samplePOD.copy(favorite = false)
 
         dailyPicturesRepository.switchFavorite(element)
@@ -140,7 +140,7 @@ class DailyPicturesRepositoryTest {
     }
 
     @Test
-    fun `Switching favorite marks as unfavorite a favorite movie`(): Unit = runBlocking {
+    fun `Switching favorite marks as unfavorite a favorite item`(): Unit = runBlocking {
         val element = samplePOD.copy(favorite = true)
 
         dailyPicturesRepository.switchFavorite(element)
