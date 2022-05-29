@@ -98,6 +98,7 @@ dependencies {
     androidTestImplementation Libs.AndroidX.Test.Espresso.core
     androidTestImplementation Libs.AndroidX.Compose.Test.uiJunit
     debugImplementation Libs.AndroidX.Compose.Test.tooling
+    debugImplementation Libs.AndroidX.Compose.Test.uiManifest
 
     implementation Libs.Kotlin.Jdk.stdLib
 

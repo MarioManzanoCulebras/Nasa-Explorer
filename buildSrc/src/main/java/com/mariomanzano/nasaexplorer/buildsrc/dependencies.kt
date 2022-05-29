@@ -73,6 +73,7 @@ object Libs {
             object Test {
                 const val uiJunit = "androidx.compose.ui:ui-test-junit4:$version"
                 const val tooling = "androidx.compose.ui:ui-tooling:$version"
+                const val uiManifest = "androidx.compose.ui:ui-test-manifest:$version"
             }
         }
     }
