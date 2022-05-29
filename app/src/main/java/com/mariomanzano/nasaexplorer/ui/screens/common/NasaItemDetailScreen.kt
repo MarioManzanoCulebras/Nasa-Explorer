@@ -124,7 +124,7 @@ private fun Header(nasaItem: NasaItem) {
                     modifier = Modifier.padding(16.dp, 0.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(100.dp))
         } else {
             ExtraMarsHeader(marsItem = nasaItem)
         }
@@ -177,5 +177,5 @@ private fun ExtraMarsHeader(marsItem: MarsItem) {
         style = MaterialTheme.typography.body1,
         modifier = Modifier.padding(16.dp, 0.dp)
     )
-    Spacer(modifier = Modifier.height(32.dp))
+    Spacer(modifier = Modifier.height(100.dp))
 }

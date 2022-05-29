@@ -2,20 +2,21 @@ package com.mariomanzano.nasaexplorer.ui.screens.common
 
 import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ShareCompat
 import com.mariomanzano.domain.entities.NasaItem
-import com.mariomanzano.nasaexplorer.ui.navigation.AppBarIcon
 
 @ExperimentalMaterialApi
 @Composable
@@ -28,21 +29,19 @@ fun NasaItemDetailScaffold(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { shareNasaItem(context, nasaItem.title ?: "", nasaItem.url ?: "") }
-            ) {
-                Icon(imageVector = Icons.Default.Share, contentDescription = null)
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-        isFloatingActionButtonDocked = true,
-        bottomBar = {
-            BottomAppBar(
-                cutoutShape = CircleShape
-            ) {
-                AppBarIcon(imageVector = Icons.Default.Menu, onClick = { })
+            Row {
+                Spacer(modifier = Modifier.width(12.dp))
+                FloatingActionButton(
+                    onClick = { shareNasaItem(context, nasaItem.title ?: "", nasaItem.url ?: "") }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        tint = Color.Companion.White,
+                        contentDescription = null
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = onFavoriteClick) {
+                FloatingActionButton(onClick = onFavoriteClick) {
                     if (nasaItem.favorite) BuildIcon(
                         icon = Icons.Default.Favorite,
                         nasaIcon = NasaIcon.FavoriteOn
@@ -52,8 +51,11 @@ fun NasaItemDetailScaffold(
                         nasaIcon = NasaIcon.FavoriteOff
                     )
                 }
+                Spacer(modifier = Modifier.width(12.dp))
             }
         },
+        floatingActionButtonPosition = FabPosition.Center,
+        isFloatingActionButtonDocked = true,
         content = content
     )
 }
