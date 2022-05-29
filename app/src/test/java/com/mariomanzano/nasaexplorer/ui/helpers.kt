@@ -9,10 +9,7 @@ import com.mariomanzano.nasaexplorer.network.EarthServerDataSource
 import com.mariomanzano.nasaexplorer.network.MarsServerDataSource
 import com.mariomanzano.nasaexplorer.network.PODServerDataSource
 import com.mariomanzano.nasaexplorer.network.entities.*
-import com.mariomanzano.nasaexplorer.repositories.DailyEarthRepository
-import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
-import com.mariomanzano.nasaexplorer.repositories.LastDbUpdateRepository
-import com.mariomanzano.nasaexplorer.repositories.MarsRepository
+import com.mariomanzano.nasaexplorer.repositories.*
 import java.util.*
 
 //DailyPictures helper
@@ -149,3 +146,17 @@ private fun buildRemoteMarsItem(id: Int) =
             status = "active"
         ),
     )
+
+//Favorites helper
+fun buildFavoritesRepositoryWith(
+    localListPOD: List<DbPOD> = emptyList(),
+    localListEarth: List<DbEarth> = emptyList(),
+    localListMars: List<DbMars> = emptyList()
+): FavoritesRepository {
+    val podLocalDataSource = PODRoomDataSource(FakeNasaDao(listPOD = localListPOD))
+    val earthLocalDataSource =
+        EarthRoomDataSource(FakeNasaDao(listEarth = localListEarth.toMutableList()))
+    val marsLocalDataSource =
+        MarsRoomDataSource(FakeNasaDao(listMars = localListMars.toMutableList()))
+    return FavoritesRepository(podLocalDataSource, earthLocalDataSource, marsLocalDataSource)
+}
