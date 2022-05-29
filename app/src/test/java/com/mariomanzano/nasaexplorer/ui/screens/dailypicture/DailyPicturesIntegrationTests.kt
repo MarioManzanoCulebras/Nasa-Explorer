@@ -6,7 +6,7 @@ import com.mariomanzano.nasaexplorer.network.entities.ApiAPOD
 import com.mariomanzano.nasaexplorer.testrules.CoroutinesTestRule
 import com.mariomanzano.nasaexplorer.ui.buildDailyPictureRepositoryWith
 import com.mariomanzano.nasaexplorer.ui.buildDatabasePods
-import com.mariomanzano.nasaexplorer.ui.buildLastDbUpdateRepositoryWith
+import com.mariomanzano.nasaexplorer.ui.buildLastDbUpdateRepositoryWithPodList
 import com.mariomanzano.nasaexplorer.ui.buildRemotePods
 import com.mariomanzano.nasaexplorer.ui.screens.dailypicture.DailyPictureViewModel.UiState
 import com.mariomanzano.nasaexplorer.usecases.*
@@ -92,7 +92,7 @@ class DailyPicturesIntegrationTests {
         remoteData: List<ApiAPOD> = emptyList()
     ): DailyPictureViewModel {
         val dailyPicturesRepository = buildDailyPictureRepositoryWith(localData, remoteData)
-        val lastDbUpdateRepository = buildLastDbUpdateRepositoryWith(localData)
+        val lastDbUpdateRepository = buildLastDbUpdateRepositoryWithPodList(localData)
 
         val getPODUseCase = GetPODUseCase(dailyPicturesRepository)
         val requestPODListUseCase = RequestPODListUseCase(dailyPicturesRepository)

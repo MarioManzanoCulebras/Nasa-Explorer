@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class FakeNasaDao(
     listPOD: List<DbPOD> = emptyList(),
     podLastUpdate: DbPODLastUpdate? = null,
-    listEarth: List<DbEarth> = emptyList(),
+    listEarth: MutableList<DbEarth> = mutableListOf(),
     earthLasUpdate: DbEarthLastUpdate? = null,
     listMars: List<DbMars> = emptyList(),
     marsLasUpdate: DbMarsLastUpdate? = null
@@ -68,7 +68,7 @@ class FakeNasaDao(
 
     override fun getAllPOD(): Flow<List<DbPOD>> = inMemoryPod
 
-    override fun getAllEarth(): Flow<List<DbEarth>> = inMemoryEarth
+    override fun getAllEarth(): Flow<MutableList<DbEarth>> = inMemoryEarth
 
     override fun getAllMars(): Flow<List<DbMars>> = inMemoryMars
 
@@ -121,7 +121,7 @@ class FakeNasaDao(
     }
 
     override suspend fun insertEarthOnDb(items: List<DbEarth>) {
-        inMemoryEarth.value = items
+        inMemoryEarth.value.addAll(items)
 
         if (::findEarthFlow.isInitialized) {
             items.firstOrNull() { it.id == findEarthFlow.value.id }
@@ -130,7 +130,7 @@ class FakeNasaDao(
     }
 
     override suspend fun insertEarthEntities(items: List<DbEarth>) {
-        inMemoryEarth.value = items
+        inMemoryEarth.value.addAll(items)
 
         if (::findEarthFlow.isInitialized) {
             items.firstOrNull() { it.id == findEarthFlow.value.id }
@@ -213,7 +213,7 @@ class FakeRemoteEarthService(private val list: List<ApiEPIC> = emptyList()) : Da
 
 val sampleRemoteEarth = ApiEPIC(
     identifier = "identifier",
-    date = "2022-05-16",
+    date = "2015-10-31 00:31:45",
     caption = "caption",
     image = "image"
 )

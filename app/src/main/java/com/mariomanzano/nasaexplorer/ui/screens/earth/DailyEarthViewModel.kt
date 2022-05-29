@@ -11,7 +11,6 @@ import com.mariomanzano.nasaexplorer.usecases.GetLastEarthUpdateDateUseCase
 import com.mariomanzano.nasaexplorer.usecases.RequestEarthListUseCase
 import com.mariomanzano.nasaexplorer.usecases.UpdateLastEarthUpdateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -22,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DailyEarthViewModel @Inject constructor(
-    getEarthUseCase: GetEarthUseCase,
+    private val getEarthUseCase: GetEarthUseCase,
     private val requestEarthListUseCase: RequestEarthListUseCase,
     private val getLastEarthUpdateDateUseCase: GetLastEarthUpdateDateUseCase,
     private val updateLastEarthUpdateUseCase: UpdateLastEarthUpdateUseCase
@@ -73,8 +72,11 @@ class DailyEarthViewModel @Inject constructor(
     fun launchUpdate() {
         viewModelScope.launch {
             _state.update { _state.value.copy(loading = true) }
-            delay(3000)
-            _state.update { _state.value.copy(loading = false, error = requestEarthListUseCase()) }
+            //delay(3000)
+            _state.value = UiState(
+                loading = false,
+                error = requestEarthListUseCase()
+            )
         }
     }
 
