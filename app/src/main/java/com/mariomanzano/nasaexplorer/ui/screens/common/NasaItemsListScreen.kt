@@ -32,7 +32,7 @@ fun <T : NasaItem> NasaItemsListScreen(
     listState: LazyListState,
     onItemsMoreClicked: () -> Unit,
 ) {
-    if (error != null && !loading && items?.isEmpty() == true) {
+    if (error != null && !loading && (items == null || items.isEmpty())) {
         ErrorMessage(error = error, onRefreshComplete)
     } else {
         var bottomSheetItem by remember { mutableStateOf<T?>(null) }
