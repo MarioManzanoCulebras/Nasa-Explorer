@@ -39,6 +39,16 @@ android {
     buildFeatures {
         compose true
     }
+    sourceSets {
+        test {
+            java.srcDirs += "$projectDir/src/testShared/java"
+        }
+
+        androidTest {
+            java.srcDirs += "$projectDir/src/testShared/java"
+        }
+    }
+
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
