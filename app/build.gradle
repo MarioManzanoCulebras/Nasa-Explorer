@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.mariomanzano.nasaexplorer.di.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary true
         }
@@ -104,6 +104,7 @@ dependencies {
     testImplementation Libs.Mockito.inline
     testImplementation Libs.Kotlin.Coroutines.test
     testImplementation Libs.turbine
+
     androidTestImplementation Libs.AndroidX.Test.Ext.junit
     androidTestImplementation Libs.AndroidX.Test.Espresso.contrib
     androidTestImplementation Libs.AndroidX.Test.runner
@@ -111,6 +112,9 @@ dependencies {
     androidTestImplementation Libs.AndroidX.Compose.Test.uiJunit
     debugImplementation Libs.AndroidX.Compose.Test.tooling
     debugImplementation Libs.AndroidX.Compose.Test.uiManifest
+    androidTestImplementation Libs.Kotlin.Coroutines.test
+    androidTestImplementation Libs.Hilt.test
+    kaptAndroidTest Libs.Hilt.compiler
 
     implementation Libs.Kotlin.Jdk.stdLib
 

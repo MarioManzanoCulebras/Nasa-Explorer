@@ -1,4 +1,4 @@
-package com.mariomanzano.nasaexplorer
+package com.mariomanzano.nasaexplorer.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -7,6 +7,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.mariomanzano.domain.entities.PictureOfDayItem
+import com.mariomanzano.nasaexplorer.R
 import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 import org.junit.Before
 import org.junit.Rule
