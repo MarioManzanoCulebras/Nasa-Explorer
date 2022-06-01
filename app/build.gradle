@@ -114,6 +114,7 @@ dependencies {
     debugImplementation Libs.AndroidX.Compose.Test.uiManifest
     androidTestImplementation Libs.Kotlin.Coroutines.test
     androidTestImplementation Libs.Hilt.test
+    androidTestImplementation Libs.OkHttp3.mockWebServer
     kaptAndroidTest Libs.Hilt.compiler
 
     implementation Libs.Kotlin.Jdk.stdLib
