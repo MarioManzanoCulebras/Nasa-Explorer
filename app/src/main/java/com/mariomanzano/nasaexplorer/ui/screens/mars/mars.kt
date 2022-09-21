@@ -1,7 +1,7 @@
 package com.mariomanzano.nasaexplorer.ui.screens.mars
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,7 +15,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 @ExperimentalFoundationApi
 @Composable
 fun MarsScreen(
-    listState: LazyListState,
+    listState: LazyGridState,
     onClick: (MarsItem) -> Unit,
     onItemsMoreClicked: () -> Unit,
     viewModel: MarsViewModel = hiltViewModel()

@@ -1,7 +1,8 @@
 package com.mariomanzano.nasaexplorer.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
@@ -26,7 +27,9 @@ fun rememberNasaExplorerAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavHostController = rememberNavController(),
     pagerState: PagerState = rememberPagerState(initialPage = startIndex),
-    scrollState: Map<Int, LazyListState> = BOTTOM_NAV_OPTIONS.associate { it.ordinal to rememberLazyListState() }
+    scrollState: Map<Int, ScrollableState> = BOTTOM_NAV_OPTIONS.associate {
+        if (it.ordinal == 0) it.ordinal to rememberLazyListState() else it.ordinal to rememberLazyGridState()
+    }
 ): NasaExplorerAppState = remember(scaffoldState, navController, pagerState, scrollState) {
     NasaExplorerAppState(scaffoldState, navController, pagerState, scrollState)
 }
@@ -38,7 +41,7 @@ class NasaExplorerAppState(
     val scaffoldState: ScaffoldState,
     val navController: NavHostController,
     val pagerState: PagerState,
-    val scrollState: Map<Int, LazyListState>,
+    val scrollState: Map<Int, ScrollableState>,
 ) {
     companion object {
         val BOTTOM_NAV_OPTIONS =
@@ -57,7 +60,7 @@ class NasaExplorerAppState(
     fun updateScrollPosition(newScrollIndex: Int, pageIndex: Int) {
         if (newScrollIndex == lastScrollIndex[pageIndex]) return
 
-        _scrollUp[pageIndex]?.value = newScrollIndex > lastScrollIndex[pageIndex] ?: 0
+        _scrollUp[pageIndex]?.value = newScrollIndex > (lastScrollIndex[pageIndex] ?: 0)
         lastScrollIndex[pageIndex] = newScrollIndex
     }
 

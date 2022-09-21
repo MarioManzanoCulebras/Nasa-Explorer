@@ -1,7 +1,7 @@
 package com.mariomanzano.nasaexplorer.ui.screens.favorites
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -16,7 +16,7 @@ import com.mariomanzano.nasaexplorer.ui.screens.common.NasaItemsListScreen
 @ExperimentalFoundationApi
 @Composable
 fun FavoritesScreen(
-    listState: LazyListState,
+    listState: LazyGridState,
     onClick: (NasaItem) -> Unit,
     onItemsMoreClicked: () -> Unit,
     viewModel: FavoriteViewModel = hiltViewModel()

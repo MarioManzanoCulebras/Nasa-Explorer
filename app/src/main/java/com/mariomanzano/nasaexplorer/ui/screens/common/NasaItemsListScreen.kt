@@ -6,7 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,7 +35,7 @@ fun <T : NasaItem> NasaItemsListScreen(
     onRefreshComplete: (() -> Unit)? = null,
     onSimpleRefresh: (() -> Unit)? = null,
     error: Error? = null,
-    listState: LazyListState,
+    listState: LazyGridState,
     onItemsMoreClicked: () -> Unit,
 ) {
     if (error != null && !loading && (items == null || items.isEmpty())) {
@@ -139,7 +145,7 @@ fun <T : NasaItem> NasaItemsList(
     onItemClick: (T) -> Unit,
     onItemMore: (T) -> Unit,
     onRefresh: (() -> Unit)?,
-    listState: LazyListState,
+    listState: LazyGridState,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -160,7 +166,7 @@ fun <T : NasaItem> NasaItemsList(
                 ) {
                     LazyVerticalGrid(
                         state = listState,
-                        cells = GridCells.Adaptive(180.dp),
+                        columns = GridCells.Adaptive(180.dp),
                         contentPadding = PaddingValues(4.dp)
                     ) {
 

@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flight
@@ -66,7 +67,11 @@ fun NasaContainerScreen(
             ) { index ->
                 when ((index - startIndex).floorMod(BOTTOM_NAV_OPTIONS.size)) {
                     0 -> {
-                        PagerContainer(appState = appState, pageNumber = NavItem.Pictures.ordinal) {
+                        PagerContainer(
+                            feature = Feature.DAILY_PICTURE,
+                            appState = appState,
+                            pageNumber = NavItem.Pictures.ordinal
+                        ) {
                             DailyPictureScreen(
                                 onClick = { pictureOfTheDay ->
                                     appState.navController.navigatePoppingUpToStartDestination(
@@ -76,14 +81,17 @@ fun NasaContainerScreen(
                                             )
                                     )
                                 },
-                                listState = appState.scrollState[NavItem.Pictures.ordinal]
-                                    ?: rememberLazyListState(),
+                                listState = appState.scrollState[NavItem.Pictures.ordinal] as LazyListState,
                                 onItemsMoreClicked = { appState.forceScrollUpSimulation(NavItem.Pictures.ordinal) }
                             )
                         }
                     }
                     1 -> {
-                        PagerContainer(appState = appState, pageNumber = NavItem.Earth.ordinal) {
+                        PagerContainer(
+                            feature = Feature.EARTH,
+                            appState = appState,
+                            pageNumber = NavItem.Earth.ordinal
+                        ) {
                             EarthScreen(
                                 onClick = { earthDay ->
                                     appState.navController.navigatePoppingUpToStartDestination(
@@ -92,14 +100,17 @@ fun NasaContainerScreen(
                                         )
                                     )
                                 },
-                                listState = appState.scrollState[NavItem.Earth.ordinal]
-                                    ?: rememberLazyListState(),
+                                listState = appState.scrollState[NavItem.Earth.ordinal] as LazyGridState,
                                 onItemsMoreClicked = { appState.forceScrollUpSimulation(NavItem.Earth.ordinal) }
                             )
                         }
                     }
                     2 -> {
-                        PagerContainer(appState = appState, pageNumber = NavItem.Mars.ordinal) {
+                        PagerContainer(
+                            feature = Feature.MARS,
+                            appState = appState,
+                            pageNumber = NavItem.Mars.ordinal
+                        ) {
                             MarsScreen(
                                 onClick = { marsItem ->
                                     appState.navController.navigatePoppingUpToStartDestination(
@@ -108,14 +119,14 @@ fun NasaContainerScreen(
                                         )
                                     )
                                 },
-                                listState = appState.scrollState[NavItem.Mars.ordinal]
-                                    ?: rememberLazyListState(),
+                                listState = appState.scrollState[NavItem.Mars.ordinal] as LazyGridState,
                                 onItemsMoreClicked = { appState.forceScrollUpSimulation(NavItem.Mars.ordinal) }
                             )
                         }
                     }
                     3 -> {
                         PagerContainer(
+                            feature = Feature.FAVORITES,
                             appState = appState,
                             pageNumber = NavItem.Favorites.ordinal
                         ) {
@@ -126,8 +137,7 @@ fun NasaContainerScreen(
                                             .createRoute(nasaItem.id, nasaItem.type)
                                     )
                                 },
-                                listState = appState.scrollState[NavItem.Favorites.ordinal]
-                                    ?: rememberLazyListState(),
+                                listState = appState.scrollState[NavItem.Favorites.ordinal] as LazyGridState,
                                 onItemsMoreClicked = { appState.forceScrollUpSimulation(NavItem.Favorites.ordinal) }
                             )
                         }
@@ -143,16 +153,32 @@ fun NasaContainerScreen(
 @ExperimentalFoundationApi
 @Composable
 private fun PagerContainer(
+    feature: Feature,
     appState: NasaExplorerAppState,
     pageNumber: Int,
     content: @Composable () -> Unit
 ) {
-    LaunchedEffect(appState.scrollState[pageNumber]?.firstVisibleItemIndex) {
-        appState.updateScrollPosition(
-            appState.scrollState[pageNumber]?.firstVisibleItemIndex ?: 0,
-            pageNumber
-        )
+    when (feature.ordinal) {
+        0 -> {
+            LaunchedEffect((appState.scrollState[pageNumber] as? LazyListState)?.firstVisibleItemIndex) {
+                appState.updateScrollPosition(
+                    (appState.scrollState[pageNumber] as? LazyListState)?.firstVisibleItemIndex
+                        ?: 0,
+                    pageNumber
+                )
+            }
+        }
+        else -> {
+            LaunchedEffect((appState.scrollState[pageNumber] as? LazyGridState)?.firstVisibleItemIndex) {
+                appState.updateScrollPosition(
+                    (appState.scrollState[pageNumber] as? LazyGridState)?.firstVisibleItemIndex
+                        ?: 0,
+                    pageNumber
+                )
+            }
+        }
     }
+
     content()
 }
 

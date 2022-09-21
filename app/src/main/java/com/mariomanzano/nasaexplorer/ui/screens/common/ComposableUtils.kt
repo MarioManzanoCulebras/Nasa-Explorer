@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
@@ -44,8 +45,10 @@ fun NasaImageWithLoader(
 ) {
     GlideImage(
         imageModel = urlImage,
-        contentScale = contentScale,
-        contentDescription = contentDescription,
+        imageOptions = ImageOptions(
+            contentScale = contentScale,
+            contentDescription = contentDescription
+        ),
         modifier = modifier ?: Modifier
             .fillMaxWidth()
             .aspectRatio(1f),
