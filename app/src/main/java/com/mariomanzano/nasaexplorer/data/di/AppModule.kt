@@ -11,11 +11,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.ktor.client.*
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.serialization.gson.gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -58,23 +60,35 @@ object AppModule {
         .build()
 
     @Provides
-    fun provideRestAdapter(@ApiEndPoint apiEndPoint: String, okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(apiEndPoint)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+    fun provideKtorHttpClient(
+        @ApiEndPoint baseUrl: String,
+        loggingInterceptor: HttpLoggingInterceptor,
+        queryInterceptor: QueryInterceptor
+    ): HttpClient =
+        HttpClient(OkHttp) {
+            expectSuccess = true
+            engine {
+                addInterceptor(loggingInterceptor)
+                addInterceptor(queryInterceptor)
+            }
+            defaultRequest {
+                url(baseUrl)
+            }
+            install(ContentNegotiation) {
+                gson()
+            }
+        }
 
     @Provides
-    fun provideDailyPictureService(restAdapter: Retrofit): DailyPicturesService =
-        restAdapter.create()
+    fun provideDailyPictureService(ktor: HttpClient): DailyPicturesService =
+        DailyPicturesServiceImpl(ktor)
 
     @Provides
-    fun provideDailyEarthServiceService(restAdapter: Retrofit): DailyEarthService =
-        restAdapter.create()
+    fun provideDailyEarthServiceService(ktor: HttpClient): DailyEarthService =
+        DailyEarthServiceImpl(ktor)
 
     @Provides
-    fun provideMarsService(restAdapter: Retrofit): MarsService = restAdapter.create()
+    fun provideMarsService(ktor: HttpClient): MarsService = MarsServiceImpl(ktor)
 
 }
 

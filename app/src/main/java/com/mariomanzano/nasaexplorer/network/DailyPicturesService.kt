@@ -1,14 +1,31 @@
 package com.mariomanzano.nasaexplorer.network
 
 import com.mariomanzano.nasaexplorer.network.entities.ApiAPOD
-import retrofit2.http.GET
-import retrofit2.http.Query
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import javax.inject.Inject
 
 interface DailyPicturesService {
+    suspend fun getPictureOfTheDay(date: String): ApiAPOD
 
-    @GET("/planetary/apod")
-    suspend fun getPictureOfTheDay(@Query("date") date: String) : ApiAPOD
+    suspend fun getPicturesOfDateRange(startDate: String, endDate: String): List<ApiAPOD>
 
-    @GET("/planetary/apod")
-    suspend fun getPicturesOfDateRange(@Query("start_date") startDate: String, @Query("end_date") endDate: String) : List<ApiAPOD>
+}
+
+class DailyPicturesServiceImpl @Inject constructor(private val ktor: HttpClient) :
+    DailyPicturesService {
+    override suspend fun getPictureOfTheDay(date: String): ApiAPOD {
+        return ktor.get("/planetary/apod") {
+            parameter("date", date)
+        }.body()
+    }
+
+    override suspend fun getPicturesOfDateRange(startDate: String, endDate: String): List<ApiAPOD> {
+        return ktor.get("/planetary/apod") {
+            parameter("start_date", startDate)
+            parameter("end_date", endDate)
+        }.body()
+    }
 }

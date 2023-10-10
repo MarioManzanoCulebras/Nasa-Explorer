@@ -3,26 +3,51 @@ package com.mariomanzano.nasaexplorer.di
 import android.app.Application
 import androidx.room.Room
 import com.mariomanzano.nasaexplorer.R
-import com.mariomanzano.nasaexplorer.data.database.*
+import com.mariomanzano.nasaexplorer.data.database.EarthRoomDataSource
+import com.mariomanzano.nasaexplorer.data.database.LastDbUpdateRoomDataSource
+import com.mariomanzano.nasaexplorer.data.database.MarsRoomDataSource
+import com.mariomanzano.nasaexplorer.data.database.NasaDatabase
+import com.mariomanzano.nasaexplorer.data.database.PODRoomDataSource
 import com.mariomanzano.nasaexplorer.data.di.ApiEndPoint
 import com.mariomanzano.nasaexplorer.data.di.ApiKey
 import com.mariomanzano.nasaexplorer.data.di.AppDataModule
 import com.mariomanzano.nasaexplorer.data.di.AppModule
-import com.mariomanzano.nasaexplorer.datasource.*
-import com.mariomanzano.nasaexplorer.network.*
+import com.mariomanzano.nasaexplorer.datasource.EarthLocalDataSource
+import com.mariomanzano.nasaexplorer.datasource.EarthRemoteDataSource
+import com.mariomanzano.nasaexplorer.datasource.LastDbUpdateDataSource
+import com.mariomanzano.nasaexplorer.datasource.MarsLocalDataSource
+import com.mariomanzano.nasaexplorer.datasource.MarsRemoteDataSource
+import com.mariomanzano.nasaexplorer.datasource.PODLocalDataSource
+import com.mariomanzano.nasaexplorer.datasource.PODRemoteDataSource
+import com.mariomanzano.nasaexplorer.network.DailyEarthService
+import com.mariomanzano.nasaexplorer.network.DailyEarthServiceImpl
+import com.mariomanzano.nasaexplorer.network.DailyPicturesService
+import com.mariomanzano.nasaexplorer.network.DailyPicturesServiceImpl
+import com.mariomanzano.nasaexplorer.network.EarthServerDataSource
+import com.mariomanzano.nasaexplorer.network.MarsServerDataSource
+import com.mariomanzano.nasaexplorer.network.MarsService
+import com.mariomanzano.nasaexplorer.network.MarsServiceImpl
+import com.mariomanzano.nasaexplorer.network.PODServerDataSource
+import com.mariomanzano.nasaexplorer.network.QueryInterceptor
 import com.mariomanzano.nasaexplorer.repositories.DailyPicturesRepository
 import com.mariomanzano.nasaexplorer.repositories.LastDbUpdateRepository
 import com.mariomanzano.nasaexplorer.ui.screens.dailypicture.DailyPictureViewModel
-import com.mariomanzano.nasaexplorer.usecases.*
+import com.mariomanzano.nasaexplorer.usecases.GetLastPODUpdateDateUseCase
+import com.mariomanzano.nasaexplorer.usecases.GetPODUseCase
+import com.mariomanzano.nasaexplorer.usecases.RequestPODListUseCase
+import com.mariomanzano.nasaexplorer.usecases.RequestPODSingleDayUseCase
+import com.mariomanzano.nasaexplorer.usecases.UpdateLastPODUpdateUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.serialization.kotlinx.json.json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -67,23 +92,35 @@ object TestAppModule {
         .build()
 
     @Provides
-    fun provideRestAdapter(@ApiEndPoint apiEndPoint: String, okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(apiEndPoint)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+    fun provideKtorHttpClient(
+        @ApiEndPoint baseUrl: String,
+        loggingInterceptor: HttpLoggingInterceptor,
+        queryInterceptor: QueryInterceptor
+    ): HttpClient =
+        HttpClient(OkHttp) {
+            expectSuccess = true
+            engine {
+                addInterceptor(loggingInterceptor)
+                addInterceptor(queryInterceptor)
+            }
+            defaultRequest {
+                url(baseUrl)
+            }
+            install(ContentNegotiation) {
+                json()
+            }
+        }
 
     @Provides
-    fun provideDailyPictureService(restAdapter: Retrofit): DailyPicturesService =
-        restAdapter.create()
+    fun provideDailyPictureService(ktor: HttpClient): DailyPicturesService =
+        DailyPicturesServiceImpl(ktor)
 
     @Provides
-    fun provideDailyEarthServiceService(restAdapter: Retrofit): DailyEarthService =
-        restAdapter.create()
+    fun provideDailyEarthServiceService(ktor: HttpClient): DailyEarthService =
+        DailyEarthServiceImpl(ktor)
 
     @Provides
-    fun provideMarsService(restAdapter: Retrofit): MarsService = restAdapter.create()
+    fun provideMarsService(ktor: HttpClient): MarsService = MarsServiceImpl(ktor)
 
     @Provides
     fun provideDailyPictureViewModel(

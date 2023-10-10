@@ -93,8 +93,10 @@ dependencies {
     implementation Libs.Hilt.navigationCompose
 
     implementation Libs.OkHttp3.loginInterceptor
-    implementation Libs.Retrofit.retrofit
-    implementation Libs.Retrofit.converterGson
+    implementation Libs.Ktor.okhttp
+    implementation Libs.Ktor.core
+    implementation Libs.Ktor.negotiation
+    implementation Libs.Ktor.gson
 
     implementation Libs.Arrow.core
 
@@ -104,12 +106,15 @@ dependencies {
     testImplementation Libs.Mockito.inline
     testImplementation Libs.Kotlin.Coroutines.test
     testImplementation Libs.turbine
+    testImplementation Libs.Ktor.mock
+    testImplementation Libs.Ktor.testHost
 
     androidTestImplementation Libs.AndroidX.Test.Ext.junit
     androidTestImplementation Libs.AndroidX.Test.Espresso.contrib
     androidTestImplementation Libs.AndroidX.Test.runner
     androidTestImplementation Libs.AndroidX.Test.rules
     androidTestImplementation Libs.AndroidX.Compose.Test.uiJunit
+    androidTestImplementation Libs.Ktor.json
     debugImplementation Libs.AndroidX.Compose.Test.tooling
     debugImplementation Libs.AndroidX.Compose.Test.uiManifest
     androidTestImplementation Libs.Kotlin.Coroutines.test

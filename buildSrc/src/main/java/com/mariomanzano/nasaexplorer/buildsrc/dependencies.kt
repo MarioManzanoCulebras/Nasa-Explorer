@@ -93,10 +93,16 @@ object Libs {
         const val mockWebServer = "com.squareup.okhttp3:mockwebserver:$version"
     }
 
-    object Retrofit {
-        private const val version = "2.9.0"
-        const val retrofit = "com.squareup.retrofit2:retrofit:$version"
-        const val converterGson = "com.squareup.retrofit2:converter-gson:$version"
+    object Ktor {
+        private const val version = "2.1.2"
+        const val okhttp = "io.ktor:ktor-client-okhttp:$version"
+        const val core = "io.ktor:ktor-client-core:$version"
+        const val negotiation = "io.ktor:ktor-client-content-negotiation:$version"
+        const val gson = "io.ktor:ktor-serialization-gson:$version"
+        const val json = "io.ktor:ktor-serialization-kotlinx-json:$version"
+        const val ios_darwin = "io.ktor:ktor-client-darwin:$version"
+        const val mock = "io.ktor:ktor-client-mock:$version"
+        const val testHost = "io.ktor:ktor-server-test-host:$version"
     }
 
     object Arrow {
