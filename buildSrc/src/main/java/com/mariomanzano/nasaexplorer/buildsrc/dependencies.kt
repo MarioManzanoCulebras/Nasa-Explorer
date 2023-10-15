@@ -4,7 +4,7 @@ package com.mariomanzano.nasaexplorer.buildsrc
 
 object Libs {
 
-    const val androidGradlePlugin = "com.android.tools.build:gradle:7.2.2"
+    const val androidGradlePlugin = "com.android.tools.build:gradle:8.1.0"
     const val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.42.0"
 
     object Kotlin {
