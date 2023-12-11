@@ -64,6 +64,7 @@ dependencies {
     implementation project(":data")
     implementation project(":domain")
     implementation project(":usecases")
+    implementation project(":shared")
 
     implementation Libs.AndroidX.coreKtx
     implementation Libs.AndroidX.appCompat

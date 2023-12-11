@@ -1,12 +1,14 @@
 package com.mariomanzano.nasaexplorer.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.mariomanzano.nadaexplorer.shared.Greeting
 import dagger.hilt.android.AndroidEntryPoint
 
 @ExperimentalPagerApi
@@ -19,6 +21,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i(this::class.simpleName, "Hello from shared module: " + (Greeting().greet()))
         setContent {
             NasaExploreApp()
         }

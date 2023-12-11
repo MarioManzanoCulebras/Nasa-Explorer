@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.mariomanzano.nadaexplorer.shared"
-    compileSdk = 34
+    namespace = "com.mariomanzano.nadaexplorer"
+    compileSdk = 33
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
     }
 }
 
 kotlin {
-
+    android()
     listOf(
         iosX64(),
         iosArm64(),
